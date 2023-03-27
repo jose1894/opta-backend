@@ -1,9 +1,7 @@
 const { response } = require("express");
-const Pais  = require('../models/pais')
+const Estado  = require('../models/estado')
 
-// obtenerPaiss - paginado - total - populate
-
-const paisesGet = async ( req, res = response) => {
+const estadosGet = async ( req, res = response) => {
     try{
         const {
             q        = '', 
@@ -34,87 +32,89 @@ const paisesGet = async ( req, res = response) => {
         }
          
         // Promise . all envia varias promesas simultaneas
-        const [ total, paises ] = await Promise.all([
-            Pais.countDocuments( query ),
-            Pais.find(query)
+        const [ total, estados ] = await Promise.all([
+            Estado.countDocuments( query ),
+            Estado.find(query)
+                    .populate( 'pais' )
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
         ])
 
-        res.send({ total, paises, perPage:parseInt(perPage), page: parseInt(page)})
+        res.send({ total, estados, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
         console.log( error )
 
         return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los paises ${ error }`
+            msg: `Error del servidor al mostrar los estados ${ error }`
         })
     }
 
 }
 
-// obtenerPais - populate {}
-const paisGet = async ( req, res = response ) => {
+// obtenerEtado - populate {}
+const estadoGet = async ( req, res = response ) => {
 
     try{
 
         const { id } = req.params
 
-        const pais = await Pais.findById( id ).populate( 'usuario' )
+        const estado = await Estado.findById( id ).populate( 'usuario').populate('pais')
 
         return res.status(200).send(
-            pais
+            estado
         )
 
     } catch ( error ) {
         console.log( error )
 
         return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los paises ${ error }`
+            msg: `Error del servidor al mostrar los estados ${ error }`
         })
     }
 }
 
-const paisesPost = async ( req, res = response ) => {
+
+const estadosPost = async ( req, res = response ) => {
 
 
     try {
-        const {nombre,codigo} = req.body
+        const {nombre,codigo, pais} = req.body
 
-        const paisDB = await Pais.findOne( { nombre } )
+        const estadoDB = await Estado.findOne( { nombre } )
 
-        if ( paisDB ) {
+        if ( estadoDB ) {
             return res.status( 400 ).json({
-                msg: `El país ${ paisDB.nombre } ya existe`
+                msg: `El estado ${ estadoDB.nombre } ya existe`
             })
         }
-
         const data = {
             nombre,
             codigo,
-            usuario: req.usuario._id
+            usuario: req.usuario._id,
+            pais,
         }
 
-        const pais = new Pais( data )
+        const estado = new Estado( data )
 
         //Guardar en DB
-        await pais.save()
+        await estado.save()
 
-        return res.status( 201 ).json(pais)
+        return res.status( 201 ).json(estado)
 
     } catch ( error ) {
             console.log( error )
 
             return res.status( 500 ).json({
-                msg: `Error del servidor al guardar un pais ${ error }`
+                msg: `Error del servidor al guardar un estado ${ error }`
             })
 
     }
 } 
 
 // actualizarPais 
-const paisPut = async ( req, res = response ) => {
+const estadoPut = async ( req, res = response ) => {
 
     try{
 
@@ -124,49 +124,50 @@ const paisPut = async ( req, res = response ) => {
 
         data.nombre = data.nombre.toUpperCase()
         data.usuario = req.usuario._id 
+        data.pais = data.pais
 
-        const pais = await Pais.findByIdAndUpdate( id, data, { new:true })
+        const estado = await Estado.findByIdAndUpdate( id, data, { new:true })
 
         return res.status(200).send(
-            pais
+            estado
         )
 
     } catch ( error ) {
         console.log( error )
 
         return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar las paiss ${ error }`
+            msg: `Error del servidor al mostrar los estados ${ error }`
         })
     }
 }
 
 // borrarPais - status : false
-const paisDelete = async ( req, res = response ) => {
+const estadoDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const pais = await Pais.findByIdAndUpdate( id, { status: false}, { new: true})
+    const estado = await Estado.findByIdAndUpdate( id, { status: false}, { new: true})
 
-    res.json( pais )
+    res.json( estado )
 }
 
 // restaurarPais - status : true
-const paisRestore = async ( req, res = response ) => {
+const estadoRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const pais = await Pais.findOneAndUpdate( {id, status: false}, { status: true}, { new: true})
+    const estado = await Estado.findOneAndUpdate( {id, status: false}, { status: true}, { new: true})
 
-    if(!pais){
-        return res.json(`El país solicitado no se encuentra eliminado`)
+    if(!estado){
+        return res.json(`El estado solicitado no se encuentra eliminado`)
     }
 
-    res.json( pais )
+    res.json( estado )
 }
 
 module.exports = {
-    paisesPost,
-    paisesGet,
-    paisGet,
-    paisPut,
-    paisDelete,
-    paisRestore
+    estadosPost,
+    estadosGet,
+    estadoGet,
+    estadoPut,
+    estadoDelete,
+    estadoRestore
 }

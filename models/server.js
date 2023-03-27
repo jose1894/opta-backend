@@ -15,6 +15,8 @@ class Server {
             buscar:     '/api/buscar',
             categorias: '/api/categorias',
             paises:     '/api/paises',
+            estados:    '/api/estados',
+            ciudades:   '/api/ciudades',
             productos:  '/api/productos',
             usuarios:   '/api/usuarios',
             uploads:    '/api/uploads',
@@ -62,6 +64,8 @@ class Server {
         this.app.use( this.paths.buscar, require('../routes/buscar'));
         this.app.use( this.paths.categorias, require('../routes/categorias'));
         this.app.use( this.paths.paises, require('../routes/paises'));
+        this.app.use( this.paths.estados, require('../routes/estados'));
+        this.app.use( this.paths.ciudades, require('../routes/ciudades'));
         this.app.use( this.paths.productos, require('../routes/productos'));
         this.app.use( this.paths.usuarios, require('../routes/usuarios'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
