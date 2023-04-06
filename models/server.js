@@ -19,6 +19,7 @@ class Server {
             ciudades:   '/api/ciudades',
             productos:  '/api/productos',
             usuarios:   '/api/usuarios',
+            aliados:    '/api/aliados',
             uploads:    '/api/uploads',
         }
 
@@ -68,6 +69,7 @@ class Server {
         this.app.use( this.paths.ciudades, require('../routes/ciudades'));
         this.app.use( this.paths.productos, require('../routes/productos'));
         this.app.use( this.paths.usuarios, require('../routes/usuarios'));
+        this.app.use( this.paths.aliados, require('../routes/aliados'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 

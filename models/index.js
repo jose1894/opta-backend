@@ -8,6 +8,9 @@ const Server = require('./server')
 const Usuario = require('./usuario')
 const Estado = require('./estado')
 const Ciudad = require('./ciudad')
+const Aliado = require('./aliado')
+const Cliente = require('./cliente')
+const Referido = require('./referido')
 
 module.exports = {
     Categoria,
@@ -17,6 +20,9 @@ module.exports = {
     Server,
     Usuario,
     Estado,
-    Ciudad
+    Ciudad,
+    Aliado,
+    Cliente,
+    Referido
 }
 

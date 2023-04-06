@@ -1,4 +1,4 @@
-const { Categoria, Usuario, Role, Pais, Producto, Estado, Ciudad } = require('../models')
+const { Categoria, Usuario, Role, Pais, Producto, Estado, Ciudad, Aliado, Referido, Cliente } = require('../models')
 
 
 const esRolValido = async ( rol = '' ) => {
@@ -65,6 +65,33 @@ const existeCiudadPorId = async ( id ) => {
     }
 }
 
+const existeAliadoPorId = async ( id ) => {
+    const existe = await Aliado.findById( id )
+    // console.log( existe )
+    
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeReferidoPorId = async ( id ) => {
+    const existe = await Referido.findById( id )
+    // console.log( existe )
+    
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeClientePorId = async ( id ) => {
+    const existe = await Cliente.findById( id )
+    // console.log( existe )
+    
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
 const existeProductoPorId = async ( id ) => {
     const existe = await Producto.findById( id )
     // console.log( existe )
@@ -97,5 +124,8 @@ module.exports = {
     existePaisPorId,
     existeEstadoPorId,
     existeCiudadPorId,
-    coleccionesPermitidas
+    coleccionesPermitidas,
+    existeAliadoPorId,
+    existeReferidoPorId,
+    existeClientePorId
 }
