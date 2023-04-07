@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const AliadoSchema = Schema({
+const MiembroSchema = Schema({
     codigo: {
         type: String,
         required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
@@ -70,17 +70,10 @@ const AliadoSchema = Schema({
         type: String,
         maxLength: [250, 'La Longitud máxima es de 250 caracteres']
     },
-    referido: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Miembro',
-        }
-    ],
-    estado : {
-        type: Number,
-        default: 1,
-        enum: [0,1,2],
-        required: true,
+    aliado: {
+        type: Schema.Types.ObjectId,
+        ref: 'Aliado',
+        required: true
     },
     usuario: {
         type: Schema.Types.ObjectId,
@@ -89,9 +82,9 @@ const AliadoSchema = Schema({
     },
 });
 
-AliadoSchema.methods.toJSON = function() {
+MiembroSchema.methods.toJSON = function() {
     const {__v, ...data } = this.toObject()
     return data
 }
 
-module.exports = model( 'Aliado', AliadoSchema);
+module.exports = model( 'Miembro', MiembroSchema);
