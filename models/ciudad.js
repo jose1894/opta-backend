@@ -15,6 +15,11 @@ const CiudadSchema = Schema({
         trim: true,
         unique: true
     },
+    pais: {
+        type: Schema.Types.ObjectId,
+        ref: 'Pais',
+        required: true,
+    },
     estado : {
         type: Number,
         default: 1,

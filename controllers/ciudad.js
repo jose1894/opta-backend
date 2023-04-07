@@ -35,6 +35,7 @@ const ciudadesGet = async ( req, res = response) => {
         const [ total, ciudades ] = await Promise.all([
             Ciudad.countDocuments( query ),
             Ciudad.find(query)
+                    .populate( 'pais' )
                     .populate( 'state' )
                     .skip( skip )
                     .sort(sort) 
@@ -60,7 +61,7 @@ const ciudadGet = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const ciudad = await Ciudad.findById( id ).populate( 'usuario').populate('state')
+        const ciudad = await Ciudad.findById( id ).populate( 'usuario').populate('state').populate('pais')
 
         return res.status(200).send(
             ciudad
@@ -80,7 +81,7 @@ const ciudadesPost = async ( req, res = response ) => {
 
 
     try {
-        const {nombre,codigo, state} = req.body
+        const {nombre,codigo, state, pais} = req.body
 
         const ciudadDB = await Ciudad.findOne( { nombre } )
 
@@ -93,6 +94,7 @@ const ciudadesPost = async ( req, res = response ) => {
             nombre,
             codigo,
             usuario: req.usuario._id,
+            pais,
             state
         }
 
@@ -148,6 +150,23 @@ const ciudadDelete = async ( req, res = response ) => {
     res.json( ciudad )
 }
 
+const ciudadesByEstadosGet = async ( req, res = response ) => {
+
+    try{
+        let options = { $or:[ {'estado':1}, {'estado':2}]}; 
+        query = {...options}
+        const { id } = req.params
+        const ciudadesList = await Ciudad.find(query).populate({ path: 'state', match: { '_id': id }})
+        const ciudades = ciudadesList.filter(ciudad => ciudad.state)
+        res.send({ ciudades })
+    } catch ( error ) {
+        console.log( error )
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los estados ${ query }`
+        })
+    }
+}
+
 // restaurarPais - status : true
 const ciudadRestore = async ( req, res = response ) => {
 
@@ -167,5 +186,6 @@ module.exports = {
     ciudadGet,
     ciudadPut,
     ciudadDelete,
+    ciudadesByEstadosGet,
     ciudadRestore
 }

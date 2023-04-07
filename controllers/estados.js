@@ -150,6 +150,26 @@ const estadoDelete = async ( req, res = response ) => {
     res.json( estado )
 }
 
+// obtenerEtado - populate {}
+const estadosByPaisGet = async ( req, res = response ) => {
+
+    try{
+        let options = { $or:[ {'estado':1}, {'estado':2}]}; 
+        query = {...options}
+        const { id } = req.params
+        debugger
+        const estadosList = await Estado.find(query).populate({ path: 'pais', match: { '_id': id }})
+        const estados = estadosList.filter(estado => estado.pais)
+        res.send({ estados })
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los estados ${ query }`
+        })
+    }
+}
+
 // restaurarPais - status : true
 const estadoRestore = async ( req, res = response ) => {
 
@@ -169,5 +189,6 @@ module.exports = {
     estadoGet,
     estadoPut,
     estadoDelete,
+    estadosByPaisGet,
     estadoRestore
 }

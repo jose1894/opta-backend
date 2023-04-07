@@ -13,7 +13,8 @@ const {
     ciudadGet, 
     ciudadPut, 
     ciudadDelete,
-    ciudadRestore
+    ciudadRestore,
+    ciudadesByEstadosGet
 } = require('../controllers/ciudad')
 
 const { existeCiudadPorId, existeEmail } = require('../helpers/db-validators')
@@ -69,5 +70,7 @@ router.put( '/restore/:id',[
     check( 'id' ).custom( existeCiudadPorId ),
     validarCampos 
 ], ciudadRestore)
+
+router.get( '/ciudadesByEstados/:id', ciudadesByEstadosGet) 
 
 module.exports = router

@@ -35,7 +35,10 @@ const aliadosGet = async ( req, res = response) => {
         const [ total, aliados ] = await Promise.all([
             Aliado.countDocuments( query ),
             Aliado.find(query)
-                    .populate( 'referido')
+                    .populate('referido')
+                    .populate('state')
+                    .populate('ciudad')
+                    .populate('pais')
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
@@ -60,7 +63,7 @@ const aliadoGet = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const ciudad = await Aliado.findById( id ).populate( 'usuario').populate('referido')
+        const ciudad = await Aliado.findById( id ).populate( 'usuario').populate('referido').populate('state').populate('ciudad').populate('pais')
 
         return res.status(200).send(
             ciudad
@@ -106,7 +109,7 @@ const aliadosPost = async ( req, res = response ) => {
             telefonoOfic, 
             telefonoCelu, 
             correoContact, 
-            referido,
+            referido:null,
             usuario: req.usuario._id
         }
 
