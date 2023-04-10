@@ -11,16 +11,22 @@ class Server {
         this.port = process.env.PORT;
 
         this.paths = {
-            auth:       '/api/auth',
-            buscar:     '/api/buscar',
-            categorias: '/api/categorias',
-            paises:     '/api/paises',
-            estados:    '/api/estados',
-            ciudades:   '/api/ciudades',
-            productos:  '/api/productos',
-            usuarios:   '/api/usuarios',
-            aliados:    '/api/aliados',
-            uploads:    '/api/uploads',
+            auth:             '/api/auth',
+            buscar:           '/api/buscar',
+            categorias:       '/api/categorias',
+            paises:           '/api/paises',
+            estados:          '/api/estados',
+            ciudades:         '/api/ciudades',
+            productos:        '/api/productos',
+            usuarios:         '/api/usuarios',
+            aliados:          '/api/aliados',
+            cargos:           '/api/cargos',
+            monedas:          '/api/monedas',
+            miembros:         '/api/miembros',
+            sucursales:       '/api/sucursales',
+            unidadesNegocios: '/api/unidadesNegocios',
+            gastos:           '/api/gastos',
+            uploads:          '/api/uploads',
         }
 
 
@@ -70,6 +76,12 @@ class Server {
         this.app.use( this.paths.productos, require('../routes/productos'));
         this.app.use( this.paths.usuarios, require('../routes/usuarios'));
         this.app.use( this.paths.aliados, require('../routes/aliados'));
+        this.app.use( this.paths.cargos, require('../routes/cargos'));
+        this.app.use( this.paths.monedas, require('../routes/monedas'));
+        this.app.use( this.paths.sucursales, require('../routes/sucursales'));
+        this.app.use( this.paths.miembros, require('../routes/miembro'));
+        this.app.use( this.paths.unidadesNegocios, require('../routes/unidadesNegocio'));
+        this.app.use( this.paths.gastos, require('../routes/gastos'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 

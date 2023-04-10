@@ -11,7 +11,12 @@ const Ciudad = require('./ciudad')
 const Aliado = require('./aliado')
 const Cliente = require('./cliente')
 const Referido = require('./referido')
-const Miembro = require('./miembro') 
+const Miembro = require('./miembro')
+const Cargo = require('./cargo') 
+const Moneda = require('./moneda') 
+const Sucursal = require('./sucursal')
+const UnidadNegocio = require('./unidadNegocio')
+const Gasto = require('./gasto')
 
 module.exports = {
     Categoria,
@@ -25,6 +30,11 @@ module.exports = {
     Aliado,
     Cliente,
     Referido,
-    Miembro
+    Miembro,
+    Cargo,
+    Moneda,
+    Sucursal,
+    UnidadNegocio,
+    Gasto
 }
 

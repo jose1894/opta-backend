@@ -1,4 +1,21 @@
-const { Categoria, Usuario, Role, Pais, Producto, Estado, Ciudad, Aliado, Referido, Cliente } = require('../models')
+const { 
+    Categoria, 
+    Usuario, 
+    Role, 
+    Pais, 
+    Producto, 
+    Estado, 
+    Ciudad, 
+    Aliado, 
+    Referido, 
+    Cliente, 
+    Cargo,
+    Moneda,
+    Miembro,
+    Sucursal,
+    UnidadNegocio,
+    Gasto
+ } = require('../models')
 
 
 const esRolValido = async ( rol = '' ) => {
@@ -92,6 +109,48 @@ const existeClientePorId = async ( id ) => {
     }
 }
 
+const existeCargoPorId = async ( id ) => {
+    const existe = await Cargo.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeMonedaPorId = async ( id ) => {
+    const existe = await Moneda.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeMiembroPorId = async ( id ) => {
+    const existe = await Miembro.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeSucursalPorId = async ( id ) => {
+    const existe = await Sucursal.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeUnidadNegociolPorId = async ( id ) => {
+    const existe = await UnidadNegocio.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeGastoPorId = async ( id ) => {
+    const existe = await Gasto.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
 const existeProductoPorId = async ( id ) => {
     const existe = await Producto.findById( id )
     // console.log( existe )
@@ -127,5 +186,11 @@ module.exports = {
     coleccionesPermitidas,
     existeAliadoPorId,
     existeReferidoPorId,
-    existeClientePorId
+    existeClientePorId,
+    existeCargoPorId,
+    existeMonedaPorId,
+    existeMiembroPorId,
+    existeSucursalPorId,
+    existeUnidadNegociolPorId,
+    existeGastoPorId
 }

@@ -1,7 +1,7 @@
 const { response } = require("express");
-const Aliado  = require('../models/aliado')
+const Sucursal  = require('../models/sucursal')
 
-const aliadosGet = async ( req, res = response) => {
+const sucursalesGet = async ( req, res = response) => {
     try{
         const {
             q        = '', 
@@ -32,107 +32,94 @@ const aliadosGet = async ( req, res = response) => {
         }
          
         // Promise . all envia varias promesas simultaneas
-        const [ total, aliados ] = await Promise.all([
-            Aliado.countDocuments( query ),
-            Aliado.find(query)
-                    .populate('referido')
+        const [ total, sucursales ] = await Promise.all([
+            Sucursal.countDocuments( query ),
+            Sucursal.find(query)
                     .populate('state')
                     .populate('ciudad')
                     .populate('pais')
-                    .populate('cargo')
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
         ])
 
-        res.send({ total, aliados, perPage:parseInt(perPage), page: parseInt(page)})
+        res.send({ total, sucursales, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
         console.log( error )
 
         return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los aliados ${ error }`
+            msg: `Error del servidor al mostrar las sucursales ${ error }`
         })
     }
 
 }
 
 // obtenerEtado - populate {}
-const aliadoGet = async ( req, res = response ) => {
+const sucursalGet = async ( req, res = response ) => {
 
     try{
 
         const { id } = req.params
 
-        const ciudad = await Aliado.findById( id ).populate( 'usuario').populate('referido').populate('state').populate('ciudad').populate('pais').populate('cargo')
+        const sucursal = await Sucursal.findById( id ).populate( 'usuario').populate('state').populate('ciudad').populate('pais')
 
         return res.status(200).send(
-            ciudad
+            sucursal
         )
 
     } catch ( error ) {
         console.log( error )
 
         return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los aliados ${ error }`
+            msg: `Error del servidor al mostrar las sucursales ${ error }`
         })
     }
 }
 
 
-const aliadosPost = async ( req, res = response ) => {
+const sucursalPost = async ( req, res = response ) => {
 
 
     try {
-        const {codigo, nombre, iDFiscal, pais, state, ciudad, calle, 
-            paginaWeb, nombreContact, apellidoContact, cargo, telefonoOfic, 
-            telefonoCelu, correoContact} = req.body
+        const {codigo, nombre, siglas, pais, state, ciudad, estado} = req.body
 
-        const aliadodDB = await Aliado.findOne( { nombre } )
+        const sucursalDB = await Sucursal.findOne( { nombre } )
 
-        if ( aliadodDB ) {
+        if ( sucursalDB ) {
             return res.status( 400 ).json({
-                msg: `El aliado ${ aliadodDB.nombre } ya existe`
+                msg: `La sucursal ${ sucursalDB.nombre } ya existe`
             })
         }
         const data = {
             codigo, 
             nombre, 
-            iDFiscal, 
+            siglas,
             pais, 
             state, 
-            ciudad, 
-            calle, 
-            paginaWeb, 
-            nombreContact, 
-            apellidoContact, 
-            cargo, 
-            telefonoOfic, 
-            telefonoCelu, 
-            correoContact, 
-            referido:null,
+            ciudad,
             usuario: req.usuario._id
         }
 
-        const aliado = new Aliado( data )
+        const sucursal = new Sucursal( data )
 
         //Guardar en DB
-        await aliado.save()
+        await sucursal.save()
 
-        return res.status( 201 ).json(aliado)
+        return res.status( 201 ).json(sucursal)
 
     } catch ( error ) {
             console.log( error )
 
             return res.status( 500 ).json({
-                msg: `Error del servidor al guardar un aliado ${ error }`
+                msg: `Error del servidor al guardar una sucursal ${ error }`
             })
 
     }
 } 
 
 // actualizarPais 
-const aliadoPut = async ( req, res = response ) => {
+const sucursalPut = async ( req, res = response ) => {
 
     try{
 
@@ -141,64 +128,65 @@ const aliadoPut = async ( req, res = response ) => {
         const { status, usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
+        data.siglas = data.siglas.toUpperCase()
         data.usuario = req.usuario._id 
-        const aliado = await Aliado.findByIdAndUpdate( id, data, { new:true })
+        const sucursal = await Sucursal.findByIdAndUpdate( id, data, { new:true })
 
         return res.status(200).send(
-            aliado
+            sucursal
         )
 
     } catch ( error ) {
         console.log( error )
 
         return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los aliados ${ error }`
+            msg: `Error del servidor al mostrar las sucursales ${ error }`
         })
     }
 }
 
 // borrarPais - status : false
-const aliadoDelete = async ( req, res = response ) => {
+const sucursalDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const aliado = await Aliado.findByIdAndUpdate( id, { status: false}, { new: true})
+    const sucrsal = await Sucursal.findByIdAndUpdate( id, { status: false}, { new: true})
 
-    res.json( aliado )
+    res.json( sucursal )
 }
 
-const allAliadosGet = async ( req, res = response ) => {
+const allSucursalesGet = async ( req, res = response ) => {
 
     try{
         let options = { $or:[ {'estado':1}, {'estado':2}]}; 
         query = {...options}
         const { id } = req.params
-        const aliados = await Aliado.find(query)
+        const sucursales = await Sucursal.find(query)
         //const { cargos } = listCargos.data
-        res.send({ aliados })
+        res.send({ sucursales })
     } catch ( error ) {
         console.log( error )
         return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los aliados ${ query }`
+            msg: `Error del servidor al mostrar las sucusrsales ${ query }`
         })
     }
 }
 
 // restaurarPais - status : true
-const aliadoRestore = async ( req, res = response ) => {
+const sucursalRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const aliado = await Aliado.findOneAndUpdate( {id, status: false}, { status: true}, { new: true});
-    if(!aliado){
-        return res.json(`El aliado solicitado no se encuentra eliminado`)
+    const sucursal = await Sucursal.findOneAndUpdate( {id, status: false}, { status: true}, { new: true});
+    if(!sucursal){
+        return res.json(`La sucursal solicitada no se encuentra eliminada`)
     }
-    res.json( aliado )
+    res.json( sucursal )
 }
 
 module.exports = {
-    aliadosPost,
-    aliadosGet,
-    aliadoGet,
-    aliadoPut,
-    aliadoDelete,
-    aliadoRestore,
-    allAliadosGet
+    sucursalPost,
+    sucursalesGet,
+    sucursalGet,
+    sucursalPut,
+    sucursalDelete,
+    sucursalRestore,
+    allSucursalesGet
 }

@@ -56,8 +56,8 @@ const AliadoSchema = Schema({
         maxLength: [250,'La longitud máxima es de 250 caracteres']
     },
     cargo: {
-        type: String,
-        maxLength: [250, 'La Longitud máxima es de 250 caracteres']
+        type: Schema.Types.ObjectId,
+        ref: 'Cargo',
     },
     telefonoOfic: {
         type: String,

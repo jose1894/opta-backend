@@ -10,24 +10,24 @@ const {
 } = require( '../middlewares')
 
 const { 
-    aliadosPost, 
-    aliadosGet, 
-    aliadoGet, 
-    aliadoPut, 
-    aliadoDelete,
-    aliadoRestore,
-    allAliadosGet
-} = require('../controllers/aliado')
+    miembroPost, 
+    miembrosGet, 
+    miembroGet, 
+    miembroPut, 
+    miembroDelete,
+    miembroRestore,
+    allMiembrosGet
+} = require('../controllers/miembros')
 
-const { existeAliadoPorId, existeEmail } = require('../helpers/db-validators')
+const { existeMiembroPorId, existeEmail } = require('../helpers/db-validators')
 
 const router =  Router()
 
 
 //Obtener todos los paises - publico
-router.get( '/', aliadosGet) 
+router.get( '/', miembrosGet) 
 
-router.get( '/allAliados', allAliadosGet) 
+router.get( '/allMiembros', allMiembrosGet) 
 
 
 //Crear pais - privado - Cualquier persona con token
@@ -47,14 +47,14 @@ router.post( '/', [
     check( 'telefonoOfic', 'La longitud debe ser de 16 caracteres' ).isLength({ min: 1, max:250 }), 
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
     validarCampos,
-], aliadosPost)
+], miembroPost)
 
 // Obtener un pais - publico
 router.get( '/:id', [
     check('id', 'No es un ID valido').isMongoId(),
-    check('id').custom( existeAliadoPorId ),
+    check('id').custom( existeMiembroPorId ),
     validarCampos,
-],aliadoGet)
+],miembroGet)
 
 
 //Actualizar pais - privado - Cualquier persona con token
@@ -74,24 +74,24 @@ router.put( '/:id', [
     check( 'telefonoCelu', 'La longitud debe ser de 16 caracteres' ).isLength({ min: 1, max: 16 }), 
     check( 'telefonoOfic', 'La longitud debe ser de 16 caracteres' ).isLength({ min: 1, max:250 }), 
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
-    check( 'id' ).custom( existeAliadoPorId ),
+    check( 'id' ).custom( existeMiembroPorId ),
     validarCampos
-], aliadoPut)
+], miembroPut)
 
 //Borrar una pais - Admin
 router.delete( '/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
-    check( 'id' ).custom( existeAliadoPorId ),
+    check( 'id' ).custom( existeMiembroPorId ),
     validarCampos 
-], aliadoDelete)
+], miembroDelete)
 
 //Borrar una pais - Admin
 router.put( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
-    check( 'id' ).custom( existeAliadoPorId ),
+    check( 'id' ).custom( existeMiembroPorId ),
     validarCampos 
-], aliadoRestore)
+], miembroRestore)
 
 module.exports = router
