@@ -120,7 +120,7 @@ const paisPut = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const { status, usuario, ...data } = req.body
+        const { estado, usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
         data.usuario = req.usuario._id 
@@ -144,7 +144,7 @@ const paisPut = async ( req, res = response ) => {
 const paisDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const pais = await Pais.findByIdAndUpdate( id, { status: false}, { new: true})
+    const pais = await Pais.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( pais )
 }
@@ -153,7 +153,7 @@ const paisDelete = async ( req, res = response ) => {
 const paisRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const pais = await Pais.findOneAndUpdate( {id, status: false}, { status: true}, { new: true})
+    const pais = await Pais.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
 
     if(!pais){
         return res.json(`El país solicitado no se encuentra eliminado`)

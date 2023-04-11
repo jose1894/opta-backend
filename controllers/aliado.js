@@ -64,7 +64,13 @@ const aliadoGet = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const ciudad = await Aliado.findById( id ).populate( 'usuario').populate('referido').populate('state').populate('ciudad').populate('pais').populate('cargo')
+        const ciudad = await Aliado.findById( id )
+                                    .populate( 'usuario')
+                                    .populate('referido')
+                                    .populate('state')
+                                    .populate('ciudad')
+                                    .populate('pais')
+                                    .populate('cargo')
 
         return res.status(200).send(
             ciudad
@@ -109,8 +115,7 @@ const aliadosPost = async ( req, res = response ) => {
             cargo, 
             telefonoOfic, 
             telefonoCelu, 
-            correoContact, 
-            referido:null,
+            correoContact,
             usuario: req.usuario._id
         }
 

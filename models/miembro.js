@@ -4,7 +4,7 @@ const MiembroSchema = Schema({
     aliado: {
         type: Schema.Types.ObjectId,
         ref: 'Aliado',
-        required: true
+        default: null,
     },
     codigo: {
         type: String,

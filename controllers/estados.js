@@ -145,7 +145,7 @@ const estadoPut = async ( req, res = response ) => {
 const estadoDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const estado = await Estado.findByIdAndUpdate( id, { status: false}, { new: true})
+    const estado = await Estado.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( estado )
 }
@@ -174,7 +174,7 @@ const estadosByPaisGet = async ( req, res = response ) => {
 const estadoRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const estado = await Estado.findOneAndUpdate( {id, status: false}, { status: true}, { new: true})
+    const estado = await Estado.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
 
     if(!estado){
         return res.json(`El estado solicitado no se encuentra eliminado`)
