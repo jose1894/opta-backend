@@ -149,7 +149,7 @@ const sucursalPut = async ( req, res = response ) => {
 const sucursalDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const sucrsal = await Sucursal.findByIdAndUpdate( id, { status: false}, { new: true})
+    const sucursal = await Sucursal.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( sucursal )
 }
@@ -174,7 +174,7 @@ const allSucursalesGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const sucursalRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const sucursal = await Sucursal.findOneAndUpdate( {id, status: false}, { status: true}, { new: true});
+    const sucursal = await Sucursal.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
     if(!sucursal){
         return res.json(`La sucursal solicitada no se encuentra eliminada`)
     }

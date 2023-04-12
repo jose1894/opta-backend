@@ -182,7 +182,7 @@ const miembroPut = async ( req, res = response ) => {
 const miembroDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const miembro = await Miembro.findByIdAndUpdate( id, { status: false}, { new: true})
+    const miembro = await Miembro.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( miembro )
 }
@@ -207,7 +207,7 @@ const allMiembrosGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const miembroRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const miembro = await Miembro.findOneAndUpdate( {id, status: false}, { status: true}, { new: true});
+    const miembro = await Miembro.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
     if(!miembro){
         return res.json(`El miembro solicitado no se encuentra eliminado`)
     }

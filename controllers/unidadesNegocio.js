@@ -144,7 +144,7 @@ const unidadNegocioPut = async ( req, res = response ) => {
 const unidadNegocioDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const unidadNegocio = await UnidadNegocio.findByIdAndUpdate( id, { status: false}, { new: true})
+    const unidadNegocio = await UnidadNegocio.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( unidadNegocio )
 }
@@ -168,7 +168,7 @@ const allUnidadesNegocioGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const unidadNegocioRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const unidadNegocio = await UnidadNegocio.findOneAndUpdate( {id, status: false}, { status: true}, { new: true});
+    const unidadNegocio = await UnidadNegocio.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
     if(!unidadNegocio){
         return res.json(`La unidad de negocio solicitada no se encuentra eliminada`)
     }

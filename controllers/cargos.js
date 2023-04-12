@@ -161,7 +161,7 @@ const cargoPut = async ( req, res = response ) => {
 const cargoDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const cargo = await Cargo.findByIdAndUpdate( id, { status: false}, { new: true})
+    const cargo = await Cargo.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( cargo )
 }
@@ -170,7 +170,7 @@ const cargoDelete = async ( req, res = response ) => {
 const cargoRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const cargo = await Cargo.findOneAndUpdate( {id, status: false}, { status: true}, { new: true})
+    const cargo = await Cargo.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
 
     if(!cargo){
         return res.json(`El cargo solicitado no se encuentra eliminado`)

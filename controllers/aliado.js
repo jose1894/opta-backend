@@ -166,7 +166,7 @@ const aliadoPut = async ( req, res = response ) => {
 const aliadoDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const aliado = await Aliado.findByIdAndUpdate( id, { status: false}, { new: true})
+    const aliado = await Aliado.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( aliado )
 }
@@ -191,7 +191,7 @@ const allAliadosGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const aliadoRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const aliado = await Aliado.findOneAndUpdate( {id, status: false}, { status: true}, { new: true});
+    const aliado = await Aliado.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
     if(!aliado){
         return res.json(`El aliado solicitado no se encuentra eliminado`)
     }

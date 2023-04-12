@@ -140,7 +140,7 @@ const gastoPut = async ( req, res = response ) => {
 const gastoDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const gasto = await Gasto.findByIdAndUpdate( id, { status: false}, { new: true})
+    const gasto = await Gasto.findByIdAndUpdate( id, { estado: false}, { new: true})
 
     res.json( gasto )
 }
@@ -164,7 +164,7 @@ const allGastosGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const gastoRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const gasto = await Gasto.findOneAndUpdate( {id, status: false}, { status: true}, { new: true});
+    const gasto = await Gasto.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
     if(!gasto){
         return res.json(`el gasto solicitado no se encuentra eliminado`)
     }
