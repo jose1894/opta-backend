@@ -71,7 +71,7 @@ const AliadoSchema = Schema({
         type: String,
         maxLength: [250, 'La Longitud máxima es de 250 caracteres']
     },
-    referido: [
+    referidos: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Miembro',

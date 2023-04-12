@@ -35,7 +35,6 @@ const aliadosGet = async ( req, res = response) => {
         const [ total, aliados ] = await Promise.all([
             Aliado.countDocuments( query ),
             Aliado.find(query)
-                    .populate('referido')
                     .populate('state')
                     .populate('ciudad')
                     .populate('pais')
@@ -66,7 +65,7 @@ const aliadoGet = async ( req, res = response ) => {
 
         const ciudad = await Aliado.findById( id )
                                     .populate( 'usuario')
-                                    .populate('referido')
+                                    .populate('referidos')
                                     .populate('state')
                                     .populate('ciudad')
                                     .populate('pais')
