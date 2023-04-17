@@ -5,6 +5,7 @@ const MonedaSchema = Schema({
         type: String,
         required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
         uppercase: true,
+        unique: true,
         trim: true,
         maxLength: [3,'La longitud máxima es de 2 caracteres']
     },

@@ -12,7 +12,61 @@ const miembrosGet = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':2}]};        
+        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }
+         
+        // Promise . all envia varias promesas simultaneas
+        const [ total, miembros ] = await Promise.all([
+            Miembro.countDocuments( query ),
+            Miembro.find(query)
+                    .populate('aliado')
+                    .populate('cargo')
+                    .populate('moneda')
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
+        ])
+
+        res.send({ total, miembros, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los miembros ${ error }`
+        })
+    }
+
+}
+
+const miembrosGetDelete = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true 
+        } = req.query;
+
+        let options = { $or:[ {'estado':2}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -71,7 +125,8 @@ const miembroGet = async ( req, res = response ) => {
                                    .populate('pais')
                                    .populate('cargo')
                                    .populate('moneda')
-        miembro.vigencia = moment.utc(miembro.vigencia).format('DD-MM-YYYY');
+        let dateVigencia = miembro.vigencia
+        miembro.vigencia = dateVigencia.format('DD-MM-YYYY');
         console.log(miembro.vigencia)
 
         return res.status(200).send(
@@ -97,11 +152,14 @@ const miembroPost = async ( req, res = response ) => {
             telefonoCelu, correoContact, codigoActivacion, licencias, vigencia, moneda, periodoRevision,
             creacion, declaracionHoras, modificacionHoras, requiereAprobacion, estado} = req.body
 
-        const miembrodDB = await Miembro.findOne( { nombre } )
+        const miembrodDB = await Miembro.findOne( { $or : [ { nombre}, { codigo}, { iDFiscal} ] } )
 
         if ( miembrodDB ) {
             return res.status( 400 ).json({
-                msg: `El miembro ${ miembrodDB.nombre } ya existe`
+                msg: (miembrodDB.nombre === nombre.toUpperCase()) ? `La membresia  ${miembrodDB.nombre} ya existe` :
+                     (miembrodDB.iDFiscal === iDFiscal) ? `El id fiscal ${miembrodDB.iDFiscal} ya existe` : 
+                     `El codigo ${miembrodDB.codigo} ya existe`,
+                data: miembrodDB 
             })
         }
         const data = {
@@ -124,7 +182,7 @@ const miembroPost = async ( req, res = response ) => {
             correoContact,
             codigoActivacion, 
             licencias, 
-            vigencia:  moment.utc(vigencia).format('DD-MM-YYYY'), 
+            vigencia:  moment(vigencia, 'YYYY-MM-DD'), //moment.utc(vigencia).format('DD-MM-YYYY'), 
             moneda, 
             periodoRevision,
             creacion, 
@@ -134,9 +192,7 @@ const miembroPost = async ( req, res = response ) => {
             estado,
             usuario: req.usuario._id
         }
-
         console.log( data )
-
         const miembro = new Miembro( data )
 
         //Guardar en DB
@@ -185,7 +241,7 @@ const miembroPut = async ( req, res = response ) => {
 const miembroDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const miembro = await Miembro.findByIdAndUpdate( id, { estado: false}, { new: true})
+    const miembro = await Miembro.findByIdAndUpdate( id, { estado: 2}, { new: true})
 
     res.json( miembro )
 }
@@ -193,7 +249,7 @@ const miembroDelete = async ( req, res = response ) => {
 const allMiembrosGet = async ( req, res = response ) => {
 
     try{
-        let options = { $or:[ {'estado':1}, {'estado':2}]}; 
+    let options = { $or:[ {'estado':1}/*, {'estado':2}*/]}; 
         query = {...options}
         const { id } = req.params
         const miembros = await Miembro.find(query)
@@ -224,5 +280,6 @@ module.exports = {
     miembroPut,
     miembroDelete,
     miembroRestore,
-    allMiembrosGet
+    allMiembrosGet,
+    miembrosGetDelete
 }

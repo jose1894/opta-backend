@@ -11,7 +11,7 @@ const estadosGet = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':2}]};        
+        let options = { $or:[ {'estado':1}, {'estado':0}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -82,18 +82,21 @@ const estadosPost = async ( req, res = response ) => {
     try {
         const {nombre,codigo, pais} = req.body
 
-        const estadoDB = await Estado.findOne( { nombre } )
+        const estadoDB = await Estado.findOne( { $or : [ { nombre}, { codigo} ] } )
 
         if ( estadoDB ) {
             return res.status( 400 ).json({
-                msg: `El estado ${ estadoDB.nombre } ya existe`
+                msg: (estadoDB.nombre === nombre.toUpperCase()) ? `El estado ${ estadoDB.nombre } ya existe` : 
+                                       `El codigo ${ estadoDB.codigo } ya existe`,
+                data: estadoDB
             })
         }
         const data = {
             nombre,
-            codigo,
-            usuario: req.usuario._id,
+            codigo,            
             pais,
+            estado: req.body.estado,
+            usuario: req.usuario._id,
         }
 
         const estado = new Estado( data )
@@ -145,16 +148,68 @@ const estadoPut = async ( req, res = response ) => {
 const estadoDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const estado = await Estado.findByIdAndUpdate( id, { estado: false}, { new: true})
+    const estado = await Estado.findByIdAndUpdate( id, { estado: 2}, { new: true})
 
     res.json( estado )
 }
+
+const estdosGetDeleteOrInactive = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true,
+            estado = 2,
+        } = req.query;
+
+        let options = { $or:[ {'estado': estado}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }         
+        // Promise . all envia varias promesas simultaneas
+        const [ total, estados ] = await Promise.all([
+            Estado.countDocuments( query ),
+            Estado.find(query)
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
+        ])
+        
+        res.send({ total, estados, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los estados ${ error }`
+        })
+    }
+
+}
+
 
 // obtenerEtado - populate {}
 const estadosByPaisGet = async ( req, res = response ) => {
 
     try{
-        let options = { $or:[ {'estado':1}, {'estado':2}]}; 
+        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
         query = {...options}
         const { id } = req.params
         debugger
@@ -190,5 +245,6 @@ module.exports = {
     estadoPut,
     estadoDelete,
     estadosByPaisGet,
-    estadoRestore
+    estadoRestore,
+    estdosGetDeleteOrInactive
 }

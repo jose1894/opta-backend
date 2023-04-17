@@ -16,7 +16,8 @@ const {
     unidadNegocioPut, 
     unidadNegocioDelete,
     unidadNegocioRestore,
-    allUnidadesNegocioGet
+    allUnidadesNegocioGet,
+    unidadesNegocioGetDelete
 } = require('../controllers/unidadesNegocio')
 
 const { existeUnidadNegociolPorId, existeEmail } = require('../helpers/db-validators')
@@ -26,6 +27,7 @@ const router =  Router()
 
 //Obtener todos los paises - publico
 router.get( '/', unidadesNegocioGet) 
+router.get( '/unidadesNegocioDelete', unidadesNegocioGetDelete)
 
 router.get( '/allUnidadesNegocio', allUnidadesNegocioGet) 
 

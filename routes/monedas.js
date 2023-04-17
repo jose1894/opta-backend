@@ -16,16 +16,19 @@ const {
     monedaPut, 
     monedaDelete,
     monedaRestore,
-    allMonedasGet
+    allMonedasGet,
+    monedasGetDelete
 } = require('../controllers/moneda')
 
-const { existeMonedaPorId, existeEmail } = require('../helpers/db-validators')
+const { existeMonedaPorId, existeMonedaPorCode } = require('../helpers/db-validators')
 
 const router =  Router()
 
 
 //Obtener todos los paises - publico
 router.get( '/', monedasGet) 
+
+router.get( '/monedasDelete', monedasGetDelete)
 
 router.get( '/allMonedas', allMonedasGet)
 

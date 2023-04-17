@@ -16,7 +16,8 @@ const {
     aliadoPut, 
     aliadoDelete,
     aliadoRestore,
-    allAliadosGet
+    allAliadosGet,
+    aliadosGetDelete
 } = require('../controllers/aliado')
 
 const { existeAliadoPorId, existeEmail } = require('../helpers/db-validators')
@@ -28,6 +29,7 @@ const router =  Router()
 router.get( '/', aliadosGet) 
 
 router.get( '/allAliados', allAliadosGet) 
+router.get( '/aliadosDelete', aliadosGetDelete) 
 
 
 //Crear pais - privado - Cualquier persona con token

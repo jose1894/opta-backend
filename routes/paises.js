@@ -15,7 +15,8 @@ const {
     paisGet, 
     paisPut, 
     paisDelete,
-    paisRestore
+    paisRestore,
+    paisesGetDeleteOrInactive
 } = require('../controllers/paises')
 
 const { existePaisPorId, existeEmail } = require('../helpers/db-validators')
@@ -26,6 +27,7 @@ const router =  Router()
 
 //Obtener todos los paises - publico
 router.get( '/', paisesGet) 
+router.get( '/paisesDelete', paisesGetDeleteOrInactive)
 
 //Crear pais - privado - Cualquier persona con token
 router.post( '/', [

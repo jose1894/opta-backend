@@ -123,6 +123,14 @@ const existeMonedaPorId = async ( id ) => {
     }
 }
 
+const existeMonedaPorCode = async ( codigo ) => {  
+    const existe = await Moneda.findOne( { codigo } )
+    console.log(code, existe )
+    if ( existe ) {
+        throw new Error( `El codigo ${ code } ya esta registrado`)
+    }
+}
+
 const existeMiembroPorId = async ( id ) => {
     const existe = await Miembro.findById( id )
     if ( !existe ) {
@@ -189,6 +197,7 @@ module.exports = {
     existeClientePorId,
     existeCargoPorId,
     existeMonedaPorId,
+    existeMonedaPorCode,
     existeMiembroPorId,
     existeSucursalPorId,
     existeUnidadNegociolPorId,

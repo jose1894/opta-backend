@@ -11,7 +11,58 @@ const gastosGet = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':2}]};        
+        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }
+         
+        // Promise . all envia varias promesas simultaneas
+        const [ total, gastos ] = await Promise.all([
+            Gasto.countDocuments( query ),
+            Gasto.find(query)
+                .skip( skip )
+                .sort(sort) 
+                .limit( perPage )
+        ])
+
+        res.send({ total, gastos, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los gastos ${ error }`
+        })
+    }
+
+}
+
+const gastosGetDelete = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true 
+        } = req.query;
+
+        let options = { $or:[{'estado':2}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -140,7 +191,7 @@ const gastoPut = async ( req, res = response ) => {
 const gastoDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const gasto = await Gasto.findByIdAndUpdate( id, { estado: false}, { new: true})
+    const gasto = await Gasto.findByIdAndUpdate( id, { estado: 2}, { new: true})
 
     res.json( gasto )
 }
@@ -178,5 +229,6 @@ module.exports = {
     gastoPut,
     gastoDelete,
     gastoRestore,
-    allGastosGet
+    allGastosGet,
+    gastosGetDelete
 }

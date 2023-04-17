@@ -13,7 +13,7 @@ const paisesGet = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':2}]};        
+        let options = { $or:[ {'estado':1}, {'estado':0}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -31,8 +31,7 @@ const paisesGet = async ( req, res = response) => {
             }
         } else {
             query = {...options}
-        }
-         
+        }         
         // Promise . all envia varias promesas simultaneas
         const [ total, paises ] = await Promise.all([
             Pais.countDocuments( query ),
@@ -53,6 +52,59 @@ const paisesGet = async ( req, res = response) => {
     }
 
 }
+
+const paisesGetDeleteOrInactive = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'codigo', 
+            sortDesc = true,
+            estado   = 2, 
+        } = req.query;
+
+        let options = { $or:[ {'estado': estado}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }         
+        // Promise . all envia varias promesas simultaneas
+        const [ total, paises ] = await Promise.all([
+            Pais.countDocuments( query ),
+            Pais.find(query)
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
+        ])
+        
+        res.send({ total, paises, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los paises ${ error }`
+        })
+    }
+
+}
+
+const functionFiltrar  = ( q ) => q
 
 // obtenerPais - populate {}
 const paisGet = async ( req, res = response ) => {
@@ -82,17 +134,20 @@ const paisesPost = async ( req, res = response ) => {
     try {
         const {nombre,codigo} = req.body
 
-        const paisDB = await Pais.findOne( { nombre } )
+        const paisDB = await Pais.findOne( { $or : [ { nombre}, { codigo} ] } )
 
         if ( paisDB ) {
             return res.status( 400 ).json({
-                msg: `El país ${ paisDB.nombre } ya existe`
+                msg: (paisDB.nombre === nombre.toUpperCase()) ? `El pais ${ paisDB.nombre } ya existe` : 
+                                       `El codigo ${ paisDB.codigo } ya existe`,
+                data: paisDB
             })
         }
 
         const data = {
             nombre,
             codigo,
+            estado,
             usuario: req.usuario._id
         }
 
@@ -120,7 +175,7 @@ const paisPut = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const { estado, usuario, ...data } = req.body
+        const { usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
         data.usuario = req.usuario._id 
@@ -144,7 +199,7 @@ const paisPut = async ( req, res = response ) => {
 const paisDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const pais = await Pais.findByIdAndUpdate( id, { estado: false}, { new: true})
+    const pais = await Pais.findByIdAndUpdate( id, { estado: 2}, { new: true})
 
     res.json( pais )
 }
@@ -164,9 +219,10 @@ const paisRestore = async ( req, res = response ) => {
 
 module.exports = {
     paisesPost,
-    paisesGet,
+    paisesGet,    
     paisGet,
     paisPut,
     paisDelete,
-    paisRestore
+    paisRestore,
+    paisesGetDeleteOrInactive
 }

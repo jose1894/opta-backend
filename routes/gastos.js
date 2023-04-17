@@ -16,7 +16,8 @@ const {
     gastoPut, 
     gastoDelete,
     gastoRestore,
-    allGastosGet
+    allGastosGet,
+    gastosGetDelete
 } = require('../controllers/gastos')
 
 const { existeGastoPorId, existeEmail } = require('../helpers/db-validators')
@@ -26,6 +27,8 @@ const router =  Router()
 
 //Obtener todos los paises - publico
 router.get( '/', gastosGet) 
+
+router.get( '/gastosDelete', gastosGetDelete)
 
 router.get( '/allGastos', allGastosGet) 
 

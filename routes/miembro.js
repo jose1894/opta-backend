@@ -16,7 +16,8 @@ const {
     miembroPut, 
     miembroDelete,
     miembroRestore,
-    allMiembrosGet
+    allMiembrosGet,
+    miembrosGetDelete
 } = require('../controllers/miembros')
 
 const { existeMiembroPorId, existeEmail } = require('../helpers/db-validators')
@@ -28,6 +29,7 @@ const router =  Router()
 router.get( '/', miembrosGet) 
 
 router.get( '/allMiembros', allMiembrosGet) 
+router.get( '/membresiasDelete',miembrosGetDelete) 
 
 
 //Crear pais - privado - Cualquier persona con token

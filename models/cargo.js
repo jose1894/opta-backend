@@ -6,6 +6,7 @@ const CargoSchema = Schema({
         required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
         uppercase: true,
         trim: true,
+        unique: true,
         maxLength: [3,'La longitud máxima es de 2 caracteres']
     },
     nombre: {

@@ -14,7 +14,8 @@ const {
     ciudadPut, 
     ciudadDelete,
     ciudadRestore,
-    ciudadesByEstadosGet
+    ciudadesByEstadosGet,
+    ciudadGetDelete
 } = require('../controllers/ciudad')
 
 const { existeCiudadPorId, existeEmail } = require('../helpers/db-validators')
@@ -25,6 +26,7 @@ const router =  Router()
 
 //Obtener todos los estados - publico
 router.get( '/', ciudadesGet) 
+router.get( '/ciudadesDelete', ciudadGetDelete) 
 
 //Crear estado - privado - Cualquier persona con token
 router.post( '/', [

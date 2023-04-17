@@ -16,7 +16,8 @@ const {
     sucursalPut, 
     sucursalDelete,
     sucursalRestore,
-    allSucursalesGet
+    allSucursalesGet,
+    sucursalesGetDelete
 } = require('../controllers/sucursales')
 
 const { existeSucursalPorId, existeEmail } = require('../helpers/db-validators')
@@ -26,6 +27,8 @@ const router =  Router()
 
 //Obtener todos los paises - publico
 router.get( '/', sucursalesGet) 
+
+router.get( '/sucursalesDelete', sucursalesGetDelete)
 
 router.get( '/allSucursales', allSucursalesGet) 
 

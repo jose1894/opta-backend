@@ -11,7 +11,61 @@ const sucursalesGet = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':2}]};        
+        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }
+         
+        // Promise . all envia varias promesas simultaneas
+        const [ total, sucursales ] = await Promise.all([
+            Sucursal.countDocuments( query ),
+            Sucursal.find(query)
+                    .populate('state')
+                    .populate('ciudad')
+                    .populate('pais')
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
+        ])
+
+        res.send({ total, sucursales, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar las sucursales ${ error }`
+        })
+    }
+
+}
+
+const sucursalesGetDelete = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true 
+        } = req.query;
+
+        let options = { $or:[ {'estado':2 }]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -82,23 +136,26 @@ const sucursalPost = async ( req, res = response ) => {
 
 
     try {
-        const {codigo, nombre, siglas, pais, state, ciudad, estado} = req.body
+        const {nombre,codigo, pais, ciudad, estado, siglas, state } = req.body
 
-        const sucursalDB = await Sucursal.findOne( { nombre } )
+        const sucursalDB = await Sucursal.findOne( { $or : [ { nombre}, { codigo} ] } )
 
         if ( sucursalDB ) {
             return res.status( 400 ).json({
-                msg: `La sucursal ${ sucursalDB.nombre } ya existe`
+                msg: (sucursalDB.nombre === nombre.toUpperCase()) ? `La sucursal ${ sucursalDB.nombre } ya existe` : 
+                                       `El codigo ${ sucursalDB.codigo } ya existe`,
+                data: sucursalDB
             })
         }
         const data = {
-            codigo, 
-            nombre, 
-            siglas,
-            pais, 
-            state, 
+            nombre,
+            codigo,            
+            pais,
             ciudad,
-            usuario: req.usuario._id
+            estado,
+            siglas,
+            state,
+            usuario: req.usuario._id,
         }
 
         const sucursal = new Sucursal( data )
@@ -112,7 +169,7 @@ const sucursalPost = async ( req, res = response ) => {
             console.log( error )
 
             return res.status( 500 ).json({
-                msg: `Error del servidor al guardar una sucursal ${ error }`
+                msg: `Error del servidor al guardar la sucursal ${ error }`
             })
 
     }
@@ -125,7 +182,7 @@ const sucursalPut = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const { status, usuario, ...data } = req.body
+        const { usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
         data.siglas = data.siglas.toUpperCase()
@@ -149,7 +206,7 @@ const sucursalPut = async ( req, res = response ) => {
 const sucursalDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const sucursal = await Sucursal.findByIdAndUpdate( id, { estado: false}, { new: true})
+    const sucursal = await Sucursal.findByIdAndUpdate( id, { estado: 2}, { new: true})
 
     res.json( sucursal )
 }
@@ -157,14 +214,13 @@ const sucursalDelete = async ( req, res = response ) => {
 const allSucursalesGet = async ( req, res = response ) => {
 
     try{
-        let options = { $or:[ {'estado':1}, {'estado':2}]}; 
+        let options = { $or:[ {'estado':1}/*, {'estado':2}*/]}; 
         query = {...options}
         const { id } = req.params
         const sucursales = await Sucursal.find(query)
         //const { cargos } = listCargos.data
         res.send({ sucursales })
     } catch ( error ) {
-        console.log( error )
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las sucusrsales ${ query }`
         })
@@ -188,5 +244,6 @@ module.exports = {
     sucursalPut,
     sucursalDelete,
     sucursalRestore,
-    allSucursalesGet
+    allSucursalesGet,
+    sucursalesGetDelete
 }

@@ -11,7 +11,7 @@ const unidadesNegocioGet = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':2}]};        
+        let options = { $or:[ {'estado':1}, {'estado':0}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -52,6 +52,59 @@ const unidadesNegocioGet = async ( req, res = response) => {
 
 }
 
+const unidadesNegocioGetDelete = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true 
+        } = req.query;
+
+        let options = { $or:[{'estado':2}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }
+         
+        // Promise . all envia varias promesas simultaneas
+        const [ total, unidadesNegocio ] = await Promise.all([
+            UnidadNegocio.countDocuments( query ),
+            UnidadNegocio.find(query)
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
+        ])
+
+        res.send({ total, unidadesNegocio, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar las unidades de negocios ${ error }`
+        })
+    }
+
+}
+
+
+
 // obtenerEtado - populate {}
 const unidadNegocioGet = async ( req, res = response ) => {
 
@@ -81,11 +134,13 @@ const unidadNegocioPost = async ( req, res = response ) => {
     try {
         const {codigo, nombre, siglas,estado} = req.body
 
-        const unidadNegocioDB = await UnidadNegocio.findOne( { nombre } )
+        const unidadNegocioDB = await UnidadNegocio.findOne( { $or : [ {nombre}, {codigo} ] } )
 
         if ( unidadNegocioDB ) {
             return res.status( 400 ).json({
-                msg: `La unida de negocio ${ unidadNegocioDB.nombre } ya existe`
+                msg: (unidadNegocioDB.nombre === nombre.toUpperCase()) ? `La unidad de negocio ${ unidadNegocioDB.nombre } ya existe` : 
+                `El codigo ${ unidadNegocioDB.codigo } ya existe`,
+                data: unidadNegocioDB
             })
         }
         const data = {
@@ -120,7 +175,7 @@ const unidadNegocioPut = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const { status, usuario, ...data } = req.body
+        const { usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
         data.siglas = data.siglas.toUpperCase()
@@ -144,7 +199,7 @@ const unidadNegocioPut = async ( req, res = response ) => {
 const unidadNegocioDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const unidadNegocio = await UnidadNegocio.findByIdAndUpdate( id, { estado: false}, { new: true})
+    const unidadNegocio = await UnidadNegocio.findByIdAndUpdate( id, { estado: 2}, { new: true})
 
     res.json( unidadNegocio )
 }
@@ -152,7 +207,7 @@ const unidadNegocioDelete = async ( req, res = response ) => {
 const allUnidadesNegocioGet = async ( req, res = response ) => {
 
     try{
-        let options = { $or:[ {'estado':1}, {'estado':2}]}; 
+        let options = { $or:[ {'estado':1}/*, {'estado':2}*/]}; 
         query = {...options}
         const unidadesNegocio = await UnidadNegocio.find(query)
         //const { cargos } = listCargos.data
@@ -168,7 +223,7 @@ const allUnidadesNegocioGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const unidadNegocioRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const unidadNegocio = await UnidadNegocio.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
+    const unidadNegocio = await UnidadNegocio.findOneAndUpdate( {id, estado: 1}, { estado: true}, { new: true});
     if(!unidadNegocio){
         return res.json(`La unidad de negocio solicitada no se encuentra eliminada`)
     }
@@ -182,5 +237,6 @@ module.exports = {
     unidadNegocioPut,
     unidadNegocioDelete,
     unidadNegocioRestore,
-    allUnidadesNegocioGet
+    allUnidadesNegocioGet,
+    unidadesNegocioGetDelete
 }

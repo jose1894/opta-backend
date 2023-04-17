@@ -16,7 +16,8 @@ const {
     cargoPut, 
     cargoDelete,
     cargoRestore,
-    allCargosGet
+    allCargosGet,
+    cargosGetDeleted
 } = require('../controllers/cargos')
 
 const { existeCargoPorId, existeEmail } = require('../helpers/db-validators')
@@ -29,6 +30,8 @@ const router =  Router()
 router.get( '/', cargosGet) 
 
 router.get( '/allCargos', allCargosGet)
+
+router.get( '/cargosDeleted', cargosGetDeleted) 
 
 //Crear pais - privado - Cualquier persona con token
 router.post( '/', [
