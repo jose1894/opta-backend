@@ -17,6 +17,9 @@ const Moneda = require('./moneda')
 const Sucursal = require('./sucursal')
 const UnidadNegocio = require('./unidadNegocio')
 const Gasto = require('./gasto')
+const AccionPerfil = require('./accionPerfil')
+const Menu = require('./menu')
+
 
 module.exports = {
     Categoria,
@@ -35,6 +38,8 @@ module.exports = {
     Moneda,
     Sucursal,
     UnidadNegocio,
-    Gasto
+    Gasto,
+    AccionPerfil,
+    Menu
 }
 

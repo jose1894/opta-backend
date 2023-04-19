@@ -26,6 +26,8 @@ class Server {
             sucursales:       '/api/sucursales',
             unidadesNegocios: '/api/unidadesNegocios',
             gastos:           '/api/gastos',
+            accionesPerfiles: '/api/accionesPerfiles',
+            menu:             '/api/menu',
             uploads:          '/api/uploads',
         }
 
@@ -82,6 +84,8 @@ class Server {
         this.app.use( this.paths.miembros, require('../routes/miembro'));
         this.app.use( this.paths.unidadesNegocios, require('../routes/unidadesNegocio'));
         this.app.use( this.paths.gastos, require('../routes/gastos'));
+        this.app.use( this.paths.accionesPerfiles, require('../routes/accionesPerfiles'));
+        this.app.use( this.paths.menu, require('../routes/menu'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 

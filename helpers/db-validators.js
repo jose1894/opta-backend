@@ -14,7 +14,9 @@ const {
     Miembro,
     Sucursal,
     UnidadNegocio,
-    Gasto
+    Gasto,
+    AccionPerfil,
+    Menu
  } = require('../models')
 
 
@@ -168,6 +170,20 @@ const existeProductoPorId = async ( id ) => {
     }
 }
 
+const existeAccionPerfilPorId = async ( id ) => {
+    const existe = await AccionPerfil.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeMenuPorId = async ( id ) => {
+    const existe = await Menu.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
 /**
  * Validar colecciones permitidas
  */
@@ -201,5 +217,7 @@ module.exports = {
     existeMiembroPorId,
     existeSucursalPorId,
     existeUnidadNegociolPorId,
-    existeGastoPorId
+    existeGastoPorId,
+    existeAccionPerfilPorId,
+    existeMenuPorId
 }
