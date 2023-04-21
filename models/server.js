@@ -28,6 +28,7 @@ class Server {
             gastos:           '/api/gastos',
             accionesPerfiles: '/api/accionesPerfiles',
             menu:             '/api/menu',
+            perfiles:         '/api/perfiles',
             uploads:          '/api/uploads',
         }
 
@@ -86,6 +87,7 @@ class Server {
         this.app.use( this.paths.gastos, require('../routes/gastos'));
         this.app.use( this.paths.accionesPerfiles, require('../routes/accionesPerfiles'));
         this.app.use( this.paths.menu, require('../routes/menu'));
+        this.app.use( this.paths.perfiles, require('../routes/perfiles'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 

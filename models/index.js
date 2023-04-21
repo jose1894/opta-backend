@@ -19,6 +19,7 @@ const UnidadNegocio = require('./unidadNegocio')
 const Gasto = require('./gasto')
 const AccionPerfil = require('./accionPerfil')
 const Menu = require('./menu')
+const Perfil = require('./perfil')
 
 
 module.exports = {
@@ -40,6 +41,7 @@ module.exports = {
     UnidadNegocio,
     Gasto,
     AccionPerfil,
-    Menu
+    Menu,
+    Perfil
 }
 
