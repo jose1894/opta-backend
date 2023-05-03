@@ -29,6 +29,10 @@ class Server {
             accionesPerfiles: '/api/accionesPerfiles',
             menu:             '/api/menu',
             perfiles:         '/api/perfiles',
+            tasas:            '/api/tasas',
+            idiomas:          '/api/idiomas',
+            profesiones:      '/api/profesiones',
+            personal:         '/api/personal',
             uploads:          '/api/uploads',
         }
 
@@ -88,6 +92,10 @@ class Server {
         this.app.use( this.paths.accionesPerfiles, require('../routes/accionesPerfiles'));
         this.app.use( this.paths.menu, require('../routes/menu'));
         this.app.use( this.paths.perfiles, require('../routes/perfiles'));
+        this.app.use( this.paths.tasas, require('../routes/tasas'));
+        this.app.use( this.paths.profesiones, require('../routes/profesiones'));
+        this.app.use( this.paths.idiomas, require('../routes/idiomas'));
+        this.app.use( this.paths.personal, require('../routes/personal'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 

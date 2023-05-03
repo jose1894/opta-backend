@@ -20,6 +20,10 @@ const Gasto = require('./gasto')
 const AccionPerfil = require('./accionPerfil')
 const Menu = require('./menu')
 const Perfil = require('./perfil')
+const Tasa = require('./tasa')
+const Idioma = require('./idioma')
+const Profesion = require('./profesion')
+const Personal = require('./personal')
 
 
 module.exports = {
@@ -42,6 +46,10 @@ module.exports = {
     Gasto,
     AccionPerfil,
     Menu,
-    Perfil
+    Perfil,
+    Tasa,
+    Idioma,
+    Profesion,
+    Personal
 }
 

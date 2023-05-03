@@ -1,21 +1,18 @@
 const { Schema, model } = require('mongoose')
 
-const CategoriaSchema = Schema({
+const TasaSchema = Schema({
     codigo: {
         type: String,
         required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
         uppercase: true,
         trim: true,
         unique: true,
-        maxLength: [3,'La longitud máxima es de 2 caracteres']
+        maxLength: [3,'La longitud máxima es de 3 caracteres']
     },
-    nombre: {
-        type: String,
-        required: [ true, 'El nombre es obligatorio'],
-        uppercase: true,
-        trim: true,
-        //unique: true
-    },
+    fecha: {
+        type: Date,
+        required: true
+    }, 
     siglas: {
         type: String,
         required:[true, 'Las siglas son obligatorias'],
@@ -28,6 +25,17 @@ const CategoriaSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'UnidadNegocio',
         required: true,
+    },
+    categoria: {
+        type: Schema.Types.ObjectId,
+        ref: 'Categoria',
+        required: true,
+    },
+    anterior: {
+        type: String,
+    },
+    actual: {
+        type: String,
     },
     estado : {
         type: Number,
@@ -42,9 +50,9 @@ const CategoriaSchema = Schema({
     }
 })
 
-CategoriaSchema.methods.toJSON = function() {
+TasaSchema.methods.toJSON = function() {
     const {__v, ...data } = this.toObject()
     return data
 }
 
-module.exports = model( 'Categoria', CategoriaSchema)
+module.exports = model( 'Tasa', TasaSchema)

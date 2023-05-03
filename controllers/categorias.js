@@ -1,27 +1,48 @@
 const { response } = require("express");
 const Categoria  = require('../models/categoria')
 
-// obtenerCategorias - paginado - total - populate
+// obtenerPaiss - paginado - total - populate
 
 const categoriasGet = async ( req, res = response) => {
-
     try{
-        const { limite = 5, desde = 0 } = req.query
-        const query = { estado: true}
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true 
+        } = req.query;
 
+        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }
+         
         // Promise . all envia varias promesas simultaneas
         const [ total, categorias ] = await Promise.all([
             Categoria.countDocuments( query ),
-            Categoria.find( query )
-                    .populate( 'usuario' )
-                    .skip( +desde )
-                    .limit( +limite )
+            Categoria.find(query)
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
         ])
 
-        res.send({
-            total,
-            categorias
-        })
+        res.send({ total, categorias, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
         console.log( error )
@@ -33,14 +54,65 @@ const categoriasGet = async ( req, res = response) => {
 
 }
 
-// obtenerCategoria - populate {}
+const categoriasGetDeleted = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true, 
+        } = req.query;
+
+        let options = { $or:[ {'estado': 2}]};        
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        let filter = {}
+        let query = {}
+
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+        
+        if ( q ){
+            filter = functionFiltrar( q );
+            query = {
+                ...filter,
+                '$and': [
+                    options
+                ]
+            }
+        } else {
+            query = {...options}
+        }
+         
+        // Promise . all envia varias promesas simultaneas
+        const [ total, categorias ] = await Promise.all([
+            Categoria.countDocuments( query ),
+            Categoria.find(query)
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
+        ])
+
+        res.send({ total, categorias, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar las categorias ${ error }`
+        })
+    }
+
+}
+
+// obtenerPais - populate {}
 const categoriaGet = async ( req, res = response ) => {
 
     try{
 
-        const { id } = req.params
+        const { id } = req.params       
 
-        const categoria = await Categoria.findById( id ).populate( 'usuario' )
+        const categoria = await Categoria.findById( id ).populate( 'usuario' ).populate( 'unidadNegocio' )
 
         return res.status(200).send(
             categoria
@@ -55,23 +127,48 @@ const categoriaGet = async ( req, res = response ) => {
     }
 }
 
+const allCategoriasGet = async ( req, res = response ) => {
 
-const categoriasPost = async ( req, res = response ) => {
+    try{
+        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
+        query = {...options}
+        const categorias = await Categoria.find(query)
+        res.send({ categorias })
+    } catch ( error ) {
+        console.log( error )
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar las categorias ${ query }`
+        })
+    }
+}
+
+const categoriaPost = async ( req, res = response ) => {
 
 
     try {
-        const nombre = req.body.nombre.toUpperCase()
+        const { codigo, nombre, siglas, unidadNegocio, estado } = req.body
 
-        const categoriaDB = await Categoria.findOne( { nombre } )
+        const categoriaDB = await Categoria.findOne({
+            $or : [ { nombre}, { codigo} ],
+            unidadNegocio         
+        })
+        //( { $or : [ { nombre}, { codigo} ] } )
+        console.log(categoriaDB,'respuesta***********************' )
 
         if ( categoriaDB ) {
             return res.status( 400 ).json({
-                msg: `La categoria ${ categoriaDB.nombre } ya existe`
+                msg: (categoriaDB.nombre === nombre.toUpperCase()) ? `La categoria ${ categoriaDB.nombre } ya existe` : 
+                                       `El codigo ${ categoriaDB.codigo } ya existe`,
+                data: categoriaDB
             })
         }
 
         const data = {
             nombre,
+            siglas,
+            codigo,
+            unidadNegocio,
+            estado,
             usuario: req.usuario._id
         }
 
@@ -92,14 +189,14 @@ const categoriasPost = async ( req, res = response ) => {
     }
 } 
 
-// actualizarCategoria 
+// actualizarPais 
 const categoriaPut = async ( req, res = response ) => {
 
     try{
 
         const { id } = req.params
 
-        const { estado, usuario, ...data } = req.body
+        const { usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
         data.usuario = req.usuario._id 
@@ -112,26 +209,59 @@ const categoriaPut = async ( req, res = response ) => {
 
     } catch ( error ) {
         console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las categorias ${ error }`
         })
     }
 }
+const categoriasPorUnidadNegocio = async ( req, res = response ) => {
 
-// borrarCategoria - estado : false
+    try{
+        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
+        query = {...options}
+        const { id } = req.params
+        console.log(id)
+        const categoriasList = await Categoria.find(query).populate({ path: 'unidadNegocio', match: { '_id': id }})
+        const categorias = categoriasList.filter(categoria => categoria.unidadNegocio)
+        res.send({ categorias })
+    } catch ( error ) {
+        console.log( error )
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar las categorias ${ query }`
+        })
+    }
+}
+
+// borrarPais - status : false
 const categoriaDelete = async ( req, res = response ) => {
 
     const { id } = req.params
-    const categoria = await Categoria.findByIdAndUpdate( id, { estado: false}, { new: true})
+    const categoria = await Categoria.findByIdAndUpdate( id, { estado: 2}, { new: true})
+
+    res.json(  )
+}
+
+// restaurarPais - status : truez
+const categoriaRestore = async ( req, res = response ) => {
+
+    const { id } = req.params
+    const categoria = await Categoria.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+
+    if(!categoria){
+        return res.json(`La categoria solicitada no se encuentra eliminada`)
+    }
 
     res.json( categoria )
 }
 
 module.exports = {
-    categoriasPost,
+    categoriaPost,
     categoriasGet,
     categoriaGet,
     categoriaPut,
-    categoriaDelete
+    categoriaDelete,
+    categoriaRestore,
+    allCategoriasGet,
+    categoriasGetDeleted,
+    categoriasPorUnidadNegocio
 }

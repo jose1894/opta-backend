@@ -17,7 +17,11 @@ const {
     Gasto,
     AccionPerfil,
     Menu,
-    Perfil
+    Perfil,
+    Tasa,
+    Idioma,
+    Profesion,
+    Personal
  } = require('../models')
 
 
@@ -50,18 +54,14 @@ const existeUsuarioPorId = async ( id ) => {
 }
 
 const existeCategoriaPorId = async ( id ) => {
-    const existe = await Categoria.findById( id )
-    // console.log( existe )
-    
+    const existe = await Categoria.findById( id )    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
 }
 
 const existePaisPorId = async ( id ) => {
-    const existe = await Pais.findById( id )
-    // console.log( existe )
-    
+    const existe = await Pais.findById( id )    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
@@ -69,8 +69,6 @@ const existePaisPorId = async ( id ) => {
 
 const existeEstadoPorId = async ( id ) => {
     const existe = await Estado.findById( id )
-    // console.log( existe )
-    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
@@ -78,17 +76,13 @@ const existeEstadoPorId = async ( id ) => {
 
 const existeCiudadPorId = async ( id ) => {
     const existe = await Ciudad.findById( id )
-    // console.log( existe )
-    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
 }
 
 const existeAliadoPorId = async ( id ) => {
-    const existe = await Aliado.findById( id )
-    // console.log( existe )
-    
+    const existe = await Aliado.findById( id )    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
@@ -96,8 +90,6 @@ const existeAliadoPorId = async ( id ) => {
 
 const existeReferidoPorId = async ( id ) => {
     const existe = await Referido.findById( id )
-    // console.log( existe )
-    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
@@ -105,8 +97,6 @@ const existeReferidoPorId = async ( id ) => {
 
 const existeClientePorId = async ( id ) => {
     const existe = await Cliente.findById( id )
-    // console.log( existe )
-    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
@@ -171,8 +161,6 @@ const existePerfilPorId = async ( id ) => {
 
 const existeProductoPorId = async ( id ) => {
     const existe = await Producto.findById( id )
-    // console.log( existe )
-    
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
     }
@@ -192,17 +180,43 @@ const existeMenuPorId = async ( id ) => {
     }
 }
 
+const existeTasaPorId = async ( id ) => {
+    const existe = await Tasa.findById(id)
+    if ( !existe ) {
+        throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
+const existeIdiomaPorId = async ( id ) => {
+    const existe = await Idioma.findById(id)
+    if ( !existe ) {
+        throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
+const existeProfesionPorId = async ( id ) => {
+    const existe = await Profesion.findById(id)
+    if ( !existe ) {
+        throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
+const existePersonalPorId = async ( id ) => {
+    const existe = await Personal.findById(id)
+    if ( !existe ) {
+        throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
 /**
  * Validar colecciones permitidas
  */
 
 const coleccionesPermitidas = ( coleccion = '', coleccionesPermitidas = []) => {
     const incluida = coleccionesPermitidas.includes( coleccion )
-
     if (!incluida ) {
         throw new Error(`La coleccion ${ coleccion } no es permitida - ${ coleccionesPermitidas }`)
     }
-
     return true
 }
 
@@ -228,5 +242,9 @@ module.exports = {
     existeGastoPorId,
     existeAccionPerfilPorId,
     existeMenuPorId,
-    existePerfilPorId
+    existePerfilPorId,
+    existeTasaPorId,
+    existeIdiomaPorId,
+    existeProfesionPorId,
+    existePersonalPorId
 }
