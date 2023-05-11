@@ -21,7 +21,8 @@ const {
     Tasa,
     Idioma,
     Profesion,
-    Personal
+    Personal,
+    Industria
  } = require('../models')
 
 
@@ -138,6 +139,13 @@ const existeSucursalPorId = async ( id ) => {
     }
 }
 
+const existeIndustriaPorId = async ( id ) => {
+    const existe = await Industria.findById( id )
+    if ( !existe ) {
+        throw new Error( `El id ${ id } no existe`)
+    }
+}
+
 const existeUnidadNegociolPorId = async ( id ) => {
     const existe = await UnidadNegocio.findById( id )
     if ( !existe ) {
@@ -180,6 +188,8 @@ const existeMenuPorId = async ( id ) => {
     }
 }
 
+
+
 const existeTasaPorId = async ( id ) => {
     const existe = await Tasa.findById(id)
     if ( !existe ) {
@@ -207,6 +217,7 @@ const existePersonalPorId = async ( id ) => {
         throw new Error( `El registro ${ id } no existe`)
     }
 }
+
 
 /**
  * Validar colecciones permitidas
@@ -246,5 +257,6 @@ module.exports = {
     existeTasaPorId,
     existeIdiomaPorId,
     existeProfesionPorId,
-    existePersonalPorId
+    existePersonalPorId,
+    existeIndustriaPorId,
 }

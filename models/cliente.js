@@ -22,13 +22,48 @@ const ClienteSchema = Schema({
         unique: true,
         maxLength: [12,'La longitud máxima es de 12 caracteres']
     },
-    direccion: {
+    industria: {
+        type: Schema.Types.ObjectId,
+        ref: 'Industria',
+    },
+    companiaListada : {
+        type: Number,
+        default: 1,
+        enum: [1,2]
+    },
+    companiaRegulada : {
+        type: Number,
+        default: 1,
+        enum: [1,2]
+    },
+    casaMatriz: {
         type: String,
-        uppercase: true,
-        trim: true,
+        maxLength: [250,'La longitud máxima es de 12 caracteres']
+    },  
+    pais: {
+        type: Schema.Types.ObjectId,
+        ref: 'Pais',
+        required: true,
+    },
+    state: {
+        type: Schema.Types.ObjectId,
+        ref: 'Estado',
+        required: true,
+    },
+    ciudad: {
+        type: Schema.Types.ObjectId,
+        ref: 'Ciudad',
+        required: true,
+    },
+    calle: {
+        type:String,
         maxLength: [250,'La longitud máxima es de 250 caracteres']
     },
-    contacto: {
+    paginaWeb: {
+        type: String,
+        maxLength: [250,'La longitud máxima es de 250 caracteres']
+    },
+    direccion: {
         type: String,
         uppercase: true,
         trim: true,
@@ -39,6 +74,10 @@ const ClienteSchema = Schema({
         default: 1,
         enum: [0,1,2],
         required: true,
+    },
+    miembro: {
+        type: Schema.Types.ObjectId,
+        ref: 'Miembro'
     },
     usuario: {
         type: Schema.Types.ObjectId,

@@ -24,6 +24,8 @@ const Tasa = require('./tasa')
 const Idioma = require('./idioma')
 const Profesion = require('./profesion')
 const Personal = require('./personal')
+const Industria = require('./industria')
+const Contacto = require('./contacto')
 
 
 module.exports = {
@@ -50,6 +52,8 @@ module.exports = {
     Tasa,
     Idioma,
     Profesion,
-    Personal
+    Personal,
+    Industria,
+    Contacto
 }
 

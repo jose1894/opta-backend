@@ -33,6 +33,9 @@ class Server {
             idiomas:          '/api/idiomas',
             profesiones:      '/api/profesiones',
             personal:         '/api/personal',
+            industrias:       '/api/industrias',
+            contactos:        '/api/contactos',
+            clientes:         '/api/clientes',
             uploads:          '/api/uploads',
         }
 
@@ -96,6 +99,9 @@ class Server {
         this.app.use( this.paths.profesiones, require('../routes/profesiones'));
         this.app.use( this.paths.idiomas, require('../routes/idiomas'));
         this.app.use( this.paths.personal, require('../routes/personal'));
+        this.app.use( this.paths.industrias, require('../routes/industrias'));
+        this.app.use( this.paths.contactos, require('../routes/contactos'));
+        this.app.use( this.paths.clientes, require('../routes/clientes'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 
