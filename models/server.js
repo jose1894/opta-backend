@@ -36,6 +36,7 @@ class Server {
             industrias:       '/api/industrias',
             contactos:        '/api/contactos',
             clientes:         '/api/clientes',
+            enfoques:         '/api/enfoques',
             uploads:          '/api/uploads',
         }
 
@@ -102,6 +103,7 @@ class Server {
         this.app.use( this.paths.industrias, require('../routes/industrias'));
         this.app.use( this.paths.contactos, require('../routes/contactos'));
         this.app.use( this.paths.clientes, require('../routes/clientes'));
+        this.app.use( this.paths.enfoques, require('../routes/enfoques'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 
