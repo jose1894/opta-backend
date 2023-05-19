@@ -10,12 +10,18 @@ const {
 } = require( '../middlewares')
 
 const { 
-    enfoquePost
+    enfoquePost,
+    enfoquesGet,
+    getChildrenEnfoque
 } = require('../controllers/enfoques')
 
 const { existeEnfoquePorId, existeEmail } = require('../helpers/db-validators')
 
 const router =  Router()
+
+router.get( '/', enfoquesGet)
+
+router.get( '/getChildren/:id', getChildrenEnfoque) 
 
 router.post( '/', [
     validarJWT,

@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 
 const EnfoqueSchema = Schema({
     indice: {
-        type: Number,
+        type: String,
         required:[true, 'El indice es obligatorio'],
         unique: true,
         maxLength: [3,'La longitud máxima es de 2 caracteres']
@@ -14,11 +14,8 @@ const EnfoqueSchema = Schema({
         unique: true
     },
     areaPadre: {
-        type: String,
-        required: [ true, 'El nombre es obligatorio'],
-        uppercase: true,
-        trim: true,
-        unique: true
+        type: Schema.Types.ObjectId,
+        ref: 'Enfoque'
     },
     ruta: {
         type: String,
@@ -45,6 +42,10 @@ const EnfoqueSchema = Schema({
         enum: [0,1,2],
         required: true,
     },
+    children:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Enfoque'
+    }],
     miembro: {
         type: Schema.Types.ObjectId,
         ref: 'Miembro'
