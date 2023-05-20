@@ -198,13 +198,15 @@ const clientePost = async ( req, res = response ) => {
         }
         const cliente = new Cliente( data )
         await cliente.save()
+        
         const { _id } = cliente
-        const dataContacto = await Promise.all( contactos.map(async (contact) => {
+        console.log(_id)
+       /* const dataContacto = await Promise.all( contactos.map(async (contact) => {
                 contact.cliente = _id
                 const dataSave = new Contacto(contact)
                 const dataSaveContactos = await dataSave.save()
             })
-        );
+        );*/
         return res.status( 201 ).json(cliente)
 
     } catch ( error ) {

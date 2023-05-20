@@ -125,8 +125,8 @@ const miembroGet = async ( req, res = response ) => {
                                    .populate('pais')
                                    .populate('cargo')
                                    .populate('moneda')
-        let dateVigencia = miembro.vigencia
-        miembro.vigencia = dateVigencia.format('DD-MM-YYYY');
+        //let dateVigencia = miembro.vigencia
+        miembro.vigencia = moment.utc(miembro.vigencia).format('DD-MM-YYYY'),
         console.log(miembro.vigencia)
 
         return res.status(200).send(
@@ -220,7 +220,8 @@ const miembroPut = async ( req, res = response ) => {
         const { status, usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
-        data.vigencia = moment.utc(data.vigencia).format('DD-MM-YYYY'), 
+        console.log(data)
+        //data.vigencia = moment(data.vigencia, 'YYYY-MM-DD')//moment.utc(data.vigencia).format('DD-MM-YYYY'), 
         data.usuario = req.usuario._id 
         const miembro = await Miembro.findByIdAndUpdate( id, data, { new:true })
 
