@@ -201,7 +201,7 @@ const clientePost = async ( req, res = response ) => {
         
         const { _id } = cliente
         const dataContacto = await Promise.all( contactos.map(async (contact) => {
-                contact.cliente = idString
+                contact.cliente = _id
                 const dataSave = new Contacto(contact)
                 const dataSaveContactos = await dataSave.save()
             })
