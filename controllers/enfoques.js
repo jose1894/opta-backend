@@ -23,6 +23,29 @@ const enfoquesGet = async ( req, res = response) => {
     }
 }
 
+const getChild = async ( req, res = response) => {
+    try{
+        let options = { $or:[ {'estado':1}, {'estado':0}]};   
+        let filter = {'nombre':'Root'}
+        let query = {}
+        query = {
+            ...filter,
+            '$and': [
+                options
+            ]
+        }
+        let enfoques  = await Enfoque.find(query)        
+        res.send({ enfoques })
+    } catch ( error ) {
+        console.log( error )
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los cargos ${ error }`
+        })
+    }
+}
+
+
+
 const getChildrenEnfoque = async ( req, res = response ) => {
 
     try{

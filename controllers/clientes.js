@@ -1,5 +1,6 @@
 const { response } = require("express");
 const Cliente  = require('../models/cliente')
+const Contacto = require('../models/contacto')
 
 const clientesGet = async ( req, res = response) => {
     try{
@@ -117,16 +118,26 @@ const clienteGet = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        let cliente = await Cliente.findById( id )
+        /*let cliente = await Cliente.findById( id )
                                    .populate( 'usuario')
                                    .populate('industria')
                                    .populate('pais')
                                    .populate('estado')
                                    .populate('ciudad')
-                                   .populate('miembro')
-        return res.status(200).send(
-            cliente
-        )
+                                   .populate('miembro')*/
+
+        const [ contactos, cliente ] = await Promise.all([
+            Contacto.find({'cliente': id}).populate( 'cargo'),
+            Cliente.findById( id )
+                    .populate( 'usuario')
+                    .populate('industria')
+                    .populate('pais')
+                    .populate('state')
+                    .populate('estado')
+                    .populate('ciudad')
+                    .populate('miembro')
+        ])
+        return res.status(200).send({cliente, contactos})
 
     } catch ( error ) {
         console.log( error )
@@ -142,7 +153,22 @@ const clientePost = async ( req, res = response ) => {
 
 
     try {
-        const {codigo, nombre, iDFiscal, industria, companiaListada, companiaRegulada, casaMatriz, pais, state, ciudad, calle, paginaWeb, direccion, miembro, estado} = req.body
+        const {codigo, 
+            nombre, 
+            iDFiscal, 
+            industria, 
+            companiaListada, 
+            companiaRegulada, 
+            casaMatriz, 
+            pais, 
+            state, 
+            ciudad, 
+            calle, 
+            paginaWeb, 
+            direccion, 
+            miembro, 
+            estado,
+            contactos} = req.body
 
         const clientedDB = await Cliente.findOne({ iDFiscal} )
 
@@ -170,12 +196,15 @@ const clientePost = async ( req, res = response ) => {
             estado,
             usuario: req.usuario._id
         }
-        console.log( data )
         const cliente = new Cliente( data )
-
-        //Guardar en DB
         await cliente.save()
-
+        const { _id } = cliente
+        const dataContacto = await Promise.all( contactos.map(async (contact) => {
+                contact.cliente = _id
+                const dataSave = new Contacto(contact)
+                const dataSaveContactos = await dataSave.save()
+            })
+        );
         return res.status( 201 ).json(cliente)
 
     } catch ( error ) {
@@ -195,11 +224,17 @@ const clientePut = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const { status, usuario, ...data } = req.body
+        const { status, usuario, contactos, ...data } = req.body
 
         //data.nombre = data.nombre.toUpperCase()
         data.usuario = req.usuario._id 
         const cliente = await Cliente.findByIdAndUpdate( id, data, { new:true })
+        const dataContacto = await Promise.all( contactos.map(async (contact) => {
+            const { id, ...dataC } = contact
+            const updateContactos = await Contacto.findByIdAndUpdate( id, dataC, { new:true })
+            return updateContactos
+        })
+    );
 
         return res.status(200).send(
             cliente
