@@ -200,13 +200,12 @@ const clientePost = async ( req, res = response ) => {
         await cliente.save()
         
         const { _id } = cliente
-        console.log(_id)
-       /* const dataContacto = await Promise.all( contactos.map(async (contact) => {
-                contact.cliente = _id
+        const dataContacto = await Promise.all( contactos.map(async (contact) => {
+                contact.cliente = idString
                 const dataSave = new Contacto(contact)
                 const dataSaveContactos = await dataSave.save()
             })
-        );*/
+        );
         return res.status( 201 ).json(cliente)
 
     } catch ( error ) {
