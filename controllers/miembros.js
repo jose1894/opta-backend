@@ -38,7 +38,6 @@ const miembrosGet = async ( req, res = response) => {
             Miembro.find(query)
                     .populate('aliado')
                     .populate('cargo')
-                    .populate('moneda')
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
@@ -92,7 +91,6 @@ const miembrosGetDelete = async ( req, res = response) => {
             Miembro.find(query)
                     .populate('aliado')
                     .populate('cargo')
-                    .populate('moneda')
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
@@ -124,7 +122,6 @@ const miembroGet = async ( req, res = response ) => {
                                    .populate('ciudad')
                                    .populate('pais')
                                    .populate('cargo')
-                                   .populate('moneda')
         //let dateVigencia = miembro.vigencia
         miembro.vigencia = moment.utc(miembro.vigencia).format('DD-MM-YYYY'),
         console.log(miembro.vigencia)
@@ -149,8 +146,7 @@ const miembroPost = async ( req, res = response ) => {
     try {
         const {aliado, codigo, nombre, iDFiscal, ejercicioFiscal, pais, state, ciudad, calle, 
             paginaWeb, tipoContacto, nombreContact, apellidoContact, cargo, telefonoOfic, 
-            telefonoCelu, correoContact, codigoActivacion, licencias, vigencia, moneda, periodoRevision,
-            creacion, declaracionHoras, modificacionHoras, requiereAprobacion, estado} = req.body
+            telefonoCelu, correoContact, estado} = req.body
 
         const miembrodDB = await Miembro.findOne( { $or : [ { nombre}, { codigo}, { iDFiscal} ] } )
 
@@ -180,7 +176,7 @@ const miembroPost = async ( req, res = response ) => {
             telefonoOfic, 
             telefonoCelu, 
             correoContact,
-            codigoActivacion, 
+            /*codigoActivacion, 
             licencias, 
             vigencia:  moment(vigencia, 'YYYY-MM-DD'), //moment.utc(vigencia).format('DD-MM-YYYY'), 
             moneda, 
@@ -188,7 +184,7 @@ const miembroPost = async ( req, res = response ) => {
             creacion, 
             declaracionHoras, 
             modificacionHoras, 
-            requiereAprobacion, 
+            requiereAprobacion,*/ 
             estado,
             usuario: req.usuario._id
         }

@@ -86,7 +86,7 @@ const MiembroSchema = Schema({
         type: String,
         maxLength: [250, 'La Longitud máxima es de 250 caracteres']
     },  
-    codigoActivacion: {
+   /* codigoActivacion: {
         type: String,
         maxLength: [30, 'La Longitud máxima es de 250 caracteres']
     }, 
@@ -121,7 +121,7 @@ const MiembroSchema = Schema({
     requiereAprobacion: {
         type: String,
          required: true
-    },  
+    },*/  
     estado : {
         type: Number,
         default: 1,

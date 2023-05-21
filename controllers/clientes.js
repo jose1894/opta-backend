@@ -197,14 +197,13 @@ const clientePost = async ( req, res = response ) => {
             usuario: req.usuario._id
         }
         const cliente = new Cliente( data )
-        await cliente.save()
-        
+        await cliente.save()        
         const { _id } = cliente
         const dataContacto = await Promise.all( contactos.map(async (contact) => {
-                contact.cliente = _id
-                const dataSave = new Contacto(contact)
-                const dataSaveContactos = await dataSave.save()
-            })
+            contact.cliente = _id
+            const dataSave = new Contacto(contact)
+            const dataSaveContactos = await dataSave.save()
+         })
         );
         return res.status( 201 ).json(cliente)
 
@@ -231,9 +230,14 @@ const clientePut = async ( req, res = response ) => {
         data.usuario = req.usuario._id 
         const cliente = await Cliente.findByIdAndUpdate( id, data, { new:true })
         const dataContacto = await Promise.all( contactos.map(async (contact) => {
-            const { id, ...dataC } = contact
-            const updateContactos = await Contacto.findByIdAndUpdate( id, dataC, { new:true })
-            return updateContactos
+            const { _id, ...dataC } = contact         
+            if (contact.cliente === '') {
+                dataC.cliente = id
+                const contactosData = new Contacto(dataC)
+                 await contactosData.save()
+            } else {
+                await Contacto.findByIdAndUpdate( _id, dataC, { new:true })
+            }
         })
     );
 
