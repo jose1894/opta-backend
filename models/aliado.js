@@ -83,6 +83,9 @@ const AliadoSchema = Schema({
         enum: [0,1,2],
         required: true,
     },
+    direccion:{
+        type: String
+    },
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario',
