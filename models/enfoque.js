@@ -5,7 +5,7 @@ const EnfoqueSchema = Schema({
         type: String,
         required:[true, 'El indice es obligatorio'],
         unique: true,
-        maxLength: [3,'La longitud máxima es de 2 caracteres']
+        maxLength: [5,'La longitud máxima es de 5 caracteres']
     },
     nombre: {
         type: String,

@@ -221,7 +221,7 @@ const monedaDelete = async ( req, res = response ) => {
 const monedaRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const moneda = await Moneda.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const moneda = await Moneda.findByIdAndUpdate( id, { estado: 1}, { new: true})
 
     if(!moneda){
         return res.json(`La moneda solicitada no se encuentra eliminada`)

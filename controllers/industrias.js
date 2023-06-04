@@ -60,11 +60,11 @@ const industriasGetDeleted = async ( req, res = response) => {
             q        = '', 
             page     = 0, 
             perPage  = 10, 
-            sortBy   = 'nombre', 
-            sortDesc = true, 
+            sortBy   = 'codigo', 
+            sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado': 2}]};        
+        let options = { $or:[ {'estado':2}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -82,17 +82,18 @@ const industriasGetDeleted = async ( req, res = response) => {
             }
         } else {
             query = {...options}
-        }
-         
+        }         
         // Promise . all envia varias promesas simultaneas
         const [ total, industrias ] = await Promise.all([
             Industria.countDocuments( query ),
             Industria.find(query)
+                    .populate( 'pais' )
+                    .populate( 'state' )
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
         ])
-
+        
         res.send({ total, industrias, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {

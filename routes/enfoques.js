@@ -12,6 +12,8 @@ const {
 const { 
     enfoquePost,
     enfoquesGet,
+    enfoquePut,
+    enfoqueDelete,
     getChildrenEnfoque
 } = require('../controllers/enfoques')
 
@@ -28,5 +30,18 @@ router.post( '/', [
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
     validarCampos
 ], enfoquePost)
+
+router.put( '/:id', [
+    validarJWT,
+    check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
+    validarCampos
+], enfoquePut)
+
+router.delete('/:id', [
+    validarJWT,
+    check('id', 'No es un ID valido').isMongoId(),
+    validarCampos
+], enfoqueDelete)
+
 
 module.exports = router
