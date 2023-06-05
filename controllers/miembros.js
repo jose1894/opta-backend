@@ -108,6 +108,7 @@ const miembrosGetDelete = async ( req, res = response) => {
 
 }
 
+
 // obtenerEtado - populate {}
 const miembroGet = async ( req, res = response ) => {
 

@@ -1,5 +1,6 @@
 const { response } = require("express");
 const Aliado = require('../models/aliado')
+const Miembro  = require('../models/miembro')
 
 const aliadosGet = async (req, res = response) => {
     try {
@@ -118,18 +119,20 @@ const aliadoGet = async (req, res = response) => {
 
         const { id } = req.params
 
-        const ciudad = await Aliado.findById(id)
-            .populate('usuario')
-            .populate('referidos')
-            .populate('state')
-            .populate('ciudad')
-            .populate('pais')
-            .populate('cargo')
-
-        return res.status(200).send(
-            ciudad
-        )
-
+        const [aliado, referidos] = await Promise.all([
+            Aliado.findById(id)
+                .populate('state')
+                .populate('ciudad')
+                .populate('pais')
+                .populate('cargo'),
+            Miembro.find({
+                "$and": [
+                    { aliado: id },
+                    {'estado':1}
+                ]
+              })
+        ])
+        res.send({ aliado, referidos })
     } catch (error) {
         console.log(error)
 

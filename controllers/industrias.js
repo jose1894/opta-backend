@@ -87,8 +87,6 @@ const industriasGetDeleted = async ( req, res = response) => {
         const [ total, industrias ] = await Promise.all([
             Industria.countDocuments( query ),
             Industria.find(query)
-                    .populate( 'pais' )
-                    .populate( 'state' )
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
