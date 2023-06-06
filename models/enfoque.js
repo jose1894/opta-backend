@@ -15,7 +15,8 @@ const EnfoqueSchema = Schema({
     },
     areaPadre: {
         type: Schema.Types.ObjectId,
-        ref: 'Enfoque'
+        ref: 'Enfoque',
+        default: null
     },
     ruta: {
         type: String,

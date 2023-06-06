@@ -14,8 +14,7 @@ const enfoquesGet = async ( req, res = response) => {
                 options
             ]
         }
-        let enfoques  = await Enfoque.find(query)/*.populate('miembro').populate('areaPadre') */
-        procesarElementos(enfoques)       
+        let enfoques  = await Enfoque.find(query).populate('miembro')/*.populate('areaPadre')*/
         res.send({ enfoques })
     } catch ( error ) {
         console.log( error )
@@ -24,51 +23,6 @@ const enfoquesGet = async ( req, res = response) => {
         })
     }
 }
-
-const procesarElementos =  async (array) =>{
-  const resultados = await Promise.all(array.map(async (elemento) => {
-    // Realizar operación en el elemento
-    const {id} = elemento
-    
-    
-    const resultado = await Enfoque.find({ 'areaPadre': id })
-    elemento.children = resultado
-    console.log(elemento)
-    //console.log(elemento)
-    
-    // Si el elemento contiene un subarray, llamar a la función recursivamente    
-   if (resultado.length > 0) {
-        return procesarElementos(resultado);
-       // elemento.children = resultado
-        //console.log(elemento)
-     // return procesarElementos(resultado);
-    }
-    // Devolver el resultado
-    
-    //return elemento;
-  }));
-
-  // Devolver el nuevo array con los resultados
-  
-  return resultados;
-}
-
-const getChild = async (enfoque) => {
-    try{
-        let enfoquesChildren  = await Enfoque.find({ 'areaPadre': id }).populate('miembro').populate('areaPadre') 
-        enfoque.children = enfoquesChildren 
-        //console.log(enfoquesChildren) 
-        return enfoquesChildren  
-        //res.send({ enfoques })
-    } catch ( error ) {
-        console.log( error )
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los cargos ${ error }`
-        })
-    }
-}
-
-
 
 const getChildrenEnfoque = async ( req, res = response ) => {
 
@@ -125,6 +79,27 @@ const enfoquePut = async ( req, res = response ) => {
     }
 }
 
+const enfoqueById = async ( req, res = response ) => {
+
+    try{
+
+        const { id } = req.params
+
+        const enfoque = await Enfoque.findById( id ).populate( 'usuario').populate('areaPadre')
+
+        return res.status(200).send(
+            enfoque
+        )
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar el enfoque ${ error }`
+        })
+    }
+}
+
 const enfoquePost = async ( req, res = response ) => {
     try {
         const {indice,nombre,areaPadre,ruta,visible,rcr,editable, estado, miembro} = req.body
@@ -168,5 +143,6 @@ module.exports = {
     enfoquesGet,
     enfoquePut,
     enfoqueDelete,
+    enfoqueById,
     getChildrenEnfoque
 }
