@@ -51,9 +51,10 @@ const getChildrenEnfoque = async ( req, res = response ) => {
 const enfoqueDelete = async ( req, res = response ) => {
 
     const { id } = req.params
+    const dataDeleted = req.params
     const enfoque = await Enfoque.deleteOne({ _id: ObjectId(id) })
 
-    res.json( enfoque )
+    res.json({enfoque, dataDeleted})
 }
 
 const enfoquePut = async ( req, res = response ) => {
