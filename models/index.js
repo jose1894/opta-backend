@@ -27,6 +27,8 @@ const Personal = require('./personal')
 const Industria = require('./industria')
 const Contacto = require('./contacto')
 const Enfoque = require('./enfoque')
+const Actividad = require('./actividad')
+const Proyecto = require('./proyecto')
 
 
 module.exports = {
@@ -56,6 +58,8 @@ module.exports = {
     Personal,
     Industria,
     Contacto,
-    Enfoque
+    Enfoque,
+    Actividad,
+    Proyecto
 }
 

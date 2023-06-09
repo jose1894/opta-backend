@@ -23,7 +23,9 @@ const {
     Profesion,
     Personal,
     Industria,
-    Enfoque
+    Enfoque,
+    Actividad,
+    Proyecto
  } = require('../models')
 
 
@@ -226,6 +228,20 @@ const existeEnfoquePorId = async ( id ) => {
     }
 }
 
+const existeActividadPorId = async ( id ) => {
+    const existe = await Actividad.findById(id)
+    if ( !existe ) {
+        throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
+const existeProyectoPorId = async ( id ) => {
+    const existe = await Actividad.findById(id)
+    if ( !existe ) {
+        throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
 
 /**
  * Validar colecciones permitidas
@@ -267,5 +283,7 @@ module.exports = {
     existeProfesionPorId,
     existePersonalPorId,
     existeIndustriaPorId,
-    existeEnfoquePorId
+    existeEnfoquePorId,
+    existeActividadPorId,
+    existeProyectoPorId
 }
