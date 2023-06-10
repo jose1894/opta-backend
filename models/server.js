@@ -38,6 +38,7 @@ class Server {
             clientes:         '/api/clientes',
             enfoques:         '/api/enfoques',
             actividades:      '/api/actividades',
+            proyectos:        '/api/proyectos',
             uploads:          '/api/uploads',
         }
 
@@ -106,6 +107,7 @@ class Server {
         this.app.use( this.paths.clientes, require('../routes/clientes'));
         this.app.use( this.paths.enfoques, require('../routes/enfoques'));
         this.app.use( this.paths.actividades, require('../routes/actividades'));
+        this.app.use( this.paths.proyectos, require('../routes/proyectos'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
     }
 

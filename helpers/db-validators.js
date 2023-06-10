@@ -236,12 +236,11 @@ const existeActividadPorId = async ( id ) => {
 }
 
 const existeProyectoPorId = async ( id ) => {
-    const existe = await Actividad.findById(id)
+    const existe = await Proyecto.findById(id)
     if ( !existe ) {
         throw new Error( `El registro ${ id } no existe`)
     }
 }
-
 
 /**
  * Validar colecciones permitidas
