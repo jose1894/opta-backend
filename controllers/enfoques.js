@@ -64,6 +64,7 @@ const enfoquePut = async ( req, res = response ) => {
         const { id } = req.params
 
         const { usuario, ...data } = req.body
+        data.ruta = data.areaPadreNombre === 'Root' ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
         data.usuario = req.usuario._id 
         const enfoque = await Enfoque.findByIdAndUpdate( id, data, { new:true })
 
@@ -80,13 +81,34 @@ const enfoquePut = async ( req, res = response ) => {
     }
 }
 
+const getRutaEnfoque = (descripcionEnfoque) => {
+    descripcionEnfoque = descripcionEnfoque.trim();
+    descripcionEnfoque = descripcionEnfoque.replace(/á|à|ä|â|ª/g, 'a')
+                   .replace(/Á|À|Â|Ä/g, 'A')
+                   .replace(/é|è|ë|ê/g, 'e')
+                   .replace(/É|È|Ê|Ë/g, 'E')
+                   .replace(/í|ì|ï|î/g, 'i')
+                   .replace(/Í|Ì|Ï|Î/g, 'I')
+                   .replace(/ó|ò|ö|ô/g, 'o')
+                   .replace(/Ó|Ò|Ö|Ô/g, 'O')
+                   .replace(/ú|ù|ü|û/g, 'u')
+                   .replace(/Ú|Ù|Û|Ü/g, 'U')
+                   .replace(/ñ/g, 'n')
+                   .replace(/Ñ/g, 'N')
+                   .replace(/ç/g, 'c')
+                   .replace(/Ç/g, 'C');
+    //This part is responsible for removing any strange character
+    descripcionEnfoque = descripcionEnfoque.replace(/[\s\\¨º\-\~#@|!"·$%&/()?'¡¿[\]^`+{}´>¿< ;,:.]/g, '_');
+    return descripcionEnfoque;
+}
+
 const enfoqueById = async ( req, res = response ) => {
 
     try{
 
         const { id } = req.params
 
-        const enfoque = await Enfoque.findById( id ).populate( 'usuario').populate('areaPadre')
+        const enfoque = await Enfoque.findById( id ).populate( 'usuario')/*.populate('areaPadre')*/
 
         return res.status(200).send(
             enfoque
@@ -103,7 +125,7 @@ const enfoqueById = async ( req, res = response ) => {
 
 const enfoquePost = async ( req, res = response ) => {
     try {
-        const {indice,nombre,areaPadre,ruta,visible,rcr,editable, estado, miembro} = req.body
+        const {indice,nombre,areaPadre,areaPadreNombre,rutaPadre,ruta,visible,rcr,editable, estado, miembro} = req.body
 
         const enfoqueDB = await Enfoque.findOne( { $or : [ { nombre}, { indice } ] } )
 
@@ -118,6 +140,8 @@ const enfoquePost = async ( req, res = response ) => {
             indice,
             nombre,
             areaPadre,
+            areaPadreNombre,
+            rutaPadre,
             ruta,
             visible,
             rcr,
@@ -126,7 +150,7 @@ const enfoquePost = async ( req, res = response ) => {
             miembro,
             usuario: req.usuario._id
         }
-
+        data.ruta = data.areaPadreNombre === 'Root' ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
         const enfoque = new Enfoque( data )
         //Guardar en DB
         await enfoque.save()

@@ -5,14 +5,11 @@ const PersonalSchema = Schema({
         type: String,
         required: [ true, 'El nombre es obligatorio'],
         uppercase: true,
-        trim: true,
     },
     apellidos: {
         type: String,
         required: [ true, 'Apellidos es obligatorio'],
         uppercase: true,
-        trim: true,
-        unique: true
     },
     iDFiscal: {
         type: String,
@@ -74,6 +71,12 @@ const PersonalSchema = Schema({
     miembro: {
         type: Schema.Types.ObjectId,
         ref: 'Miembro',
+    },
+    tipoPersonal: {
+        type: Number,
+        default: 0,
+        enum: [0,1,2],
+        required: true,
     },
     estado : {
         type: Number,

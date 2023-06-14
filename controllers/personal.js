@@ -149,6 +149,29 @@ const allPersonaGet = async ( req, res = response ) => {
     }
 }
 
+const getListTipoPersonal = async ( req, res = response ) => {
+
+    try{
+        const { tipoPersonal } = req.params 
+        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
+        //query = {...options}
+        let filter = {'tipoPersonal': tipoPersonal}
+        query = {
+            ...filter,
+            '$and': [
+                options
+            ]
+        }
+        const personas = await Personal.find(query)
+        res.send({ personas })
+    } catch ( error ) {
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar las personas ${ query }`
+        })
+    }
+}
+
+
 const personaPost = async ( req, res = response ) => {
 
 
@@ -170,6 +193,7 @@ const personaPost = async ( req, res = response ) => {
             usuarioAcceso, 
             claveAcceso, 
             miembro, 
+            tipoPersonal,
             estado   } = req.body
 
         const personaDB = await Personal.findOne( { iDFiscal } )
@@ -199,6 +223,7 @@ const personaPost = async ( req, res = response ) => {
             claveAcceso, 
             miembro,
             usuario: req.usuario._id,
+            tipoPersonal,
             estado
         }
 
@@ -277,5 +302,6 @@ module.exports = {
     personaPut,
     personaDelete,
     personaRestore,
-    personaPost
+    personaPost,
+    getListTipoPersonal
 }

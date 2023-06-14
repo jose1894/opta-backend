@@ -17,7 +17,8 @@ const {
     personaPut,
     personaDelete,
     personaRestore,
-    personaPost
+    personaPost,
+    getListTipoPersonal
 } = require('../controllers/personal')
 
 const { existePersonalPorId, existeEmail } = require('../helpers/db-validators')
@@ -32,6 +33,9 @@ router.get( '/', personastGet)
 router.get( '/allPersona', allPersonaGet)
 
 router.get( '/personaDeleted', personasGetDeleted) 
+
+router.get( '/listTipoPersonal/:tipoPersonal', getListTipoPersonal) 
+
 
 //Crear pais - privado - Cualquier persona con token
 router.post( '/', [

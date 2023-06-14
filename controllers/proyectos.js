@@ -1,6 +1,7 @@
 const { response } = require("express");
 const moment = require('moment');
 const Proyecto = require('../models/proyecto')
+const Enfoque  = require('../models/enfoque')
 
 // obtenerPaiss - paginado - total - populate
 
@@ -214,8 +215,28 @@ const proyectoPut = async ( req, res = response ) => {
         const { id } = req.params
 
         const { status, usuario, ...data } = req.body
-        data.fecha = moment.utc(data.fecha).format('DD-MM-YYYY'),
         data.usuario = req.usuario._id 
+        const fechaNew = moment(data.fecha, "DD-MM-YYYY").toDate();
+        data.fecha = fechaNew
+
+        const proyecto = await Proyecto.findByIdAndUpdate( id, data, { new:true })
+
+        return res.status(200).send(
+            proyecto
+        )
+
+    } catch ( error ) {
+        console.log( error )
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al modificar un proyecto ${ error }`
+        })
+    }
+}
+
+const crearEnfoquesEnProyectos = async (proyecto) => {
+
+    try{       
 
         const proyecto = await Proyecto.findByIdAndUpdate( id, data, { new:true })
 
