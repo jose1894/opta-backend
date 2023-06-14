@@ -208,7 +208,7 @@ const paisDelete = async ( req, res = response ) => {
 const paisRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const pais = await Pais.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const pais = await Pais.findByIdAndUpdate( id, { estado: 1}, { new: true})
 
     if(!pais){
         return res.json(`El país solicitado no se encuentra eliminado`)
