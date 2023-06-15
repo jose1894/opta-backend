@@ -18,7 +18,7 @@ const {
     estdosGetDeleteOrInactive
 } = require('../controllers/estados')
 
-const { existeEstadoPorId, existeEmail } = require('../helpers/db-validators')
+const { existeEstadoPorId, existeEmail, existeEstadoPorCodigo } = require('../helpers/db-validators')
 const { Estado } = require('../models')
 
 const router = Router()
@@ -41,6 +41,7 @@ router.post('/', [
 router.get('/:id', [
     check('id', 'No es un ID valido').isMongoId(),
     check('id').custom(existeEstadoPorId),
+    check('codigo').custom(existeEstadoPorCodigo),
     validarCampos,
 ], estadoGet)
 
@@ -64,7 +65,7 @@ router.delete('/:id', [
 ], estadoDelete)
 
 //Borrar una estado - Admin
-router.put('/restore/:id', [
+router.delete('/restore/:id', [
     validarJWT,
     check('id', 'No es un ID valido').isMongoId(),
     check('id').custom(existeEstadoPorId),

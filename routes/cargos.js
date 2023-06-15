@@ -20,7 +20,7 @@ const {
     cargosGetDeleted
 } = require('../controllers/cargos')
 
-const { existeCargoPorId, existeEmail } = require('../helpers/db-validators')
+const { existeCargoPorId, existeEmail, existeCargoPorCodigo } = require('../helpers/db-validators')
 const { Pais } = require('../models')
 
 const router =  Router()
@@ -39,6 +39,7 @@ router.post( '/', [
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
     check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
+    check( 'codigo' ).custom( existeCargoPorCodigo ),
     validarCampos
 ], cargosPost)
 
@@ -69,7 +70,7 @@ router.delete( '/:id',[
 ], cargoDelete)
 
 //Borrar una pais - Admin
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existeCargoPorId ),

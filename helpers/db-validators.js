@@ -78,10 +78,30 @@ const existeEstadoPorId = async ( id ) => {
     }
 }
 
+const existeEstadoPorCodigo = async ( id ) => {
+    const existe = await Estado.find( {codigo: id} )
+    if ( !existe ) {
+        throw new Error( `El codigo ${ id } no existe`)
+    }
+}
+
 const existeCiudadPorId = async ( id ) => {
     const existe = await Ciudad.findById( id )
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
+    }
+}
+const existeCiudadPorCodigo = async ( id ) => {
+    const existe = await Ciudad.find( {codigo: id} )
+    if ( !existe ) {
+        throw new Error( `El codigo ${ id } no existe`)
+    }
+}
+
+const existeCargoPorCodigo = async ( id ) => {
+    const existe = await Cargo.find( {codigo: id} )
+    if ( !existe ) {
+        throw new Error( `El codigo ${ id } no existe`)
     }
 }
 

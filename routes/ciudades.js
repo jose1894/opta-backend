@@ -66,7 +66,7 @@ router.delete( '/:id',[
 ], ciudadDelete)
 
 //Borrar una estado - Admin
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existeCiudadPorId ),

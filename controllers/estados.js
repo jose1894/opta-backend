@@ -10,7 +10,6 @@ const estadosGet = async ( req, res = response) => {
             sortBy   = 'nombre', 
             sortDesc = true 
         } = req.query;
-
         let options = { $or:[ {'estado':1}, {'estado':0}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
@@ -18,7 +17,7 @@ const estadosGet = async ( req, res = response) => {
         let query = {}
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-        
+    
         if ( q ){
             filter = functionFiltrar( q );
             query = {
@@ -187,6 +186,7 @@ const estdosGetDeleteOrInactive = async ( req, res = response) => {
         const [ total, estados ] = await Promise.all([
             Estado.countDocuments( query ),
             Estado.find(query)
+                    .populate( 'pais' )
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
@@ -212,7 +212,6 @@ const estadosByPaisGet = async ( req, res = response ) => {
         let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
         query = {...options}
         const { id } = req.params
-        debugger
         const estadosList = await Estado.find(query).populate({ path: 'pais', match: { '_id': id }})
         const estados = estadosList.filter(estado => estado.pais)
         res.send({ estados })
@@ -225,17 +224,17 @@ const estadosByPaisGet = async ( req, res = response ) => {
     }
 }
 
-// restaurarPais - status : true
+// restaurarEstado - status : true
 const estadoRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const estado = await Estado.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const estado = await Estado.findByIdAndUpdate( id, { estado: 1}, { new: true})
 
     if(!estado){
         return res.json(`El estado solicitado no se encuentra eliminado`)
     }
 
-    res.json( estado )
+    return res.json( estado )
 }
 
 module.exports = {
