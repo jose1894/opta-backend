@@ -18,6 +18,10 @@ const EnfoqueSchema = Schema({
         ref: 'Enfoque',
         default: null
     },
+    areaPadreNombre: {
+        type: String,
+        default: null
+    },
     ruta: {
         type: String,
         trim: true,
@@ -50,6 +54,11 @@ const EnfoqueSchema = Schema({
     miembro: {
         type: Schema.Types.ObjectId,
         ref: 'Miembro'
+    },
+    nodoRaiz: {
+        type: Number,
+        default: 0,
+        enum: [0,1], //0-no y 1-si
     },
     usuario: {
         type: Schema.Types.ObjectId,

@@ -125,7 +125,7 @@ const enfoqueById = async ( req, res = response ) => {
 
 const enfoquePost = async ( req, res = response ) => {
     try {
-        const {indice,nombre,areaPadre,areaPadreNombre,rutaPadre,ruta,visible,rcr,editable, estado, miembro} = req.body
+        const {indice,nombre,areaPadre,areaPadreNombre,rutaPadre,ruta,visible,rcr,editable, estado, miembro, nodoRaiz} = req.body
 
         const enfoqueDB = await Enfoque.findOne( { $or : [ { nombre}, { indice } ] } )
 
@@ -148,6 +148,7 @@ const enfoquePost = async ( req, res = response ) => {
             editable, 
             estado, 
             miembro,
+            nodoRaiz,
             usuario: req.usuario._id
         }
         data.ruta = data.areaPadreNombre === 'Root' ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
