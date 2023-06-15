@@ -20,7 +20,7 @@ const {
     sucursalesGetDelete
 } = require('../controllers/sucursales')
 
-const { existeSucursalPorId, existeEmail } = require('../helpers/db-validators')
+const { existeSucursalPorId, existeEmail, existeSucursalPorCodigo } = require('../helpers/db-validators')
 
 const router =  Router()
 
@@ -42,6 +42,7 @@ router.post( '/', [
     check( 'siglas', 'La longitud debe ser de 5 caracteres' ).isLength({ min: 1, max:5 }),
     check( 'siglas', 'las siglas son obligatorias' ).not().isEmpty(),
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
+    check('codigo').custom( existeSucursalPorCodigo ),
     validarCampos,
 ], sucursalPost)
 
@@ -63,6 +64,7 @@ router.put( '/:id', [
     check( 'siglas', 'las siglas son obligatorias' ).not().isEmpty(),
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
     check('id').custom( existeSucursalPorId ),
+    check('codigo').custom( existeSucursalPorCodigo ),
     validarCampos
 ], sucursalPut)
 
@@ -75,7 +77,7 @@ router.delete( '/:id',[
 ], sucursalDelete)
 
 //Borrar una pais - Admin
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check('id').custom( existeSucursalPorId ),

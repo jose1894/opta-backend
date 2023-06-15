@@ -44,7 +44,7 @@ const paisesGet = async ( req, res = response) => {
         res.send({ total, paises, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los paises ${ error }`
@@ -95,7 +95,7 @@ const paisesGetDeleteOrInactive = async ( req, res = response) => {
         res.send({ total, paises, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los paises ${ error }`
@@ -120,7 +120,7 @@ const paisGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los paises ${ error }`
@@ -159,7 +159,7 @@ const paisesPost = async ( req, res = response ) => {
         return res.status( 201 ).json(pais)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un pais ${ error }`
@@ -187,7 +187,7 @@ const paisPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las paiss ${ error }`

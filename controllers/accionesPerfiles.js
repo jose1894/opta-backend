@@ -45,8 +45,6 @@ const accionesPerfilesGet = async ( req, res = response) => {
         res.send({ total, accionesPerfiles, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar llas accioes de perfil ${ error }`
         })
@@ -96,8 +94,6 @@ const accionesPerfilesGetDeleted = async ( req, res = response) => {
         res.send({ total, accionesPerfiles, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los cargos ${ error }`
         })
@@ -119,8 +115,6 @@ const accionPerfilGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar la accion de perfil ${ error }`
         })
@@ -171,7 +165,6 @@ const accionPerfilPost = async ( req, res = response ) => {
         return res.status( 201 ).json(accionPerfil)
 
     } catch ( error ) {
-            console.log( error )
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar la accion de perfil ${ error }`
@@ -199,8 +192,6 @@ const accionPerfilPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar la accion de perfil ${ error }`
         })

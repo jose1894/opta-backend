@@ -45,7 +45,7 @@ const idiomasGet = async ( req, res = response) => {
         res.send({ total, idiomas, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los idiomas ${ error }`
@@ -96,7 +96,7 @@ const idiomasGetDeleted = async ( req, res = response) => {
         res.send({ total, idiomas, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los idiomas ${ error }`
@@ -119,7 +119,7 @@ const idiomaGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el idioma ${ error }`
@@ -137,7 +137,7 @@ const allIdiomasGet = async ( req, res = response ) => {
         //const { cargos } = listCargos.data
         res.send({ idiomas })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los idiomas ${ query }`
         })
@@ -175,7 +175,7 @@ const idiomaPost = async ( req, res = response ) => {
         return res.status( 201 ).json(idioma)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un idioma ${ error }`
@@ -203,7 +203,7 @@ const idiomaPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al actualizar el idioma ${ error }`

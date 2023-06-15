@@ -45,7 +45,7 @@ const ciudadesGet = async ( req, res = response) => {
         res.send({ total, ciudades, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las ciudades ${ error }`
@@ -97,7 +97,7 @@ const ciudadGetDelete = async ( req, res = response) => {
         res.send({ total, ciudades, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las ciudades ${ error }`
@@ -120,7 +120,7 @@ const ciudadGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los estados ${ error }`
@@ -161,7 +161,7 @@ const ciudadesPost = async ( req, res = response ) => {
         return res.status( 201 ).json(ciudad)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un ciudad ${ error }`
@@ -188,7 +188,7 @@ const ciudadPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las ciudades ${ error }`
@@ -215,7 +215,7 @@ const ciudadesByEstadosGet = async ( req, res = response ) => {
         const ciudades = ciudadesList.filter(ciudad => ciudad.state)
         res.send({ ciudades })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los estados ${ query }`
         })
@@ -226,7 +226,7 @@ const ciudadesByEstadosGet = async ( req, res = response ) => {
 const ciudadRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const ciudad = await Ciudad.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const ciudad = await Ciudad.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!ciudad){
         return res.json(`La ciudad solicitada no se encuentra eliminada`)

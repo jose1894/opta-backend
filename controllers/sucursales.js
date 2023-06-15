@@ -46,7 +46,7 @@ const sucursalesGet = async ( req, res = response) => {
         res.send({ total, sucursales, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las sucursales ${ error }`
@@ -100,7 +100,7 @@ const sucursalesGetDelete = async ( req, res = response) => {
         res.send({ total, sucursales, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las sucursales ${ error }`
@@ -123,7 +123,7 @@ const sucursalGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las sucursales ${ error }`
@@ -166,7 +166,7 @@ const sucursalPost = async ( req, res = response ) => {
         return res.status( 201 ).json(sucursal)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar la sucursal ${ error }`
@@ -194,7 +194,7 @@ const sucursalPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las sucursales ${ error }`
@@ -230,7 +230,7 @@ const allSucursalesGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const sucursalRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const sucursal = await Sucursal.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
+    const sucursal = await Sucursal.findByIdAndUpdate( id,{ estado: true}, { new: true});
     if(!sucursal){
         return res.json(`La sucursal solicitada no se encuentra eliminada`)
     }

@@ -43,7 +43,7 @@ const proyectosGet = async ( req, res = response) => {
         res.send({ total, proyectos, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los proyectos ${ error }`
@@ -91,7 +91,7 @@ const proyectosGetDeleted = async ( req, res = response) => {
         res.send({ total, proyectos, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los proyectos ${ error }`
@@ -123,7 +123,7 @@ const proyectoGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el proyecto ${ error }`
@@ -140,7 +140,7 @@ const allProyectosGet = async ( req, res = response ) => {
         const proyectos = await Proyecto.find(query)
         res.send({ proyectos })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los proyectos ${ query }`
         })
@@ -198,7 +198,7 @@ const proyectoPost = async ( req, res = response ) => {
         return res.status( 201 ).json(proyecto)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un proyecto ${ error }`
@@ -226,7 +226,7 @@ const proyectoPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al modificar un proyecto ${ error }`
@@ -245,7 +245,7 @@ const crearEnfoquesEnProyectos = async (proyecto) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al modificar un proyecto ${ error }`

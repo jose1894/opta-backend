@@ -44,8 +44,6 @@ const actividadesGet = async ( req, res = response) => {
         res.send({ total, actividades, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las actividades ${ error }`
         })
@@ -95,8 +93,6 @@ const actividadesGetDeleted = async ( req, res = response) => {
         res.send({ total, actividades, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las actividades ${ error }`
         })
@@ -118,8 +114,6 @@ const actividadGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar la actividad ${ error }`
         })
@@ -135,7 +129,6 @@ const allActividadesGet = async ( req, res = response ) => {
         const actividades = await Actividad.find(query)
         res.send({ actividades })
     } catch ( error ) {
-        console.log( error )
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las actividades ${ query }`
         })
@@ -176,8 +169,6 @@ const actividadPost = async ( req, res = response ) => {
         return res.status( 201 ).json(actividad)
 
     } catch ( error ) {
-            console.log( error )
-
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar una actividad ${ error }`
             })
@@ -205,8 +196,6 @@ const actividadPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
-
         return res.status( 500 ).json({
             msg: `Error del servidor al modificar la actividad ${ error }`
         })

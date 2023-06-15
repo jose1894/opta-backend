@@ -48,8 +48,6 @@ const aliadosGet = async (req, res = response) => {
         res.send({ total, aliados, perPage: parseInt(perPage), page: parseInt(page) })
 
     } catch (error) {
-        console.log(error)
-
         return res.status(500).json({
             msg: `Error del servidor al mostrar los aliados ${error}`
         })
@@ -103,7 +101,7 @@ const aliadosGetDelete = async (req, res = response) => {
         res.send({ total, aliados, perPage: parseInt(perPage), page: parseInt(page) })
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al mostrar los aliados ${error}`
@@ -134,7 +132,7 @@ const aliadoGet = async (req, res = response) => {
         ])
         res.send({ aliado, referidos })
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al mostrar los aliados ${error}`
@@ -188,7 +186,7 @@ const aliadosPost = async (req, res = response) => {
         return res.status(201).json(aliado)
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al guardar un aliado ${error}`
@@ -215,7 +213,7 @@ const aliadoPut = async (req, res = response) => {
         )
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al mostrar los aliados ${error}`
@@ -242,7 +240,7 @@ const allAliadosGet = async (req, res = response) => {
         //const { cargos } = listCargos.data
         res.send({ aliados })
     } catch (error) {
-        console.log(error)
+        
         return res.status(500).json({
             msg: `Error del servidor al mostrar los aliados ${query}`
         })
@@ -252,7 +250,7 @@ const allAliadosGet = async (req, res = response) => {
 // restaurarPais - status : true
 const aliadoRestore = async (req, res = response) => {
     const { id } = req.params
-    const aliado = await Aliado.findOneAndUpdate({ id, estado: false }, { estado: true }, { new: true });
+    const aliado = await Aliado.findByIdAndUpdate(id, { estado: true }, { new: true });
     if (!aliado) {
         return res.json(`El aliado solicitado no se encuentra eliminado`)
     }

@@ -45,7 +45,7 @@ const profesionesGet = async ( req, res = response) => {
         res.send({ total, profesiones, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las profesiones ${ error }`
@@ -96,7 +96,7 @@ const profesionesGetDeleted = async ( req, res = response) => {
         res.send({ total, profesiones, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las profesiones ${ error }`
@@ -119,7 +119,7 @@ const profesionGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar la profesion ${ error }`
@@ -137,7 +137,7 @@ const allProfesionesGet = async ( req, res = response ) => {
         //const { cargos } = listCargos.data
         res.send({ profesiones })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las profesiones ${ query }`
         })
@@ -175,7 +175,7 @@ const profesionPost = async ( req, res = response ) => {
         return res.status( 201 ).json(profesion)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar una profesion ${ error }`
@@ -203,7 +203,7 @@ const profesionPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al actualizar la profesion ${ error }`

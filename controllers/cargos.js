@@ -45,7 +45,7 @@ const cargosGet = async ( req, res = response) => {
         res.send({ total, cargos, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los cargos ${ error }`
@@ -96,7 +96,7 @@ const cargosGetDeleted = async ( req, res = response) => {
         res.send({ total, cargos, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los cargos ${ error }`
@@ -119,7 +119,7 @@ const cargoGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los cargos ${ error }`
@@ -137,7 +137,7 @@ const allCargosGet = async ( req, res = response ) => {
         //const { cargos } = listCargos.data
         res.send({ cargos })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los cargos ${ query }`
         })
@@ -175,7 +175,7 @@ const cargosPost = async ( req, res = response ) => {
         return res.status( 201 ).json(cargo)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un cargo ${ error }`
@@ -203,7 +203,7 @@ const cargoPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los cargos ${ error }`
@@ -224,7 +224,7 @@ const cargoDelete = async ( req, res = response ) => {
 const cargoRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const cargo = await Cargo.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const cargo = await Cargo.findByIdAndUpdate( id, { estado: 1}, { new: true})
 
     if(!cargo){
         return res.json(`El cargo solicitado no se encuentra eliminado`)

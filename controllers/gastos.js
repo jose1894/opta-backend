@@ -43,7 +43,7 @@ const gastosGet = async ( req, res = response) => {
         res.send({ total, gastos, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los gastos ${ error }`
@@ -94,7 +94,7 @@ const gastosGetDelete = async ( req, res = response) => {
         res.send({ total, gastos, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los gastos ${ error }`
@@ -117,7 +117,7 @@ const gastoGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el gasto ${ error }`
@@ -153,7 +153,7 @@ const gastoPost = async ( req, res = response ) => {
         return res.status( 201 ).json(gasto)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar el gasto ${ error }`
@@ -179,7 +179,7 @@ const gastoPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el gasto ${ error }`
@@ -205,7 +205,7 @@ const allGastosGet = async ( req, res = response ) => {
         //const { cargos } = listCargos.data
         res.send({ gastos })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los gastos ${ query }`
         })

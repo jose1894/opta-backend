@@ -17,7 +17,7 @@ const enfoquesGet = async ( req, res = response) => {
         let enfoques  = await Enfoque.find(query).populate('miembro')/*.populate('areaPadre')*/
         res.send({ enfoques })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los cargos ${ error }`
         })
@@ -41,7 +41,7 @@ const getChildrenEnfoque = async ( req, res = response ) => {
         const children = enfoquesList.filter(enfoque => enfoque.children)
         res.send({ children })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar lo sub-items ${ query }`
         })
@@ -73,7 +73,7 @@ const enfoquePut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los enfoques ${ error }`
@@ -115,7 +115,7 @@ const enfoqueById = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el enfoque ${ error }`
@@ -157,7 +157,7 @@ const enfoquePost = async ( req, res = response ) => {
         await enfoque.save()
         return res.status( 201 ).json(enfoque)
     } catch ( error ) {
-            console.log( error )
+            
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar el enfoque ${ error }`
             })

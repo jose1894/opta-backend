@@ -18,7 +18,7 @@ const {
     ciudadGetDelete
 } = require('../controllers/ciudad')
 
-const { existeCiudadPorId, existeEmail } = require('../helpers/db-validators')
+const { existeCiudadPorId, existeEmail, existeCiudadPorCodigo } = require('../helpers/db-validators')
 const { Ciudad } = require('../models')
 
 const router =  Router()
@@ -35,6 +35,7 @@ router.post( '/', [
     check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
     check( 'state', 'El nombre es obligatorio' ).not().isEmpty(),
+    check( 'codigo' ).custom( existeCiudadPorCodigo ),
     validarCampos
 ], ciudadesPost)
 
@@ -54,6 +55,7 @@ router.put( '/:id', [
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
     check( 'state', 'El nombre es obligatorio' ).not().isEmpty(),
     check( 'id' ).custom( existeCiudadPorId ),
+    check( 'codigo' ).custom( existeCiudadPorCodigo ),
     validarCampos
 ], ciudadPut)
 
@@ -66,7 +68,7 @@ router.delete( '/:id',[
 ], ciudadDelete)
 
 //Borrar una estado - Admin
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existeCiudadPorId ),

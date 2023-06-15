@@ -45,7 +45,7 @@ const perfilesGet = async ( req, res = response) => {
         res.send({ total, perfiles, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los perfiles ${ error }`
@@ -96,7 +96,7 @@ const perfilesGetDeleted = async ( req, res = response) => {
         res.send({ total, perfiles, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los perfiles ${ error }`
@@ -119,7 +119,7 @@ const perfilGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el perfil ${ error }`
@@ -173,7 +173,7 @@ const perfilPost = async ( req, res = response ) => {
         return res.status( 201 ).json(perfil)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar el perfil ${ error }`

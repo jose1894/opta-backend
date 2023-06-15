@@ -45,7 +45,7 @@ const industriasGet = async ( req, res = response) => {
         res.send({ total, industrias, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las industrias ${ error }`
@@ -95,7 +95,7 @@ const industriasGetDeleted = async ( req, res = response) => {
         res.send({ total, industrias, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las industrias ${ error }`
@@ -118,7 +118,7 @@ const industriaGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las industrias ${ error }`
@@ -173,7 +173,7 @@ const industriaPost = async ( req, res = response ) => {
         return res.status( 201 ).json(industria)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar una industria ${ error }`
@@ -201,7 +201,7 @@ const industriaPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar la industria ${ error }`
