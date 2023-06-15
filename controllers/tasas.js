@@ -46,7 +46,7 @@ const tasasGet = async (req, res = response) => {
         res.send({ total, tasas, perPage: parseInt(perPage), page: parseInt(page) })
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al mostrar las tasas ${error}`
@@ -99,7 +99,7 @@ const tasasGetDelete = async (req, res = response) => {
         res.send({ total, tasas, perPage: parseInt(perPage), page: parseInt(page) })
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al mostrar las tasas ${error}`
@@ -124,7 +124,7 @@ const tasaSelectGet = async (req, res = response) => {
         )
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al mostrar las tasas ${error}`
@@ -158,7 +158,6 @@ const tasaPost = async (req, res = response) => {
             estado,
             usuario: req.usuario._id
         }
-        console.log(data)
         const tasa = new Tasa(data)
 
         //Guardar en DB
@@ -167,7 +166,7 @@ const tasaPost = async (req, res = response) => {
         return res.status(201).json(tasa)
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor al guardar una tasa ${error}`
@@ -195,7 +194,7 @@ const tasaPut = async (req, res = response) => {
         )
 
     } catch (error) {
-        console.log(error)
+        
 
         return res.status(500).json({
             msg: `Error del servidor ${error}`
@@ -222,7 +221,7 @@ const allTasasGet = async (req, res = response) => {
         //const { cargos } = listCargos.data
         res.send({ tasas })
     } catch (error) {
-        console.log(error)
+        
         return res.status(500).json({
             msg: `Error del servidor al mostrar las tasas ${query}`
         })

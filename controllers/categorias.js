@@ -45,7 +45,7 @@ const categoriasGet = async ( req, res = response) => {
         res.send({ total, categorias, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las categorias ${ error }`
@@ -96,7 +96,7 @@ const categoriasGetDeleted = async ( req, res = response) => {
         res.send({ total, categorias, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las categorias ${ error }`
@@ -119,7 +119,7 @@ const categoriaGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las categorias ${ error }`
@@ -135,7 +135,7 @@ const allCategoriasGet = async ( req, res = response ) => {
         const categorias = await Categoria.find(query)
         res.send({ categorias })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las categorias ${ query }`
         })
@@ -152,9 +152,7 @@ const categoriaPost = async ( req, res = response ) => {
             $or : [ { nombre}, { codigo} ],
             unidadNegocio         
         })
-        //( { $or : [ { nombre}, { codigo} ] } )
-        console.log(categoriaDB,'respuesta***********************' )
-
+        
         if ( categoriaDB ) {
             return res.status( 400 ).json({
                 msg: (categoriaDB.nombre === nombre.toUpperCase()) ? `La categoria ${ categoriaDB.nombre } ya existe` : 
@@ -180,7 +178,7 @@ const categoriaPost = async ( req, res = response ) => {
         return res.status( 201 ).json(categoria)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar una categoria ${ error }`
@@ -208,7 +206,7 @@ const categoriaPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las categorias ${ error }`
         })
@@ -220,12 +218,11 @@ const categoriasPorUnidadNegocio = async ( req, res = response ) => {
         let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
         query = {...options}
         const { id } = req.params
-        console.log(id)
         const categoriasList = await Categoria.find(query).populate({ path: 'unidadNegocio', match: { '_id': id }})
         const categorias = categoriasList.filter(categoria => categoria.unidadNegocio)
         res.send({ categorias })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las categorias ${ query }`
         })

@@ -25,7 +25,7 @@ const productosGet = async ( req, res = response) => {
         })
 
     // } catch ( error ) {
-    //     console.log( error )
+    //     
 
     //     return res.status( 500 ).json({
     //         msg: `Error del servidor al mostrar los productos ${ error }`
@@ -48,7 +48,7 @@ const productoGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los producto ${ error }`
@@ -71,8 +71,6 @@ const productosPost = async ( req, res = response ) => {
             })
         }
 
-        // console.log( body )
-
         const data = {
             ...body,
             categoria: body.categoria,
@@ -88,7 +86,7 @@ const productosPost = async ( req, res = response ) => {
         return res.status( 201 ).json(producto)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un producto ${ error }`
@@ -118,7 +116,7 @@ const productoPut = async ( req, res = response ) => {
         
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los productos ${ error }`

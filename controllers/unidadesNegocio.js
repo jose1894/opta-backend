@@ -43,7 +43,7 @@ const unidadesNegocioGet = async ( req, res = response) => {
         res.send({ total, unidadesNegocio, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las unidades de negocios ${ error }`
@@ -94,7 +94,7 @@ const unidadesNegocioGetDelete = async ( req, res = response) => {
         res.send({ total, unidadesNegocio, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las unidades de negocios ${ error }`
@@ -119,7 +119,7 @@ const unidadNegocioGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar la unidad de negocio ${ error }`
@@ -159,7 +159,7 @@ const unidadNegocioPost = async ( req, res = response ) => {
         return res.status( 201 ).json(unidadNegocio)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar una unidad de negocia ${ error }`
@@ -187,7 +187,7 @@ const unidadNegocioPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar la unidad de negocio ${ error }`
@@ -213,7 +213,7 @@ const allUnidadesNegocioGet = async ( req, res = response ) => {
         //const { cargos } = listCargos.data
         res.send({ unidadesNegocio })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las unidades de negocio ${ query }`
         })
@@ -223,7 +223,7 @@ const allUnidadesNegocioGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const unidadNegocioRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const unidadNegocio = await UnidadNegocio.findOneAndUpdate( {id, estado: 1}, { estado: true}, { new: true});
+    const unidadNegocio = await UnidadNegocio.findByIdAndUpdate( id, { estado: true}, { new: true});
     if(!unidadNegocio){
         return res.json(`La unidad de negocio solicitada no se encuentra eliminada`)
     }

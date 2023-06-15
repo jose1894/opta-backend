@@ -46,7 +46,7 @@ const miembrosGet = async ( req, res = response) => {
         res.send({ total, miembros, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los miembros ${ error }`
@@ -99,7 +99,7 @@ const miembrosGetDelete = async ( req, res = response) => {
         res.send({ total, miembros, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los miembros ${ error }`
@@ -124,15 +124,14 @@ const miembroGet = async ( req, res = response ) => {
                                    .populate('pais')
                                    .populate('cargo')
         //let dateVigencia = miembro.vigencia
-        miembro.vigencia = moment.utc(miembro.vigencia).format('DD-MM-YYYY'),
-        console.log(miembro.vigencia)
+        miembro.vigencia = moment.utc(miembro.vigencia).format('DD-MM-YYYY')
 
         return res.status(200).send(
             miembro
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los miembros ${ error }`
@@ -189,7 +188,6 @@ const miembroPost = async ( req, res = response ) => {
             estado,
             usuario: req.usuario._id
         }
-        console.log( data )
         const miembro = new Miembro( data )
 
         //Guardar en DB
@@ -198,7 +196,7 @@ const miembroPost = async ( req, res = response ) => {
         return res.status( 201 ).json(miembro)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un miembro ${ error }`
@@ -217,8 +215,7 @@ const miembroPut = async ( req, res = response ) => {
         const { status, usuario, ...data } = req.body
 
         data.nombre = data.nombre.toUpperCase()
-        console.log(data)
-        //data.vigencia = moment(data.vigencia, 'YYYY-MM-DD')//moment.utc(data.vigencia).format('DD-MM-YYYY'), 
+         
         data.usuario = req.usuario._id 
         const miembro = await Miembro.findByIdAndUpdate( id, data, { new:true })
 
@@ -227,7 +224,7 @@ const miembroPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los miembros ${ error }`
@@ -254,7 +251,7 @@ const allMiembrosGet = async ( req, res = response ) => {
         //const { cargos } = listCargos.data
         res.send({ miembros })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los miembros ${ query }`
         })
@@ -264,7 +261,7 @@ const allMiembrosGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const miembroRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const miembro = await Miembro.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
+    const miembro = await Miembro.findByIdAndUpdate(id, { estado: true}, { new: true});
     if(!miembro){
         return res.json(`El miembro solicitado no se encuentra eliminado`)
     }

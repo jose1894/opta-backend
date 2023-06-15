@@ -45,7 +45,7 @@ const personastGet = async ( req, res = response) => {
         res.send({ total, personas, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las personas ${ error }`
@@ -96,7 +96,7 @@ const personasGetDeleted = async ( req, res = response) => {
         res.send({ total, personas, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las personas ${ error }`
@@ -127,7 +127,7 @@ const personaGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las personas ${ error }`
@@ -235,7 +235,7 @@ const personaPost = async ( req, res = response ) => {
         return res.status( 201 ).json(personal)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar el personal ${ error }`
@@ -264,7 +264,7 @@ const personaPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar las personas ${ error }`

@@ -58,6 +58,7 @@ router.put( '/:id', [
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
     check( 'id' ).custom( existeCargoPorId ),
+    check( 'codigo' ).custom( existeCargoPorCodigo ),
     validarCampos
 ], cargoPut)
 

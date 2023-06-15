@@ -46,7 +46,7 @@ const clientesGet = async ( req, res = response) => {
         res.send({ total, clientes, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los clientes ${ error }`
@@ -102,7 +102,7 @@ const clientesGetDeleted = async ( req, res = response) => {
         res.send({ total, clientes, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los clientes ${ error }`
@@ -140,7 +140,7 @@ const clienteGet = async ( req, res = response ) => {
         return res.status(200).send({cliente, contactos})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el cliente ${ error }`
@@ -208,7 +208,7 @@ const clientePost = async ( req, res = response ) => {
         return res.status( 201 ).json(cliente)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un cliente ${ error }`
@@ -246,7 +246,7 @@ const clientePut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los clientes ${ error }`
@@ -273,7 +273,7 @@ const allClientesGet = async ( req, res = response ) => {
         //const { cargos } = listCargos.data
         res.send({ cliente })
     } catch ( error ) {
-        console.log( error )
+        
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los clientes ${ query }`
         })

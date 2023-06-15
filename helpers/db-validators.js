@@ -142,7 +142,6 @@ const existeMonedaPorId = async ( id ) => {
 
 const existeMonedaPorCode = async ( codigo ) => {  
     const existe = await Moneda.findOne( { codigo } )
-    console.log(code, existe )
     if ( existe ) {
         throw new Error( `El codigo ${ code } ya esta registrado`)
     }
@@ -159,6 +158,13 @@ const existeSucursalPorId = async ( id ) => {
     const existe = await Sucursal.findById( id )
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeSucursalPorCodigo = async ( codigo ) => {
+    const existe = await Sucursal.find({codigo})
+    if ( !existe ) {
+        throw new Error( `El codigo ${ id } no existe`)
     }
 }
 
@@ -304,5 +310,7 @@ module.exports = {
     existeIndustriaPorId,
     existeEnfoquePorId,
     existeActividadPorId,
-    existeProyectoPorId
+    existeProyectoPorId,
+    existeSucursalPorCodigo,
+    existeCiudadPorCodigo
 }

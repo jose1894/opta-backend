@@ -43,7 +43,7 @@ const estadosGet = async ( req, res = response) => {
         res.send({ total, estados, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los estados ${ error }`
@@ -66,7 +66,7 @@ const estadoGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los estados ${ error }`
@@ -106,7 +106,7 @@ const estadosPost = async ( req, res = response ) => {
         return res.status( 201 ).json(estado)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar un estado ${ error }`
@@ -135,7 +135,7 @@ const estadoPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los estados ${ error }`
@@ -195,7 +195,7 @@ const estdosGetDeleteOrInactive = async ( req, res = response) => {
         res.send({ total, estados, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los estados ${ error }`
@@ -216,7 +216,7 @@ const estadosByPaisGet = async ( req, res = response ) => {
         const estados = estadosList.filter(estado => estado.pais)
         res.send({ estados })
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los estados ${ query }`

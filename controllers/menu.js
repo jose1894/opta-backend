@@ -45,7 +45,7 @@ const menuGet = async ( req, res = response) => {
         res.send({ total, menu, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los items del menu ${ error }`
@@ -96,7 +96,7 @@ const menuGetDeleted = async ( req, res = response) => {
         res.send({ total, menu, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar los item del menu ${ error }`
@@ -119,7 +119,7 @@ const menuItemGet = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el item del menu ${ error }`
@@ -171,7 +171,7 @@ const itemMenuPost = async ( req, res = response ) => {
         return res.status( 201 ).json(itemMenu)
 
     } catch ( error ) {
-            console.log( error )
+            
 
             return res.status( 500 ).json({
                 msg: `Error del servidor al guardar el item menu ${ error }`
@@ -199,7 +199,7 @@ const itemMenuPut = async ( req, res = response ) => {
         )
 
     } catch ( error ) {
-        console.log( error )
+        
 
         return res.status( 500 ).json({
             msg: `Error del servidor al mostrar el item menu ${ error }`
