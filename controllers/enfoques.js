@@ -6,7 +6,7 @@ const { ObjectId } = require('mongodb');
 const enfoquesGet = async ( req, res = response) => {
     try{
         let options = { $or:[ {'estado':1}, {'estado':0}]};   
-        let filter = {'nombre':'Root'}
+        let filter = {'tipoNodo':0}
         let query = {}
         query = {
             //...filter,
@@ -64,7 +64,7 @@ const enfoquePut = async ( req, res = response ) => {
         const { id } = req.params
 
         const { usuario, ...data } = req.body
-        data.ruta = data.areaPadreNombre === 'Root' ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
+        data.ruta = data.tipoNodo === 1 ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
         data.usuario = req.usuario._id 
         const enfoque = await Enfoque.findByIdAndUpdate( id, data, { new:true })
 
@@ -125,7 +125,7 @@ const enfoqueById = async ( req, res = response ) => {
 
 const enfoquePost = async ( req, res = response ) => {
     try {
-        const {indice,nombre,areaPadre,areaPadreNombre,rutaPadre,ruta,visible,rcr,editable, estado, miembro, nodoRaiz} = req.body
+        const {indice,nombre,areaPadre,areaPadreNombre,rutaPadre,ruta,visible,rcr,editable, estado, miembro, tipoNodo} = req.body
 
         const enfoqueDB = await Enfoque.findOne( { $or : [ { nombre}, { indice } ] } )
 
@@ -148,10 +148,10 @@ const enfoquePost = async ( req, res = response ) => {
             editable, 
             estado, 
             miembro,
-            nodoRaiz,
+            tipoNodo,
             usuario: req.usuario._id
         }
-        data.ruta = data.areaPadreNombre === 'Root' ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
+        data.ruta = data.tipoNodo === 1 ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
         const enfoque = new Enfoque( data )
         //Guardar en DB
         await enfoque.save()

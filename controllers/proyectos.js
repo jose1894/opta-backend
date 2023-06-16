@@ -1,30 +1,31 @@
 const { response } = require("express");
 const moment = require('moment');
 const Proyecto = require('../models/proyecto')
-const Enfoque  = require('../models/enfoque')
+const Enfoque = require('../models/enfoque')
+const fs = require('fs');
 
 // obtenerPaiss - paginado - total - populate
 
-const proyectosGet = async ( req, res = response) => {
-    try{
+const proyectosGet = async (req, res = response) => {
+    try {
         const {
-            q        = '', 
-            page     = 0, 
-            perPage  = 10, 
-            sortBy   = 'nombre', 
-            sortDesc = true 
+            q = '',
+            page = 0,
+            perPage = 10,
+            sortBy = 'nombre',
+            sortDesc = true
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        let options = { $or: [{ 'estado': 1 }, { 'estado': 0 }] };
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
         let query = {}
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-        
-        if ( q ){
-            filter = functionFiltrar( q );
+
+        if (q) {
+            filter = functionFiltrar(q);
             query = {
                 ...filter,
                 '$and': [
@@ -32,46 +33,46 @@ const proyectosGet = async ( req, res = response) => {
                 ]
             }
         } else {
-            query = {...options}
+            query = { ...options }
         }
 
-        const [ total, proyectos ] = await Promise.all([
-            Proyecto.countDocuments( query ),
-            Proyecto.find(query).populate('cliente').populate( 'socio' ).skip( skip ).sort(sort) .limit( perPage )
+        const [total, proyectos] = await Promise.all([
+            Proyecto.countDocuments(query),
+            Proyecto.find(query).populate('cliente').populate('socio').skip(skip).sort(sort).limit(perPage)
         ])
 
-        res.send({ total, proyectos, perPage:parseInt(perPage), page: parseInt(page)})
+        res.send({ total, proyectos, perPage: parseInt(perPage), page: parseInt(page) })
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los proyectos ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar los proyectos ${error}`
         })
     }
 
 }
 
-const proyectosGetDeleted = async ( req, res = response) => {
-    try{
+const proyectosGetDeleted = async (req, res = response) => {
+    try {
         const {
-            q        = '', 
-            page     = 0, 
-            perPage  = 10, 
-            sortBy   = 'nombre', 
-            sortDesc = true, 
+            q = '',
+            page = 0,
+            perPage = 10,
+            sortBy = 'nombre',
+            sortDesc = true,
         } = req.query;
 
-        let options = { $or:[ {'estado': 2}]};        
+        let options = { $or: [{ 'estado': 2 }] };
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
         let query = {}
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-        
-        if ( q ){
-            filter = functionFiltrar( q );
+
+        if (q) {
+            filter = functionFiltrar(q);
             query = {
                 ...filter,
                 '$and': [
@@ -79,200 +80,200 @@ const proyectosGetDeleted = async ( req, res = response) => {
                 ]
             }
         } else {
-            query = {...options}
+            query = { ...options }
         }
-         
+
         // Promise . all envia varias promesas simultaneas
-        const [ total, proyectos ] = await Promise.all([
-            Proyecto.countDocuments( query ),
-            Proyecto.find(query).populate('cliente').populate( 'socio' ).skip( skip ).sort(sort) .limit( perPage )
+        const [total, proyectos] = await Promise.all([
+            Proyecto.countDocuments(query),
+            Proyecto.find(query).populate('cliente').populate('socio').skip(skip).sort(sort).limit(perPage)
         ])
 
-        res.send({ total, proyectos, perPage:parseInt(perPage), page: parseInt(page)})
+        res.send({ total, proyectos, perPage: parseInt(perPage), page: parseInt(page) })
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los proyectos ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar los proyectos ${error}`
         })
     }
 
 }
 
 // obtenerPais - populate {}
-const proyectoGet = async ( req, res = response ) => {
+const proyectoGet = async (req, res = response) => {
 
-    try{
+    try {
 
-        const { id } = req.params       
+        const { id } = req.params
 
-        const proyecto = await Proyecto.findById( id )
-                                .populate( 'cliente' )
-                                .populate( 'creado' )
-                                .populate( 'socio' )
-                                .populate( 'gerente' )
-                                .populate( 'sucursal' )
-                                .populate( 'unidadNegocio' )
-                                .populate( 'tipoServicio' )
-                                .populate( 'membresia' )                                
-                                .populate( 'usuario' )
+        const proyecto = await Proyecto.findById(id)
+            .populate('cliente')
+            .populate('creado')
+            .populate('socio')
+            .populate('gerente')
+            .populate('sucursal')
+            .populate('unidadNegocio')
+            .populate('tipoServicio')
+            .populate('membresia')
+            .populate('usuario')
 
         return res.status(200).send(
             proyecto
         )
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar el proyecto ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar el proyecto ${error}`
         })
     }
 }
 
-const allProyectosGet = async ( req, res = response ) => {
+const allProyectosGet = async (req, res = response) => {
 
-    try{
-        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
-        query = {...options}
+    try {
+        let options = { $or: [{ 'estado': 1 }/*, {'estado':0}*/] };
+        query = { ...options }
         const { id } = req.params
         const proyectos = await Proyecto.find(query)
         res.send({ proyectos })
-    } catch ( error ) {
-        
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los proyectos ${ query }`
+    } catch (error) {
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar los proyectos ${query}`
         })
     }
 }
 
-const proyectoPost = async ( req, res = response ) => {
+const proyectoPost = async (req, res = response) => {
 
 
     try {
         const {
-            codigo, 
-            fecha, 
-            creado, 
-            cliente, 
+            codigo,
+            fecha,
+            creado,
+            cliente,
             socio,
-            gerente, 
-            sucursal, 
-            unidadNegocio, 
-            tipoServicio, 
+            gerente,
+            sucursal,
+            unidadNegocio,
+            tipoServicio,
             descripcionServicio,
             membresia,
-            estado} = req.body
+            estado } = req.body
 
-        const proyectoDB = await Proyecto.findOne({ codigo})
+        const proyectoDB = await Proyecto.findOne({ codigo })
 
-        if ( proyectoDB ) {
-            return res.status( 400 ).json({
-                msg: `El proyecto ${ proyectoDB.codigo } ya existe`,
+        if (proyectoDB) {
+            return res.status(400).json({
+                msg: `El proyecto ${proyectoDB.codigo} ya existe`,
                 data: proyectoDB
             })
         }
 
         const data = {
-            codigo, 
-            fecha, 
-            creado, 
-            cliente, 
+            codigo,
+            fecha,
+            creado,
+            cliente,
             socio,
-            gerente, 
-            sucursal, 
-            unidadNegocio, 
-            tipoServicio, 
+            gerente,
+            sucursal,
+            unidadNegocio,
+            tipoServicio,
             descripcionServicio,
             membresia,
             usuario: req.usuario._id,
             estado
         }
 
-        const proyecto = new Proyecto( data )
+        const proyecto = new Proyecto(data)
 
         //Guardar en DB
         await proyecto.save()
 
-        return res.status( 201 ).json(proyecto)
+        return res.status(201).json(proyecto)
 
-    } catch ( error ) {
-            
+    } catch (error) {
 
-            return res.status( 500 ).json({
-                msg: `Error del servidor al guardar un proyecto ${ error }`
-            })
+
+        return res.status(500).json({
+            msg: `Error del servidor al guardar un proyecto ${error}`
+        })
 
     }
-} 
+}
 
 // actualizarPais 
-const proyectoPut = async ( req, res = response ) => {
+const proyectoPut = async (req, res = response) => {
 
-    try{
+    try {
 
         const { id } = req.params
 
         const { status, usuario, ...data } = req.body
-        data.usuario = req.usuario._id 
+        data.usuario = req.usuario._id
         const fechaNew = moment(data.fecha, "DD-MM-YYYY").toDate();
         data.fecha = fechaNew
 
-        const proyecto = await Proyecto.findByIdAndUpdate( id, data, { new:true })
+        const proyecto = await Proyecto.findByIdAndUpdate(id, data, { new: true })
+        crearEnfoquesEnProyectos(proyecto)
 
         return res.status(200).send(
             proyecto
         )
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al modificar un proyecto ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al modificar un proyecto ${error}`
         })
     }
 }
 
 const crearEnfoquesEnProyectos = async (proyecto) => {
-
-    try{       
-
-        const proyecto = await Proyecto.findByIdAndUpdate( id, data, { new:true })
-
-        return res.status(200).send(
-            proyecto
-        )
-
-    } catch ( error ) {
-        
-
-        return res.status( 500 ).json({
-            msg: `Error del servidor al modificar un proyecto ${ error }`
+    try {
+        let enfoques = await Enfoque.find({ $and: [{ 'estado': 1 },{ tipoNodo: { $ne: 0 } }] })
+        const enfoquesPadre = enfoques.filter((e) => e.tipoNodo === 1)
+        const enfoquesHijos = enfoques.filter((e) => e.tipoNodo === 2)
+        enfoquesPadre.map((enf) => {
+            if (!fs.existsSync(`./projects/${proyecto.codigo}/${enf.ruta}/`)) {
+                fs.mkdirSync(`./projects/${proyecto.codigo}/${enf.ruta}/`, { recursive: true });
+            }            
         })
-    }
+        enfoquesHijos.map((enf) => {
+            if (enf.visible === 1 && !fs.existsSync(`./projects/${proyecto.codigo}/${enf.ruta}/`)) {
+                fs.mkdirSync(`./projects/${proyecto.codigo}/${enf.ruta}/`, { recursive: true });
+            }
+        })
+    } catch (error) {}
 }
 
 // borrarPais - status : false
-const proyectoDelete = async ( req, res = response ) => {
+const proyectoDelete = async (req, res = response) => {
 
     const { id } = req.params
-    const proyecto = await Proyecto.findByIdAndUpdate( id, { estado: 2}, { new: true})
+    const proyecto = await Proyecto.findByIdAndUpdate(id, { estado: 2 }, { new: true })
 
-    res.json( proyecto )
+    res.json(proyecto)
 }
 
 // restaurarPais - status : true
-const proyectoRestore = async ( req, res = response ) => {
+const proyectoRestore = async (req, res = response) => {
 
     const { id } = req.params
-    const proyecto = await Proyecto.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const proyecto = await Proyecto.findOneAndUpdate({ id, estado: false }, { estado: true }, { new: true })
 
-    if(!proyecto){
+    if (!proyecto) {
         return res.json(`El proyecto solicitado no se encuentra eliminado`)
     }
 
-    res.json( proyecto )
+    res.json(proyecto)
 }
 
 module.exports = {

@@ -39,7 +39,7 @@ const EnfoqueSchema = Schema({
     editable : {
         type: Number,
         default: 0,
-        enum: [0,1], //0-no y 1-si
+        enum: [0,1], //0-lista y 1-menu
     },
     estado : {
         type: Number,
@@ -55,10 +55,10 @@ const EnfoqueSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Miembro'
     },
-    nodoRaiz: {
+    tipoNodo: {
         type: Number,
-        default: 0,
-        enum: [0,1], //0-no y 1-si
+        default: 2,
+        enum: [0,1,2], //0-raiz, 1-principales y 2-otros
     },
     usuario: {
         type: Schema.Types.ObjectId,
