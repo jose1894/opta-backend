@@ -192,6 +192,7 @@ const proyectoPost = async (req, res = response) => {
         }
 
         const proyecto = new Proyecto(data)
+        crearEnfoquesEnProyectos(proyecto)
 
         //Guardar en DB
         await proyecto.save()
