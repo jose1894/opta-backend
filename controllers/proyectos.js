@@ -2,7 +2,9 @@ const { response } = require("express");
 const moment = require('moment');
 const Proyecto = require('../models/proyecto')
 const Enfoque = require('../models/enfoque')
+const ProyectoEnfoque = require('../models/proyectoEnfoque')
 const fs = require('fs');
+const proyectoEnfoque = require("../models/proyectoEnfoque");
 
 // obtenerPaiss - paginado - total - populate
 
@@ -177,7 +179,6 @@ const proyectoPost = async (req, res = response) => {
 
         const data = {
             codigo,
-            fecha,
             creado,
             cliente,
             socio,
@@ -239,21 +240,33 @@ const proyectoPut = async (req, res = response) => {
 
 const crearEnfoquesEnProyectos = async (proyecto) => {
     try {
-        let enfoques = await Enfoque.find({ $and: [{ 'estado': 1 },{ tipoNodo: { $ne: 0 } }] })
+        let enfoques = await Enfoque.find({ $and: [{ 'estado': 1 }, { tipoNodo: { $ne: 0 } }] })
         const enfoquesPadre = enfoques.filter((e) => e.tipoNodo === 1)
         const enfoquesHijos = enfoques.filter((e) => e.tipoNodo === 2)
-        enfoquesPadre.map((enf) => {
+        const dataEnfoqueP = []
+        enfoquesPadre.map(async (enf) => {
             if (!fs.existsSync(`./projects/${proyecto.codigo}/${enf.ruta}/`)) {
                 fs.mkdirSync(`./projects/${proyecto.codigo}/${enf.ruta}/`, { recursive: true });
-            }            
+                const dataResult = {enfoque: enf._id, proyecto: proyecto._id}
+                dataEnfoqueP.push(dataResult)               
+            }
         })
         enfoquesHijos.map((enf) => {
             if (enf.visible === 1 && !fs.existsSync(`./projects/${proyecto.codigo}/${enf.ruta}/`)) {
                 fs.mkdirSync(`./projects/${proyecto.codigo}/${enf.ruta}/`, { recursive: true });
+                const dataResult = {enfoque: enf._id, proyecto: proyecto._id}
+                dataEnfoqueP.push(dataResult)  
             }
         })
-    } catch (error) {}
+        const processedUsers = await Promise.all(dataEnfoqueP.map(guardarEnfoqueProyecto));
+    } catch (error) { }
 }
+
+const guardarEnfoqueProyecto = async (data) => {
+    const proyectoEnf = new ProyectoEnfoque(data)
+    await proyectoEnf.save()
+    return { ...proyectoEnf.toObject(), data };
+};
 
 // borrarPais - status : false
 const proyectoDelete = async (req, res = response) => {

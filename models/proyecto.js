@@ -12,6 +12,7 @@ const ProyectoSchema = Schema({
     fecha: {
         type: Date,
         required: [ true, 'La fecha es obligatorio'],
+        default: Date.now,
     },
     creado : {
         type: Schema.Types.ObjectId,
