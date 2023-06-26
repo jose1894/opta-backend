@@ -220,7 +220,7 @@ const itemMenuDelete = async ( req, res = response ) => {
 const itemMenuRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const itemMenu = await Menu.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const itemMenu = await Menu.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!itemMenu){
         return res.json(`La accion de perfil solicitado no se encuentra eliminada`)

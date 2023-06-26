@@ -283,8 +283,8 @@ const allClientesGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const clienteRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const cliente = await Cliente.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
-    if(!miembro){
+    const cliente = await Cliente.findByIdAndUpdate( id, { estado: true}, { new: true});
+    if(!cliente){
         return res.json(`El cliente solicitado no se encuentra eliminado`)
     }
     res.json( cliente )

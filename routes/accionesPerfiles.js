@@ -20,7 +20,7 @@ const {
     accionesPerfilesGetDeleted
 } = require('../controllers/accionesPerfiles')
 
-const { existeAccionPerfilPorId, existeEmail } = require('../helpers/db-validators')
+const { existeAccionPerfilPorId, existeEmail, existeAccionPerfilPorCodigo } = require('../helpers/db-validators')
 
 const router =  Router()
 
@@ -37,6 +37,7 @@ router.post( '/', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
     check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
+    check( 'codigo').custom(existeAccionPerfilPorCodigo),
     check( 'descripcion', 'La descripcion es obligatorio' ).not().isEmpty(),
     validarCampos
 ], accionPerfilPost)
@@ -68,7 +69,7 @@ router.delete( '/:id',[
 ], accionPerfilDelete)
 
 //Borrar una pais - Admin
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existeAccionPerfilPorId ),

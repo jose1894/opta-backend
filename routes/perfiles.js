@@ -30,7 +30,7 @@ router.get( '/', perfilesGet)
 
 router.get( '/allPerfiles', allPerfilesGet)
 
-router.get( '/perfilesDeleted', perfilDelete) 
+router.get( '/perfilesDeleted', perfilesGetDeleted) 
 
 //Crear pais - privado - Cualquier persona con token
 router.post( '/', [
@@ -67,8 +67,8 @@ router.delete( '/:id',[
     validarCampos 
 ], perfilDelete)
 
-//Borrar una pais - Admin
-router.put( '/restore/:id',[
+//Restaurar una perfil - Admin
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existePerfilPorId ),

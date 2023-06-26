@@ -58,7 +58,7 @@ router.put( '/:id', [
     validarCampos
 ], gastoPut)
 
-//Borrar una pais - Admin
+//Borrar un gasto - Admin
 router.delete( '/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
@@ -66,8 +66,8 @@ router.delete( '/:id',[
     validarCampos 
 ], gastoDelete)
 
-//Borrar una pais - Admin
-router.put( '/restore/:id',[
+//Restaurar un gasto - Admin
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check('id').custom( existeGastoPorId ),

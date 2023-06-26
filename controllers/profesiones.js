@@ -224,7 +224,7 @@ const profesionDelete = async ( req, res = response ) => {
 const profesionRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const profesion = await Profesion.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const profesion = await Profesion.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!profesion){
         return res.json(`La profesion solicitada no se encuentra eliminada`)

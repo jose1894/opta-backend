@@ -20,7 +20,7 @@ const {
     tasaRestore
 } = require('../controllers/tasas')
 
-const { existeTasaPorId, existeEmail } = require('../helpers/db-validators')
+const { existeTasaPorId, existeEmail, existeTasaPorCodigo } = require('../helpers/db-validators')
 
 const router =  Router()
 
@@ -38,6 +38,7 @@ router.post( '/', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
     check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
+    check( 'codigo' ).custom(existeTasaPorCodigo),
     validarCampos
 ], tasaPost)
 
@@ -67,7 +68,7 @@ router.delete( '/:id',[
 ], tasaDelete)
 
 //Borrar una pais - Admin
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existeTasaPorId ),

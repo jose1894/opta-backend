@@ -72,7 +72,7 @@ router.delete( '/:id',[
 ], clienteDelete)
 
 //Borrar una pais - Admin
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existeClientePorId  ),

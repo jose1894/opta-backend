@@ -242,7 +242,7 @@ const categoriaDelete = async ( req, res = response ) => {
 const categoriaRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const categoria = await Categoria.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const categoria = await Categoria.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!categoria){
         return res.json(`La categoria solicitada no se encuentra eliminada`)

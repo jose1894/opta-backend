@@ -222,7 +222,7 @@ const industriaDelete = async ( req, res = response ) => {
 const industriaRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const industria = await Industria.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const industria = await Industria.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!industria){
         return res.json(`La industria solicitado no se encuentra eliminada`)

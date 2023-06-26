@@ -20,7 +20,7 @@ const {
     categoriasGetDeleted,
     categoriasPorUnidadNegocio} = require('../controllers/categorias')
 
-const { existeCategoriaPorId, existeEmail } = require('../helpers/db-validators')
+const { existeCategoriaPorId, existeEmail, existeCategoriaPorCodigo } = require('../helpers/db-validators')
 const { Categoria } = require('../models')
 
 const router =  Router()
@@ -48,6 +48,7 @@ router.post( '/', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
     check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
+    check( 'codigo' ).custom(existeCategoriaPorCodigo),
     check( 'nombre', 'El nombre es obligatorio' ).not().isEmpty(),
     validarCampos
 ], categoriaPost)
@@ -70,7 +71,7 @@ router.delete( '/:id',[
     validarCampos 
 ], categoriaDelete)
 
-router.put( '/restore/:id',[
+router.delete( '/restore/:id',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
     check( 'id' ).custom( existeCategoriaPorId ),

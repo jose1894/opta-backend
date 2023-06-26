@@ -285,7 +285,7 @@ const personaDelete = async ( req, res = response ) => {
 const personaRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const persona = await Personal.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const persona = await Personal.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!persona){
         return res.json(`La persona solicitado no se encuentra eliminado`)

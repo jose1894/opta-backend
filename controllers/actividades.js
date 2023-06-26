@@ -215,7 +215,7 @@ const actividadDelete = async ( req, res = response ) => {
 const actividadRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const actividad = await Actividad.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const actividad = await Actividad.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!actividad){
         return res.json(`La actividad solicitada no se encuentra eliminada`)

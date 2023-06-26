@@ -224,7 +224,7 @@ const idiomaDelete = async ( req, res = response ) => {
 const idiomaRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const idioma = await Idioma.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const idioma = await Idioma.findByIdAndUpdate( id, { estado: true}, { new: true})
 
     if(!idioma){
         return res.json(`El idioma solicitado no se encuentra eliminado`)

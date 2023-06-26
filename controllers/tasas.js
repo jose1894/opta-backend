@@ -231,7 +231,7 @@ const allTasasGet = async (req, res = response) => {
 // restaurarPais - status : true
 const tasaRestore = async (req, res = response) => {
     const { id } = req.params
-    const tasa = await Tasa.findOneAndUpdate({ id, estado: false }, { estado: true }, { new: true });
+    const tasa = await Tasa.findByIdAndUpdate(id, { estado: true }, { new: true });
     if (!tasa) {
         return res.json(`La tasa no esta eliminada`)
     }

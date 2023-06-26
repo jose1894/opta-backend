@@ -220,13 +220,13 @@ const perfilDelete = async ( req, res = response ) => {
 const perfilRestore = async ( req, res = response ) => {
 
     const { id } = req.params
-    const perfil = await Perfil.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true})
+    const perfil = await Perfil.findByIdAndUpdate( id, { estado: true}, { new: true})
 
-    if(!accionPerfil){
+    if(!perfil){
         return res.json(`La accion de perfil solicitado no se encuentra eliminada`)
     }
 
-    res.json( accionPerfil )
+    res.json( perfil)
 }
 
 module.exports = {

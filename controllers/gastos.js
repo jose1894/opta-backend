@@ -215,7 +215,7 @@ const allGastosGet = async ( req, res = response ) => {
 // restaurarPais - status : true
 const gastoRestore = async ( req, res = response ) => {
     const { id } = req.params
-    const gasto = await Gasto.findOneAndUpdate( {id, estado: false}, { estado: true}, { new: true});
+    const gasto = await Gasto.findByIdAndUpdate( id, { estado: true}, { new: true});
     if(!gasto){
         return res.json(`el gasto solicitado no se encuentra eliminado`)
     }

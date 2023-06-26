@@ -64,6 +64,13 @@ const existeCategoriaPorId = async ( id ) => {
     }
 }
 
+const existeCategoriaPorCodigo = async ( codigo ) => {
+    const existe = await Categoria.find( {codigo} )    
+    if ( !existe ) {
+        throw new Error( `El codigo ${ codigo } no existe`)
+    }
+}
+
 const existePaisPorId = async ( id ) => {
     const existe = await Pais.findById( id )    
     if ( !existe ) {
@@ -210,10 +217,24 @@ const existeAccionPerfilPorId = async ( id ) => {
     }
 }
 
+const existeAccionPerfilPorCodigo = async ( codigo ) => {
+    const existe = await AccionPerfil.find( {codigo} )
+    if ( !existe ) {
+        throw new Error( `El codigo ${ codigo } no existe`)
+    }
+}
+
 const existeMenuPorId = async ( id ) => {
     const existe = await Menu.findById( id )
     if ( !existe ) {
         throw new Error( `El id ${ id } no existe`)
+    }
+}
+
+const existeMenuPorCodigo = async ( codigo) => {
+    const existe = await Menu.find( {codigo} )
+    if ( !existe ) {
+        throw new Error( `El codigo ${ codigo } no existe`)
     }
 }
 
@@ -223,6 +244,13 @@ const existeTasaPorId = async ( id ) => {
     const existe = await Tasa.findById(id)
     if ( !existe ) {
         throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
+const existeTasaPorCodigo = async ( codigo ) => {
+    const existe = await Tasa.find({codigo})
+    if ( !existe ) {
+        throw new Error( `El registro ${ codigo } no existe`)
     }
 }
 
@@ -285,6 +313,7 @@ module.exports = {
     existeEmail,
     existeUsuarioPorId,
     existeCategoriaPorId,
+    existeCategoriaPorCodigo,
     existeProductoPorId,
     existePaisPorId,
     existeEstadoPorId,
@@ -301,9 +330,12 @@ module.exports = {
     existeUnidadNegociolPorId,
     existeGastoPorId,
     existeAccionPerfilPorId,
+    existeAccionPerfilPorCodigo,
     existeMenuPorId,
+    existeMenuPorCodigo,
     existePerfilPorId,
     existeTasaPorId,
+    existeTasaPorCodigo,
     existeIdiomaPorId,
     existeProfesionPorId,
     existePersonalPorId,
