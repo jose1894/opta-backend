@@ -18,7 +18,8 @@ const {
     personaDelete,
     personaRestore,
     personaPost,
-    getListTipoPersonal
+    getListTipoPersonal,
+    buscarPersonaGet,
 } = require('../controllers/personal')
 
 const { existePersonalPorId, existeEmail } = require('../helpers/db-validators')
@@ -31,6 +32,8 @@ const router =  Router()
 router.get( '/', personastGet) 
 
 router.get( '/allPersona', allPersonaGet)
+
+router.get( '/buscarPersona/:query', buscarPersonaGet)
 
 router.get( '/personaDeleted', personasGetDeleted) 
 

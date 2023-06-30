@@ -3,12 +3,12 @@ const { Schema, model } = require('mongoose')
 const PersonalSchema = Schema({
     nombres: {
         type: String,
-        required: [ true, 'El nombre es obligatorio'],
+        required: [true, 'El nombre es obligatorio'],
         uppercase: true,
     },
     apellidos: {
         type: String,
-        required: [ true, 'Apellidos es obligatorio'],
+        required: [true, 'Apellidos es obligatorio'],
         uppercase: true,
     },
     iDFiscal: {
@@ -16,21 +16,21 @@ const PersonalSchema = Schema({
         uppercase: true,
         trim: true,
         unique: true,
-        maxLength: [12,'La longitud máxima es de 12 caracteres']
+        maxLength: [12, 'La longitud máxima es de 12 caracteres']
     },
     telefono: {
         type: String,
         uppercase: true,
         trim: true,
-        maxLength: [15,'La longitud máxima es de 15 caracteres']
+        maxLength: [15, 'La longitud máxima es de 15 caracteres']
     },
     email: {
-        type:String,
-        maxLength: [50,'La longitud máxima es de 50 caracteres']
+        type: String,
+        maxLength: [50, 'La longitud máxima es de 50 caracteres']
     },
     direccion: {
-        type:String,
-        maxLength: [250,'La longitud máxima es de 250 caracteres']
+        type: String,
+        maxLength: [250, 'La longitud máxima es de 250 caracteres']
     },
     profesion: {
         type: Schema.Types.ObjectId,
@@ -41,8 +41,8 @@ const PersonalSchema = Schema({
         ref: 'Idioma',
     },
     postgrado: {
-        type:String,
-        maxLength: [250,'La longitud máxima es de 250 caracteres']
+        type: String,
+        maxLength: [250, 'La longitud máxima es de 250 caracteres']
     },
     unidadNegocio: {
         type: Schema.Types.ObjectId,
@@ -61,12 +61,12 @@ const PersonalSchema = Schema({
         ref: 'Perfil',
     },
     usuarioAcceso: {
-        type:String,
-        maxLength: [250,'La longitud máxima es de 250 caracteres']
+        type: String,
+        maxLength: [250, 'La longitud máxima es de 250 caracteres']
     },
     claveAcceso: {
-        type:String,
-        maxLength: [10,'La longitud máxima es de 10 caracteres']
+        type: String,
+        maxLength: [10, 'La longitud máxima es de 10 caracteres']
     },
     miembro: {
         type: Schema.Types.ObjectId,
@@ -75,13 +75,13 @@ const PersonalSchema = Schema({
     tipoPersonal: {
         type: Number,
         default: 0,
-        enum: [0,1,2],
+        enum: [0, 1, 2],
         required: true,
     },
-    estado : {
+    estado: {
         type: Number,
         default: 1,
-        enum: [0,1,2],
+        enum: [0, 1, 2],
         required: true,
     },
     usuario: {
@@ -91,9 +91,22 @@ const PersonalSchema = Schema({
     }
 })
 
-PersonalSchema.methods.toJSON = function() {
-    const {__v, ...data } = this.toObject()
+PersonalSchema.index({nombres: 'text', apellidos: 'text'});
+
+/*PersonalSchema.virtual('nombre_completo').get(function () {
+    return `${this.nombres} ${this.apellidos}`;
+});*/
+
+PersonalSchema.virtual('nombreCompleto').get(function () {
+    return `${this.nombres} ${this.apellidos}`;
+});
+
+PersonalSchema.set('toObject', { virtuals: true });
+PersonalSchema.set('toJSON', { virtuals: true });
+
+PersonalSchema.methods.toJSON = function () {
+    const { __v, ...data } = this.toObject()
     return data
 }
 
-module.exports = model( 'Personal', PersonalSchema)
+module.exports = model('Personal', PersonalSchema)

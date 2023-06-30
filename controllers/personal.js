@@ -1,28 +1,28 @@
 const { response } = require("express");
-const Personal  = require('../models/personal')
+const Personal = require('../models/personal')
 
 // obtenerPaiss - paginado - total - populate
 
-const personastGet = async ( req, res = response) => {
-    try{
+const personastGet = async (req, res = response) => {
+    try {
         const {
-            q        = '', 
-            page     = 0, 
-            perPage  = 10, 
-            sortBy   = 'nombre', 
-            sortDesc = true 
+            q = '',
+            page = 0,
+            perPage = 10,
+            sortBy = 'nombre',
+            sortDesc = true
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        let options = { $or: [{ 'estado': 1 }, { 'estado': 0 }] };
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
         let query = {}
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-        
-        if ( q ){
-            filter = functionFiltrar( q );
+
+        if (q) {
+            filter = functionFiltrar(q);
             query = {
                 ...filter,
                 '$and': [
@@ -30,50 +30,50 @@ const personastGet = async ( req, res = response) => {
                 ]
             }
         } else {
-            query = {...options}
+            query = { ...options }
         }
-         
+
         // Promise . all envia varias promesas simultaneas
-        const [ total, personas ] = await Promise.all([
-            Personal.countDocuments( query ),
+        const [total, personas] = await Promise.all([
+            Personal.countDocuments(query),
             Personal.find(query)
-                    .skip( skip )
-                    .sort(sort) 
-                    .limit( perPage )
+                .skip(skip)
+                .sort(sort)
+                .limit(perPage)
         ])
 
-        res.send({ total, personas, perPage:parseInt(perPage), page: parseInt(page)})
+        res.send({ total, personas, perPage: parseInt(perPage), page: parseInt(page) })
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar las personas ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas ${error}`
         })
     }
 
 }
 
-const personasGetDeleted = async ( req, res = response) => {
-    try{
+const personasGetDeleted = async (req, res = response) => {
+    try {
         const {
-            q        = '', 
-            page     = 0, 
-            perPage  = 10, 
-            sortBy   = 'nombre', 
-            sortDesc = true, 
+            q = '',
+            page = 0,
+            perPage = 10,
+            sortBy = 'nombre',
+            sortDesc = true,
         } = req.query;
 
-        let options = { $or:[ {'estado': 2}]};        
+        let options = { $or: [{ 'estado': 2 }] };
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
         let query = {}
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-        
-        if ( q ){
-            filter = functionFiltrar( q );
+
+        if (q) {
+            filter = functionFiltrar(q);
             query = {
                 ...filter,
                 '$and': [
@@ -81,81 +81,106 @@ const personasGetDeleted = async ( req, res = response) => {
                 ]
             }
         } else {
-            query = {...options}
+            query = { ...options }
         }
-         
+
         // Promise . all envia varias promesas simultaneas
-        const [ total, personas ] = await Promise.all([
-            Personal.countDocuments( query ),
+        const [total, personas] = await Promise.all([
+            Personal.countDocuments(query),
             Personal.find(query)
-                    .skip( skip )
-                    .sort(sort) 
-                    .limit( perPage )
+                .skip(skip)
+                .sort(sort)
+                .limit(perPage)
         ])
 
-        res.send({ total, personas, perPage:parseInt(perPage), page: parseInt(page)})
+        res.send({ total, personas, perPage: parseInt(perPage), page: parseInt(page) })
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar las personas ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas ${error}`
         })
     }
 
 }
 
 // obtenerPais - populate {}
-const personaGet = async ( req, res = response ) => {
+const personaGet = async (req, res = response) => {
 
-    try{
+    try {
 
-        const { id } = req.params       
+        const { id } = req.params
 
-        const persona = await Personal.findById( id )
-                                      .populate( 'profesion' )
-                                      .populate( 'idiomas' )
-                                      .populate( 'unidadNegocio' )
-                                      .populate( 'categoria' )
-                                      .populate( 'sucursal' )
-                                      .populate( 'perfil' )
-                                      .populate( 'miembro' )
-                                      .populate( 'usuario' )
+        const persona = await Personal.findById(id)
+            .populate('profesion')
+            .populate('idiomas')
+            .populate('unidadNegocio')
+            .populate('categoria')
+            .populate('sucursal')
+            .populate('perfil')
+            .populate('miembro')
+            .populate('usuario')
 
         return res.status(200).send(
             persona
         )
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar las personas ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas ${error}`
         })
     }
 }
 
-const allPersonaGet = async ( req, res = response ) => {
+const allPersonaGet = async (req, res = response) => {
 
-    try{
-        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
-        query = {...options}
+    try {
+        let options = { $or: [{ 'estado': 1 }/*, {'estado':0}*/] };
+        query = { ...options }
         const personas = await Personal.find(query)
         res.send({ personas })
-    } catch ( error ) {
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar las personas ${ query }`
+    } catch (error) {
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas ${query}`
         })
     }
 }
 
-const getListTipoPersonal = async ( req, res = response ) => {
+const buscarPersonaGet = async (req, res = response) => {
 
-    try{
-        const { tipoPersonal } = req.params 
-        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]}; 
+
+    try {
+        let nombreApellido = req.params.query;
+        const personas = await Personal.find({
+            $and: [
+                {
+                  $or: [
+                    { nombres: { $regex: nombreApellido, $options: 'i' } },
+                    { apellidos: { $regex: nombreApellido, $options: 'i' } },
+                  ],
+                },
+                { tipoPersonal: 0 },
+                { estado: 1 },
+              ],
+        });
+        res.send({ personas })
+    } catch (error) {
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas`
+        })
+    }
+}
+
+const getListTipoPersonal = async (req, res = response) => {
+
+    try {
+        const { tipoPersonal } = req.params
+        let options = { $or: [{ 'estado': 1 }/*, {'estado':0}*/] };
         //query = {...options}
-        let filter = {'tipoPersonal': tipoPersonal}
+        let filter = { 'tipoPersonal': tipoPersonal }
         query = {
             ...filter,
             '$and': [
@@ -164,90 +189,90 @@ const getListTipoPersonal = async ( req, res = response ) => {
         }
         const personas = await Personal.find(query)
         res.send({ personas })
-    } catch ( error ) {
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar las personas ${ query }`
+    } catch (error) {
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas ${query}`
         })
     }
 }
 
 
-const personaPost = async ( req, res = response ) => {
+const personaPost = async (req, res = response) => {
 
 
     try {
-        const { 
-            nombres, 
-            apellidos, 
-            iDFiscal, 
+        const {
+            nombres,
+            apellidos,
+            iDFiscal,
             telefono,
-            email, 
-            direccion, 
-            profesion, 
-            idiomas, 
-            postgrado, 
-            unidadNegocio, 
-            categoria, 
-            sucursal, 
-            perfil, 
-            usuarioAcceso, 
-            claveAcceso, 
-            miembro, 
+            email,
+            direccion,
+            profesion,
+            idiomas,
+            postgrado,
+            unidadNegocio,
+            categoria,
+            sucursal,
+            perfil,
+            usuarioAcceso,
+            claveAcceso,
+            miembro,
             tipoPersonal,
-            estado   } = req.body
+            estado } = req.body
 
-        const personaDB = await Personal.findOne( { iDFiscal } )
+        const personaDB = await Personal.findOne({ iDFiscal })
 
-        if ( personaDB ) {
-            return res.status( 400 ).json({
-                msg:  `El registro ${ personaDB.iDFiscal } ya existe`,
+        if (personaDB) {
+            return res.status(400).json({
+                msg: `El registro ${personaDB.iDFiscal} ya existe`,
                 data: personaDB
             })
         }
 
         const data = {
-            nombres, 
-            apellidos, 
-            iDFiscal, 
-            telefono, 
+            nombres,
+            apellidos,
+            iDFiscal,
+            telefono,
             email,
-            direccion, 
-            profesion, 
-            idiomas, 
-            postgrado, 
-            unidadNegocio, 
-            categoria, 
-            sucursal, 
-            perfil, 
-            usuarioAcceso, 
-            claveAcceso, 
+            direccion,
+            profesion,
+            idiomas,
+            postgrado,
+            unidadNegocio,
+            categoria,
+            sucursal,
+            perfil,
+            usuarioAcceso,
+            claveAcceso,
             miembro,
             usuario: req.usuario._id,
             tipoPersonal,
             estado
         }
 
-        const personal = new Personal( data )
+        const personal = new Personal(data)
 
         //Guardar en DB
         await personal.save()
 
-        return res.status( 201 ).json(personal)
+        return res.status(201).json(personal)
 
-    } catch ( error ) {
-            
+    } catch (error) {
 
-            return res.status( 500 ).json({
-                msg: `Error del servidor al guardar el personal ${ error }`
-            })
+
+        return res.status(500).json({
+            msg: `Error del servidor al guardar el personal ${error}`
+        })
 
     }
-} 
+}
 
 // actualizarPais 
-const personaPut = async ( req, res = response ) => {
+const personaPut = async (req, res = response) => {
 
-    try{
+    try {
 
         const { id } = req.params
 
@@ -255,53 +280,54 @@ const personaPut = async ( req, res = response ) => {
 
         data.nombres = data.nombres.toUpperCase()
         data.apellidos = data.apellidos.toUpperCase()
-        data.usuario = req.usuario._id 
+        data.usuario = req.usuario._id
 
-        const persona = await Personal.findByIdAndUpdate( id, data, { new:true })
+        const persona = await Personal.findByIdAndUpdate(id, data, { new: true })
 
         return res.status(200).send(
             persona
         )
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar las personas ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas ${error}`
         })
     }
 }
 
 // borrarPais - status : false
-const personaDelete = async ( req, res = response ) => {
+const personaDelete = async (req, res = response) => {
 
     const { id } = req.params
-    const persona = await Personal.findByIdAndUpdate( id, { estado: 2}, { new: true})
+    const persona = await Personal.findByIdAndUpdate(id, { estado: 2 }, { new: true })
 
-    res.json( persona )
+    res.json(persona)
 }
 
 // restaurarPais - status : true
-const personaRestore = async ( req, res = response ) => {
+const personaRestore = async (req, res = response) => {
 
     const { id } = req.params
-    const persona = await Personal.findByIdAndUpdate( id, { estado: true}, { new: true})
+    const persona = await Personal.findByIdAndUpdate(id, { estado: true }, { new: true })
 
-    if(!persona){
+    if (!persona) {
         return res.json(`La persona solicitado no se encuentra eliminado`)
     }
 
-    res.json( persona )
+    res.json(persona)
 }
 
 module.exports = {
     personastGet,
     personasGetDeleted,
     personaGet,
-    allPersonaGet ,
+    allPersonaGet,
     personaPut,
     personaDelete,
     personaRestore,
     personaPost,
-    getListTipoPersonal
+    getListTipoPersonal,
+    buscarPersonaGet
 }

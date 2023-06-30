@@ -30,6 +30,7 @@ const Enfoque = require('./enfoque')
 const Actividad = require('./actividad')
 const Proyecto = require('./proyecto')
 const ProyectoEnfoque = require('./proyectoEnfoque')
+const PersonaProyecto = require('./personaProyecto')
 
 
 module.exports = {
@@ -62,6 +63,7 @@ module.exports = {
     Enfoque,
     Actividad,
     Proyecto,
-    ProyectoEnfoque
+    ProyectoEnfoque,
+    PersonaProyecto
 }
 
