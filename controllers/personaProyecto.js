@@ -1,58 +1,82 @@
 const { response } = require("express");
 const PersonaProyecto  = require('../models/personaProyecto');
-const personaProyecto = require("../models/personaProyecto");
-
 
 const personaProyectoPost = async ( req, res = response ) => {
 
 
     try {
         const dataPersonaProyecto = req.body
-        const existingData = await PersonaProyecto.find({ personaId: { $in: dataPersonaProyecto.map(obj => obj.personaId) } });
-        const existingPersonaId = existingData.map(obj => obj.personaId);
-        const newDataPersonaProyecto = dataPersonaProyecto.filter(obj => !existingPersonaId.includes(obj.personaId));
-        const promises = newDataPersonaProyecto.map(obj => { 
+        const idPP = dataPersonaProyecto[0].projectId
+        const deleteProjects = await PersonaProyecto.deleteMany({ projectId: idPP })
+
+        const promisesSave = dataPersonaProyecto.map(obj => { 
             const data = {
                 projectId:obj.projectId,
                 personaId:obj.personaId,
                 usuario: req.usuario._id,
                 encargado:obj.encargado,
+                persisteState: 'New',
             }
             return new PersonaProyecto(data).save()
         });
-        await Promise.all(promises);
 
-        /*
-        const existingPersonaId = existingData.map(obj => obj.personaId);
-        const newDataPersonaProyecto = dataPersonaProyecto.filter(obj => !existingPersonaId.includes(obj.personaId));
-        const promises = newDataPersonaProyecto.map(obj => { 
-            obj.usuario = req.usuario._id
-            return new PersonaProyecto(obj).save()
+        const newData = await Promise.all(promisesSave)
+        return res.status( 201 ).json({ newData })
+        /*const existingData = await PersonaProyecto.find({
+            $and: [
+              { personaId: { $in: dataPersonaProyecto.map(obj => obj.personaId) } },
+              { projectId: { $in: dataPersonaProyecto.map(obj => obj.projectId) } }
+            ]
+          });
+        const existingPersonaId = existingData.map(obj => {
+            const id = obj.personaId
+            return {_id: obj._id, personaId: id.toString()} ;
+        } );        
+        const newDataPersonaProyecto = dataPersonaProyecto.map(obj => { 
+            const id = obj.personaId
+            const exist = existingPersonaId.filter(obj => obj.personaId === id)
+            if(exist.length > 0) {
+                obj._id = exist[0]._id
+                obj.persisteState = 'Update'
+             }
+            return obj
         });
-
-        await Promise.all(promises);*/
-        //res.status(200).json({ message: 'New objects saved successfully' });
-
-
-       /* const idiomaDB = await Idioma.findOne( { $or : [ { nombre}, { codigo} ] } )
-        if ( idiomaDB ) {
-            return res.status( 400 ).json({
-                msg: (idiomaDB.nombre === nombre.toUpperCase()) ? `El cargo ${ idiomaDB.nombre } ya existe` : 
-                                       `El cargo ${ idiomaDB.codigo } ya existe`,
-                data: idiomaDB
-            })
-        }
-        const data = {
-            nombre,
-            codigo,
-            usuario: req.usuario._id,
-            estado
-        }
-        const idioma = new Idioma( data )
-        await idioma.save()*/
-
-        return res.status( 201 ).json({ message: 'New objects saved successfully' })
-
+        const saveDataPersonaProyecto = newDataPersonaProyecto.filter(obj => obj.persisteState === 'New')
+        const updateDataPersonaProyecto = newDataPersonaProyecto.filter(obj => obj.persisteState === 'Update')
+        const promisesSave = saveDataPersonaProyecto.map(obj => { 
+            const data = {
+                projectId:obj.projectId,
+                personaId:obj.personaId,
+                usuario: req.usuario._id,
+                encargado:obj.encargado,
+                persisteState: 'New',
+            }
+            return new PersonaProyecto(data).save()
+        });
+        const promisesUpdate= updateDataPersonaProyecto.map(obj => { 
+            const _id = (obj._id).toString()
+            const data = {
+                _id:_id.toString(),                
+                projectId:(obj.projectId).toString(),
+                personaId:(obj.personaId).toString(),
+                usuario: req.usuario._id,
+                encargado:obj.encargado,
+                persisteState: 'Update',
+            }
+            return PersonaProyecto.findByIdAndUpdate(_id, data, { new: true });
+        });
+        console.log(saveDataPersonaProyecto.length, updateDataPersonaProyecto.length) 
+        if(saveDataPersonaProyecto.length > 0 && updateDataPersonaProyecto.length > 0) {
+            const newData = await Promise.all(promisesSave)
+            const updateData = await Promise.all(promisesUpdate)
+            return res.status( 201 ).json({ newData,updateData  })
+        } else if(saveDataPersonaProyecto.length > 0 && updateDataPersonaProyecto.length === 0) {
+            const [ newData ] = await Promise.all(promisesSave)
+            return res.status( 201 ).json({newData, updateData: []})
+        } else if(saveDataPersonaProyecto.length === 0 && updateDataPersonaProyecto.length > 0) {
+            const [ updateData ] = await Promise.all(promisesUpdate)
+            return res.status( 201 ).json({newData: [], updateData})
+        }*/ 
     } catch ( error ) {           
 
             return res.status( 500 ).json({
@@ -62,11 +86,35 @@ const personaProyectoPost = async ( req, res = response ) => {
     }
 } 
 
+
+const personaProyectoById = async (req, res = response) => {
+
+    try {
+
+        const { id } = req.params
+        const personas = await PersonaProyecto.find( { projectId: id })
+            .populate('usuario')
+            .populate('personaId')
+            .populate('projectId')
+
+        return res.status(200).send({ personas })
+
+    } catch (error) {
+
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar las personas ${error}`
+        })
+    }
+}
+
+
 // borrarPais - status : false
 const personaProyectoDelete = async ( req, res = response ) => {
 
-    const { id } = req.params
-    const personaProyecto = await PersonaProyecto.findByIdAndUpdate( id, { estado: 2}, { new: true})
+    const { id, personaId } = req.params
+    const personaProyecto = await PersonaProyecto.deleteOne({ projectId: id, personaId })
+    //await PersonaProyecto.findByIdAndUpdate( id, { estado: 2}, { new: true})
 
     res.json( personaProyecto )
 }
@@ -88,4 +136,5 @@ module.exports = {
     personaProyectoPost,
     personaProyectoDelete,
     personaProyectoRestore,
+    personaProyectoById
 }

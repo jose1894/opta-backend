@@ -196,6 +196,9 @@ const profesionPut = async ( req, res = response ) => {
         data.nombre = data.nombre.toUpperCase()
         data.usuario = req.usuario._id 
 
+        console.log( data)
+        console.log( id )
+
         const profesion = await Profesion.findByIdAndUpdate( id, data, { new:true })
 
         return res.status(200).send(

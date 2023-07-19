@@ -11,6 +11,10 @@ const PersonaProyectoSchema = Schema({
         ref: 'Personal',
         required: true
     },
+    persisteState: {
+        type: String,
+        default: 'New',
+    },
     encargado: {
         type: Boolean,
         default: false,

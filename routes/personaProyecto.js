@@ -12,7 +12,8 @@ const {
 const { 
     personaProyectoPost,
     personaProyectoDelete,
-    personaProyectoRestore
+    personaProyectoRestore,
+    personaProyectoById
 } = require('../controllers/personaProyecto')
 
 const { existePersonaProyectoPorId, existeEmail } = require('../helpers/db-validators')
@@ -23,11 +24,15 @@ router.post( '/', [
     validarCampos
 ], personaProyectoPost)
 
+router.get( '/:id', [
+    check('id', 'No es un ID valido').isMongoId(),
+    validarCampos,
+], personaProyectoById)
+
 //Borrar una pais - Admin
-router.delete( '/:id',[
+router.delete( '/:id/:personaId',[
     validarJWT,    
     check('id', 'No es un ID valido').isMongoId(),
-    check( 'id' ).custom( existePersonaProyectoPorId ),
     validarCampos 
 ],  personaProyectoDelete)
 

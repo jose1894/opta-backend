@@ -86,6 +86,15 @@ const ClienteSchema = Schema({
     }
 });
 
+ClienteSchema.index({nombre: 'text' });
+
+ClienteSchema.virtual('nombreCompleto').get(function () {
+    return `${this.nombre}`;
+});
+
+ClienteSchema.set('toObject', { virtuals: true });
+ClienteSchema.set('toJSON', { virtuals: true });
+
 ClienteSchema.methods.toJSON = function() {
     const {__v, ...data } = this.toObject()
     return data

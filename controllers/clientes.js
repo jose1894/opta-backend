@@ -290,6 +290,29 @@ const clienteRestore = async ( req, res = response ) => {
     res.json( cliente )
 }
 
+const buscarClienteGet = async (req, res = response) => {
+
+
+    try {
+        let nombreApellido = req.params.query;
+        const clientes = await Cliente.find({
+            $and: [
+                {
+                  $or: [
+                    { nombre: { $regex: nombreApellido, $options: 'i' } }
+                  ],
+                },
+                { estado: 1 },
+              ],
+        });
+        res.send({ clientes })
+    } catch (error) {
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar los clientes`
+        })
+    }
+}
+
 module.exports = {
     clientePost,
     clientesGet,
@@ -298,5 +321,6 @@ module.exports = {
     clienteDelete,
     clienteRestore,
     allClientesGet,
-    clientesGetDeleted
+    clientesGetDeleted,
+    buscarClienteGet
 }
