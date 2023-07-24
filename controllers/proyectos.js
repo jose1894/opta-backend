@@ -23,9 +23,7 @@ const proyectosGet = async (req, res = response) => {
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
         let query = {}
-
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-
         if (q) {
             filter = functionFiltrar(q);
             query = {
@@ -54,6 +52,23 @@ const proyectosGet = async (req, res = response) => {
     }
 
 }
+
+const functionFiltrar = (q) => {
+    const filter = {};
+    if (q && q.length > 0) {
+      const orFilters = q.map(item => {
+        const data =  JSON.parse(item)
+        const { fecha, cliente, codigo, socio } = data
+        const dateFilter = fecha ? { fecha: { $gte: moment(fecha).toDate() } } : {};
+        const clientFilter = cliente ? { cliente } : {};
+        const codeFilter = codigo ? { codigo } : {};
+        const socioFilter = socio ? { socio } : {};
+        return { ...dateFilter, ...clientFilter, ...codeFilter, ...socioFilter };
+      });
+      filter.$or = orFilters;
+    }
+    return filter;
+  }
 
 const proyectosGetDeleted = async (req, res = response) => {
     try {

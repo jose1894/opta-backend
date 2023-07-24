@@ -18,7 +18,7 @@ const {
     clienteRestore,
     allClientesGet,
     clientesGetDeleted,
-    buscarClienteGet
+    clienteSearchGet
 } = require('../controllers/clientes')
 
 const { existeClientePorId, existeEmail } = require('../helpers/db-validators')
@@ -32,7 +32,7 @@ router.get( '/', clientesGet)
 router.get( '/allClientes', allClientesGet) 
 router.get( '/clientesDeleted', clientesGetDeleted) 
 
-router.get( '/buscarCliente/:query', buscarClienteGet)
+router.get( '/clienteSearch/:query', clienteSearchGet)
 
 
 //Crear pais - privado - Cualquier persona con token

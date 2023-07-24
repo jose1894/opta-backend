@@ -290,7 +290,7 @@ const clienteRestore = async ( req, res = response ) => {
     res.json( cliente )
 }
 
-const buscarClienteGet = async (req, res = response) => {
+const clienteSearchGet = async (req, res = response) => {
 
 
     try {
@@ -313,6 +313,8 @@ const buscarClienteGet = async (req, res = response) => {
     }
 }
 
+
+
 module.exports = {
     clientePost,
     clientesGet,
@@ -322,5 +324,5 @@ module.exports = {
     clienteRestore,
     allClientesGet,
     clientesGetDeleted,
-    buscarClienteGet
+    clienteSearchGet
 }
