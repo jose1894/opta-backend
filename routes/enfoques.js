@@ -15,7 +15,8 @@ const {
     enfoquePut,
     enfoqueDelete,
     enfoqueById,
-    getChildrenEnfoque
+    getChildrenEnfoque,
+    getChildrenPaginateGet
 } = require('../controllers/enfoques')
 
 const { existeEnfoquePorId, existeEmail } = require('../helpers/db-validators')
@@ -25,6 +26,8 @@ const router =  Router()
 router.get( '/', enfoquesGet)
 
 router.get( '/getChildren/:id', getChildrenEnfoque) 
+
+router.get( '/getChildrenPaginate/:id', getChildrenPaginateGet) 
 
 router.post( '/', [
     validarJWT,

@@ -4,10 +4,11 @@ const { actualizarImagenCloudinary, cargarArchivo, mostrarImagen } = require('..
 const { coleccionesPermitidas } = require('../helpers')
 const { validarArchivoSubir } = require('../middlewares/validar-archivo')
 const { validarCampos } = require('../middlewares/validar-campos')
+const { validarJWT } = require( '../middlewares')
 
 const router = Router()
 
-router.post( '/', validarArchivoSubir , cargarArchivo )
+router.post( '/',  [ validarJWT, validarArchivoSubir ] , cargarArchivo )
 
 router.put( '/:coleccion/:id', [
     validarArchivoSubir,

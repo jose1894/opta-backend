@@ -31,7 +31,8 @@ const Actividad = require('./actividad')
 const Proyecto = require('./proyecto')
 const ProyectoEnfoque = require('./proyectoEnfoque')
 const PersonaProyecto = require('./personaProyecto')
-
+const Riesgo = require('./riesgo')
+const Upload = require('./upload')
 
 module.exports = {
     Categoria,
@@ -64,6 +65,8 @@ module.exports = {
     Actividad,
     Proyecto,
     ProyectoEnfoque,
-    PersonaProyecto
+    PersonaProyecto,
+    Riesgo,
+    Upload
 }
 

@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const path = require( 'path' )
 
-const subirArchivo = ( files, extensionesValidas = ['gif', 'jpg', 'jpeg', 'png'], carpeta = '' ) => {
+const subirArchivo = ( files, extensionesValidas = ['gif', 'jpg', 'jpeg', 'png', 'pdf', 'txt', 'doc', 'docx', 'ppt'], carpeta = '', carpetaRaiz = 'uploads') => {
 
     return new Promise( (resolve, reject) => {
     
@@ -16,8 +16,7 @@ const subirArchivo = ( files, extensionesValidas = ['gif', 'jpg', 'jpeg', 'png']
         }
 
         const nombreTemp = uuidv4() + '.' + extension
-
-        const uploadPath = path.join(__dirname, '../uploads/', carpeta, nombreTemp);
+        const uploadPath = path.join(__dirname, `../${carpetaRaiz}/`, carpeta, nombreTemp);
     
         archivo.mv(uploadPath, function(err) {
             if (err) {

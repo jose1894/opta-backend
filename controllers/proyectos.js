@@ -38,7 +38,7 @@ const proyectosGet = async (req, res = response) => {
 
         const [total, proyectos] = await Promise.all([
             Proyecto.countDocuments(query),
-            Proyecto.find(query).populate('cliente').populate('socio').skip(skip).sort(sort).limit(perPage)
+            Proyecto.find(query).populate('cliente').populate('socio').populate('sucursal').skip(skip).sort(sort).limit(perPage)
         ])
 
         res.send({ total, proyectos, perPage: parseInt(perPage), page: parseInt(page) })

@@ -48,6 +48,50 @@ const getChildrenEnfoque = async ( req, res = response ) => {
     }
 }
 
+const getChildrenPaginateGet = async ( req, res = response) => {
+    try{
+        const {
+            q        = '', 
+            page     = 0, 
+            perPage  = 10, 
+            sortBy   = 'nombre', 
+            sortDesc = true 
+        } = req.query;     
+        const sort = {}
+        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        sort[sortBy] = (sortDesc === "false") ? -1 : 1; 
+        const { id } = req.params
+        let filter = id === '1' ? { 'areaPadre': ObjectId() } : { 'areaPadre': id } 
+        let options = { $or:[ {'estado':1}/*, {'estado':0}*/]};
+        let query = {}
+        query = {
+            ...filter,
+            '$and': [
+                options
+            ]
+        }       
+        
+        const [ total = 0, dataEnfoques = [] ] = await Promise.all([
+            Enfoque.countDocuments( query ),
+            Enfoque.find(query)
+                    .populate('miembro')
+                    .populate('areaPadre')
+                    .skip( skip )
+                    .sort(sort) 
+                    .limit( perPage )
+        ])
+
+        const enfoques = dataEnfoques.filter(enfoque => enfoque.children)
+        res.send({ total, enfoques, perPage:parseInt(perPage), page: parseInt(page)})
+
+    } catch ( error ) {
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los enfoques ${ error }`
+        })
+    }
+
+}
+
 const enfoqueDelete = async ( req, res = response ) => {
 
     const { id } = req.params
@@ -170,5 +214,6 @@ module.exports = {
     enfoquePut,
     enfoqueDelete,
     enfoqueById,
-    getChildrenEnfoque
+    getChildrenEnfoque,
+    getChildrenPaginateGet 
 }
