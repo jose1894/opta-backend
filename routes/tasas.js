@@ -28,8 +28,7 @@ const router =  Router()
 //Obtener todos los paises - publico
 router.get( '/', tasasGet) 
 
-router.get( 'allTasas', allTasasGet,
-)
+router.get( 'allTasas', allTasasGet)
 
 router.get( '/tasasDelete', tasasGetDelete) 
 

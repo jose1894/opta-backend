@@ -6,13 +6,14 @@ const { Usuario, Producto } = require('../models');
 const { param } = require('../routes/auth');
 const cloudinary = require('cloudinary').v2
 const Upload = require('../models/upload')
+const fs = require('fs');
 
 
 cloudinary.config(process.env.CLOUDINARY_URL)
 
 const cargarArchivo = async (req, res = response) => {
   try {
-    const { ruta, nombre, proyecto, enfoque } = req.body
+    const { ruta, type, nombre, proyecto, enfoque } = req.body
 
     const fileDB = await Upload.findOne({ nombre })
 
@@ -28,6 +29,7 @@ const cargarArchivo = async (req, res = response) => {
       nombre,
       nombreBinario: nombreEncriptado,
       ruta,
+      type,
       proyecto,
       enfoque,
       usuario: req.usuario._id
@@ -188,9 +190,75 @@ const mostrarImagen = async (req, res = response) => {
   res.sendFile(pathNoImage)
 }
 
+const archivoProyectoYEnfoquesGet = async (req, res = response) => {
+  try {
+    const {
+      q = '',
+      page = 0,
+      perPage = 10,
+      sortBy = 'nombre',
+      sortDesc = true
+    } = req.query;
+
+    const sort = {}
+    const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+    const { proyectoId, enfoqueId } = req.params
+    let query = { $and: [{ 'proyecto': proyectoId }, { 'enfoque': enfoqueId }] };
+    sort[sortBy] = (sortDesc === "false") ? -1 : 1;
+    const [total, Uploads] = await Promise.all([
+      Upload.countDocuments(query),
+      Upload.find(query)
+        .skip(skip)
+        .sort(sort)
+        .limit(perPage)
+    ])
+    res.send({ total, Uploads, perPage: parseInt(perPage), page: parseInt(page) })
+  } catch (error) {
+    return res.status(500).json({
+      msg: `Error del servidor al mostrar los perfiles ${error}`
+    })
+  }
+
+}
+
+const descargarArchivo = async (req, res = response) => {
+
+  try {
+    
+    const { id } = req.params
+    const file = await Upload.findById(id);
+    if (!file) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+     
+    res.setHeader('Content-Type', file.type);
+    res.setHeader('Content-Disposition', `attachment; filename="${file.nombreBinario}"`);
+    //const path = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`)    
+    //path.join(__dirname, `../projects/${file.ruta}/`, '', file.nombreBinario)
+    //console.log(path) 
+    const pathNoImage = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`)
+    //res.sendFile(pathNoImage)
+    const fileStream = fs.createWriteStream(pathNoImage)
+    fileStream.pipe(res);
+
+    //return res.status( 201 ).json(file)
+  } catch (error) {
+    return res.status(500).json({
+      msg: `Error del servidor al mostrar los perfiles ${error}`
+    })
+
+  }
+
+}
+
+
+
+
 module.exports = {
   cargarArchivo,
   actualizarImagen,
   actualizarImagenCloudinary,
-  mostrarImagen
+  mostrarImagen,
+  archivoProyectoYEnfoquesGet,
+  descargarArchivo
 }

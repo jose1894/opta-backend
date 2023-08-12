@@ -11,6 +11,10 @@ const UploadSchema = Schema({
     ruta: {
         type: String,
     },
+    type: {
+        type: String,
+        required: true
+    },
     proyecto: {
         type: Schema.Types.ObjectId,
         ref: 'Proyecto',

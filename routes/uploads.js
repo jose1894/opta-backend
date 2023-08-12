@@ -1,6 +1,12 @@
 const { Router } = require( 'express' )
 const { check } = require('express-validator')
-const { actualizarImagenCloudinary, cargarArchivo, mostrarImagen } = require('../controllers/uploads')
+const { 
+    actualizarImagenCloudinary, 
+    cargarArchivo, 
+    mostrarImagen , 
+    archivoProyectoYEnfoquesGet,
+    descargarArchivo 
+} = require('../controllers/uploads')
 const { coleccionesPermitidas } = require('../helpers')
 const { validarArchivoSubir } = require('../middlewares/validar-archivo')
 const { validarCampos } = require('../middlewares/validar-campos')
@@ -8,7 +14,11 @@ const { validarJWT } = require( '../middlewares')
 
 const router = Router()
 
+router.get( '/archivoProyectoYEnfoquesGet/:proyectoId/:enfoqueId', archivoProyectoYEnfoquesGet) 
+
 router.post( '/',  [ validarJWT, validarArchivoSubir ] , cargarArchivo )
+
+router.get( '/download/:id',  [ validarJWT ] , descargarArchivo )
 
 router.put( '/:coleccion/:id', [
     validarArchivoSubir,
