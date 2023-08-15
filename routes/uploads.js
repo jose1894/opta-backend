@@ -5,7 +5,8 @@ const {
     cargarArchivo, 
     mostrarImagen , 
     archivoProyectoYEnfoquesGet,
-    descargarArchivo 
+    descargarArchivo,
+    deleteFileById 
 } = require('../controllers/uploads')
 const { coleccionesPermitidas } = require('../helpers')
 const { validarArchivoSubir } = require('../middlewares/validar-archivo')
@@ -19,6 +20,13 @@ router.get( '/archivoProyectoYEnfoquesGet/:proyectoId/:enfoqueId', archivoProyec
 router.post( '/',  [ validarJWT, validarArchivoSubir ] , cargarArchivo )
 
 router.get( '/download/:id',  [ validarJWT ] , descargarArchivo )
+
+router.delete( '/:id',[
+    validarJWT,    
+    check('id', 'No es un ID valido').isMongoId()
+],  deleteFileById)
+
+
 
 router.put( '/:coleccion/:id', [
     validarArchivoSubir,

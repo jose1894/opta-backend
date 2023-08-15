@@ -230,21 +230,40 @@ const descargarArchivo = async (req, res = response) => {
     if (!file) {
       return res.status(404).json({ error: 'File not found' });
     }
-     
-    res.setHeader('Content-Type', file.type);
-    res.setHeader('Content-Disposition', `attachment; filename="${file.nombreBinario}"`);
-    //const path = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`)    
-    //path.join(__dirname, `../projects/${file.ruta}/`, '', file.nombreBinario)
-    //console.log(path) 
-    const pathNoImage = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`)
-    //res.sendFile(pathNoImage)
-    const fileStream = fs.createWriteStream(pathNoImage)
-    fileStream.pipe(res);
 
-    //return res.status( 201 ).json(file)
+    const filePath = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`);
+    res.download(filePath, (error) => {
+      console.log(filePath)
+      if (error) {
+        console.error('Error downloading file:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
   } catch (error) {
     return res.status(500).json({
-      msg: `Error del servidor al mostrar los perfiles ${error}`
+      msg: `Error del servidor al descargar el archivos ${error}`
+    })
+
+  }
+
+}
+
+const deleteFileById = async (req, res = response) => {
+
+  try {
+    
+    const { id } = req.params
+    const file = await Upload.findById(id);
+    if (!file) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    const filePath = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`);
+    fs.unlinkSync(filePath)
+    const archivo = await Upload.deleteOne({ _id: id })
+    res.json( archivo )
+  } catch (error) {
+    return res.status(500).json({
+      msg: `Error del servidor al descargar el archivos ${error}`
     })
 
   }
@@ -260,5 +279,6 @@ module.exports = {
   actualizarImagenCloudinary,
   mostrarImagen,
   archivoProyectoYEnfoquesGet,
-  descargarArchivo
+  descargarArchivo,
+  deleteFileById
 }
