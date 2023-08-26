@@ -33,9 +33,11 @@ const riesgosGet = async ( req, res = response) => {
         }         
         
         const [ total, riesgos ] = await Promise.all([
-            Riesgos.countDocuments( query ),
-            Riesgos.find(query)
-                    .populate( 'proyecto' )
+            Riesgo.countDocuments( query ),
+            Riesgo.find(query)
+                    .populate( 'proyecto')
+                    .populate( 'indice')
+                    .populate( 'usuario')
                     .skip( skip )
                     .sort(sort) 
                     .limit( perPage )
