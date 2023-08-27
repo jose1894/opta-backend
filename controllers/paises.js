@@ -132,7 +132,7 @@ const paisesPost = async ( req, res = response ) => {
 
 
     try {
-        const {nombre,codigo} = req.body
+        const {nombre,codigo, estado } = req.body
 
         const paisDB = await Pais.findOne( { $or : [ { nombre}, { codigo} ] } )
 
