@@ -35,10 +35,10 @@ const actividadesGet = async ( req, res = response) => {
 
         const [ total, actividades ] = await Promise.all([
             Actividad.countDocuments( query ),
-            Actividad.find(query)
-                    .skip( skip )
-                    .sort(sort) 
-                    .limit( perPage )
+            Actividad.find(query).populate( 'unidadNegocio' )
+                     .skip( skip )
+                     .sort(sort) 
+                     .limit( perPage )
         ])
 
         res.send({ total, actividades, perPage:parseInt(perPage), page: parseInt(page)})
@@ -139,7 +139,7 @@ const actividadPost = async ( req, res = response ) => {
 
 
     try {
-        const {unidadNegocio,siglas,nombre, cargable, miembro, estado} = req.body
+        const {unidadNegocio,siglas,nombre, cargable,  estado} = req.body
 
         const actividadDB = await Actividad.findOne( { $or : [ { nombre}, { siglas } ] } )
 
@@ -156,7 +156,7 @@ const actividadPost = async ( req, res = response ) => {
             siglas,
             nombre,
             cargable,
-            miembro,
+            miembro: req.usuario.membresia._id,
             usuario: req.usuario._id,
             estado
         }
@@ -184,10 +184,12 @@ const actividadPut = async ( req, res = response ) => {
         const { id } = req.params
 
         const { status, usuario, ...data } = req.body
+        
 
         data.nombre = data.nombre.toUpperCase()
         data.siglas = data.siglas.toUpperCase()
         data.usuario = req.usuario._id 
+        data.miembro = req.usuario.membresia._id
 
         const actividad = await Actividad.findByIdAndUpdate( id, data, { new:true })
 

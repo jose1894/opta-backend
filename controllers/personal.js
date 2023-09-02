@@ -37,6 +37,14 @@ const personastGet = async (req, res = response) => {
         const [total, personas] = await Promise.all([
             Personal.countDocuments(query),
             Personal.find(query)
+                .populate('profesion')
+                .populate('idiomas')
+                .populate('unidadNegocio')
+                .populate('categoria')
+                .populate('sucursal')
+                .populate('perfil')
+                .populate('miembro')
+                .populate('usuario')
                 .skip(skip)
                 .sort(sort)
                 .limit(perPage)
@@ -217,7 +225,6 @@ const personaPost = async (req, res = response) => {
             perfil,
             usuarioAcceso,
             claveAcceso,
-            miembro,
             tipoPersonal,
             estado } = req.body
 
@@ -246,7 +253,7 @@ const personaPost = async (req, res = response) => {
             perfil,
             usuarioAcceso,
             claveAcceso,
-            miembro,
+            miembro: req.usuario.membresia._id,
             usuario: req.usuario._id,
             tipoPersonal,
             estado
@@ -281,6 +288,7 @@ const personaPut = async (req, res = response) => {
         data.nombres = data.nombres.toUpperCase()
         data.apellidos = data.apellidos.toUpperCase()
         data.usuario = req.usuario._id
+        data.miembro = req.usuario.membresia._id
 
         const persona = await Personal.findByIdAndUpdate(id, data, { new: true })
 

@@ -36,6 +36,10 @@ const UserSchema = Schema({
         type: Boolean,
         default: true,
     },
+    membresia: {
+        type: Schema.Types.ObjectId,
+        ref: 'Miembro',
+    },
     google: {
         type: Boolean,
         default:false
