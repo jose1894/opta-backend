@@ -339,6 +339,7 @@ module.exports = {
     existeReferidoPorId,
     existeClientePorId,
     existeCargoPorId,
+    existeCargoPorCodigo,
     existeMonedaPorId,
     existeMonedaPorCode,
     existeMiembroPorId,
