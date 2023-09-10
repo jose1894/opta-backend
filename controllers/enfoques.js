@@ -14,7 +14,7 @@ const enfoquesGet = async ( req, res = response) => {
                 options
             ]
         }
-        let enfoques  = await Enfoque.find(query).populate('miembro')/*.populate('areaPadre')*/
+        let enfoques  = await Enfoque.find(query).populate('miembro').populate('areaPadre')
         res.send({ enfoques })
     } catch ( error ) {
         
@@ -110,6 +110,7 @@ const enfoquePut = async ( req, res = response ) => {
         const { usuario, ...data } = req.body
         data.ruta = data.tipoNodo === 1 ? getRutaEnfoque(data.nombre) : `${data.rutaPadre}/${data.indice}`
         data.usuario = req.usuario._id 
+        data.miembro = req.usuario.membresia._id 
         const enfoque = await Enfoque.findByIdAndUpdate( id, data, { new:true })
 
         return res.status(200).send(
@@ -152,7 +153,7 @@ const enfoqueById = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const enfoque = await Enfoque.findById( id ).populate( 'usuario')/*.populate('areaPadre')*/
+        const enfoque = await Enfoque.findById( id ).populate( 'usuario').populate('areaPadre')
 
         return res.status(200).send(
             enfoque
@@ -169,7 +170,7 @@ const enfoqueById = async ( req, res = response ) => {
 
 const enfoquePost = async ( req, res = response ) => {
     try {
-        const {indice,nombre,areaPadre,areaPadreNombre,rutaPadre,ruta,visible,rcr,editable, estado, miembro, tipoNodo} = req.body
+        const {indice,nombre,areaPadre,areaPadreNombre,rutaPadre,ruta,visible,rcr,editable, estado, tipoNodo} = req.body
 
         const enfoqueDB = await Enfoque.findOne( { $or : [ { nombre}, { indice } ] } )
 
@@ -191,7 +192,7 @@ const enfoquePost = async ( req, res = response ) => {
             rcr,
             editable, 
             estado, 
-            miembro,
+            miembro: req.usuario.membresia._id,
             tipoNodo,
             usuario: req.usuario._id
         }

@@ -38,6 +38,7 @@ const UserSchema = Schema({
     },
     membresia: {
         type: Schema.Types.ObjectId,
+        default: null,
         ref: 'Miembro',
     },
     google: {

@@ -1,6 +1,7 @@
 const { response } = require("express");
 const moment = require('moment');
 const Miembro  = require('../models/miembro')
+const User  = require('../models/usuario')
 
 const miembrosGet = async ( req, res = response) => {
     try{
@@ -146,7 +147,13 @@ const miembroPost = async ( req, res = response ) => {
     try {
         const {aliado, codigo, nombre, iDFiscal, ejercicioFiscal, pais, state, ciudad, calle, 
             paginaWeb, tipoContacto, nombreContact, apellidoContact, cargo, telefonoOfic, 
-            telefonoCelu, correoContact, estado} = req.body
+            telefonoCelu, correoContact, estado, membresiaUsuario} = req.body
+        
+
+        console.log(codigo)
+    
+
+            
 
         const miembrodDB = await Miembro.findOne( { $or : [ { nombre}, { codigo}, { iDFiscal} ] } )
 
@@ -189,11 +196,33 @@ const miembroPost = async ( req, res = response ) => {
             usuario: req.usuario._id
         }
         const miembro = new Miembro( data )
-
         //Guardar en DB
         await miembro.save()
+        const { firstname, lastname, username, email, password, avatar, role, estadoMembresia, google } = membresiaUsuario
 
-        return res.status( 201 ).json(miembro)
+        const dataUsuario = { 
+            firstname, 
+            lastname, 
+            username, 
+            email, 
+            password, 
+            avatar, 
+            role, 
+            estado: estadoMembresia, 
+            google,
+            membresia: miembro._id, 
+        }
+
+        const user = new User( dataUsuario )
+        //Guardar en DB
+        await user.save()
+
+        const dataResponse = {
+            miembro,
+            user
+        }
+
+        return res.status( 201 ).json(dataResponse)
 
     } catch ( error ) {
             
