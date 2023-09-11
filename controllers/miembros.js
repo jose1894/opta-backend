@@ -2,6 +2,7 @@ const { response } = require("express");
 const moment = require('moment');
 const Miembro  = require('../models/miembro')
 const User  = require('../models/usuario')
+const bcryptjs = require('bcryptjs')
 
 const miembrosGet = async ( req, res = response) => {
     try{
@@ -126,9 +127,15 @@ const miembroGet = async ( req, res = response ) => {
                                    .populate('cargo')
         //let dateVigencia = miembro.vigencia
         miembro.vigencia = moment.utc(miembro.vigencia).format('DD-MM-YYYY')
-
+        let userMiembro = await User.find({ membresia: id })        
+        
+        const dataResp = {
+            miembro,
+            userMiembro: userMiembro[0],
+            password: userMiembro[0]?.password 
+        }
         return res.status(200).send(
-            miembro
+            dataResp
         )
 
     } catch ( error ) {
@@ -147,13 +154,7 @@ const miembroPost = async ( req, res = response ) => {
     try {
         const {aliado, codigo, nombre, iDFiscal, ejercicioFiscal, pais, state, ciudad, calle, 
             paginaWeb, tipoContacto, nombreContact, apellidoContact, cargo, telefonoOfic, 
-            telefonoCelu, correoContact, estado, membresiaUsuario} = req.body
-        
-
-        console.log(codigo)
-    
-
-            
+            telefonoCelu, correoContact, estado, membresiaUsuario} = req.body            
 
         const miembrodDB = await Miembro.findOne( { $or : [ { nombre}, { codigo}, { iDFiscal} ] } )
 
@@ -199,13 +200,14 @@ const miembroPost = async ( req, res = response ) => {
         //Guardar en DB
         await miembro.save()
         const { firstname, lastname, username, email, password, avatar, role, estadoMembresia, google } = membresiaUsuario
+        const salt = bcryptjs.genSaltSync()
 
-        const dataUsuario = { 
+        let dataUsuario = { 
             firstname, 
             lastname, 
             username, 
             email, 
-            password, 
+            password: bcryptjs.hashSync( password, salt),  
             avatar, 
             role, 
             estado: estadoMembresia, 
@@ -213,13 +215,12 @@ const miembroPost = async ( req, res = response ) => {
             membresia: miembro._id, 
         }
 
-        const user = new User( dataUsuario )
+        const user = new User( dataUsuario )       
         //Guardar en DB
         await user.save()
-
         const dataResponse = {
             miembro,
-            user
+            user,
         }
 
         return res.status( 201 ).json(dataResponse)
@@ -241,12 +242,25 @@ const miembroPut = async ( req, res = response ) => {
 
         const { id } = req.params
 
-        const { status, usuario, ...data } = req.body
+        const { status, usuario, membresiaUsuario, ...data } = req.body
+
+        let { password, ...dataUser } = membresiaUsuario
+
+        const salt = bcryptjs.genSaltSync()
+
+        dataUser.password = bcryptjs.hashSync( password, salt)
 
         data.nombre = data.nombre.toUpperCase()
          
-        data.usuario = req.usuario._id 
+        data.usuario = req.usuario._id
+        
         const miembro = await Miembro.findByIdAndUpdate( id, data, { new:true })
+
+        if(dataUser.id) {
+            const userMiembro = await User.findByIdAndUpdate( dataUser.id, dataUser, { new:true })
+        }
+
+        
 
         return res.status(200).send(
             miembro

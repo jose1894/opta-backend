@@ -22,7 +22,7 @@ const UserSchema = Schema({
     },
     password: {
         type: String,
-        required: [ true, 'El correo es obligatorio']
+        required: [ true, 'El password es obligatorio']
     },
     avatar: {
         type: String,
