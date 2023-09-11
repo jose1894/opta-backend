@@ -27,6 +27,27 @@ const usuariosGet = async (req = request, res) => {
     }
 }
 
+const usuarioByMembresiaId = async (req, res) => {
+    try{
+
+        const { id } = req.params
+
+        const usuario = await usuario.find( { membresia : id}).populate( 'membresia' )
+
+        return res.status(200).send(
+            usuario
+        )
+
+    } catch ( usuario ) {
+        
+
+        return res.status( 500 ).json({
+            msg: `Error del servidor al mostrar los riesgos ${ error }`
+        })
+
+    }
+}
+
 const usuariosPost = async (req, res) => {
 
     const { firstname, lastname,fullName, username, email, password, role } = req.body
@@ -98,6 +119,7 @@ const usuariosDelete = async (req, res) => {
 
 module.exports = {
     usuariosGet,
+    usuarioByMembresiaId,
     usuariosPost,
     usuariosPut,
     usuariosPatch,

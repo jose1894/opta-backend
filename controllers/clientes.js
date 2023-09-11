@@ -165,8 +165,7 @@ const clientePost = async ( req, res = response ) => {
             ciudad, 
             calle, 
             paginaWeb, 
-            direccion, 
-            miembro, 
+            direccion,
             estado,
             contactos} = req.body
 
@@ -192,7 +191,7 @@ const clientePost = async ( req, res = response ) => {
             calle, 
             paginaWeb, 
             direccion, 
-            miembro, 
+            miembro: req.usuario.membresia._id, 
             estado,
             usuario: req.usuario._id
         }
@@ -225,9 +224,8 @@ const clientePut = async ( req, res = response ) => {
         const { id } = req.params
 
         const { status, usuario, contactos, ...data } = req.body
-
-        //data.nombre = data.nombre.toUpperCase()
         data.usuario = req.usuario._id 
+        data.miembro = req.usuario.membresia._id 
         const cliente = await Cliente.findByIdAndUpdate( id, data, { new:true })
         const dataContacto = await Promise.all( contactos.map(async (contact) => {
             const { _id, ...dataC } = contact         

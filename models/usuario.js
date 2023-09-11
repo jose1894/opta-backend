@@ -22,7 +22,7 @@ const UserSchema = Schema({
     },
     password: {
         type: String,
-        required: [ true, 'El correo es obligatorio']
+        required: [ true, 'El password es obligatorio']
     },
     avatar: {
         type: String,
@@ -35,6 +35,11 @@ const UserSchema = Schema({
     estado: {
         type: Boolean,
         default: true,
+    },
+    membresia: {
+        type: Schema.Types.ObjectId,
+        default: null,
+        ref: 'Miembro',
     },
     google: {
         type: Boolean,

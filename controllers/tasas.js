@@ -8,7 +8,7 @@ const tasasGet = async (req, res = response) => {
             q = '',
             page = 0,
             perPage = 10,
-            sortBy = 'nombre',
+            sortBy = 'siglas',
             sortDesc = true
         } = req.query;
 
@@ -139,7 +139,7 @@ const tasaPost = async (req, res = response) => {
     try {
         const { codigo, fecha, siglas, unidadNegocio, categoria, anterior, actual, estado } = req.body
 
-        const tasadDB = await Miembro.findOne({ $or: [{ nombre }, { codigo }] })
+        const tasadDB = await Tasa.findOne({ codigo })
 
         if (tasadDB) {
             return res.status(400).json({

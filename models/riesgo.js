@@ -20,8 +20,8 @@ const RiesgoSchema = Schema({
     },
     riesgoProveniente: {
         type: String,
-        default: '',
-        enum: ['Transacciones Recurrentes','Transacciones no Recurrentes', 'Juicios y Estimaciones','accountingClosingEntries']
+        default: 'Seleccione',
+        enum: ['Seleccione','Transacciones Recurrentes','Transacciones no Recurrentes', 'Juicios y Estimaciones','accountingClosingEntries']
     },
     cuadrante: {
         type: Number,
@@ -35,27 +35,27 @@ const RiesgoSchema = Schema({
     },
     expectativasNegocio: {
         type: String,
-        default: '',
-        enum: ['Intencionales','No Intencionales','Viabilidad del negocio','Expectativas del cliente']
+        default: 'Seleccione',
+        enum: ['Seleccione','Intencionales','No Intencionales','Viabilidad del negocio','Expectativas del cliente']
     },
     procedimientosAdicionales: {
         type: String,
-        default: '',
+        default: 'No',
         enum: ['Si','No']
     },
     inherente: {
         type: String,
-        default: '',
+        default: 'Bajo',
         enum: ['Medio', 'Bajo', 'Alto']
     },
     control: {
         type: String,
-        default: '',
+        default: 'Bajo',
         enum: ['Medio', 'Bajo', 'Alto']
     },
     analitico: {
         type: String,
-        default: '',
+        default: 'Bajo',
         enum: ['Medio', 'Bajo', 'Alto']
     },
     factorRiesgo: {
@@ -94,7 +94,11 @@ const RiesgoSchema = Schema({
         type: String,
         default: '',
     },
-     ase_b1: {
+    ase_a6: {
+        type: String,
+        default: '',
+    },
+    ase_b1: {
         type: String,
         default: '',
     },
@@ -128,38 +132,38 @@ const RiesgoSchema = Schema({
     },
     sel_mon: {
         type: String,
-        default: '',
+        default: 'No',
         enum: ['No aprobado','Si','No']
     },
     sel_mon2: {
         type: String,
-        default: '',
+        default: 'No',
         enum: ['No aprobado','Si','No']
     },
     sel_gen: {
         type: String,
-        default: '',
+        default: 'No',
         enum: ['No aprobado','Si','No']
     },
     sel_gen2: {
         type: String,
-        default: '',
+        default: 'No',
         enum: ['No aprobado','Si','No']
     },
     sel_esp: {
         type: String,
-        default: '',
+        default: 'No',
         enum: ['No aprobado','Si','No']
     },
     sel_esp2: {
         type: String,
-        default: '',
+        default: 'No',
         enum: ['No aprobado','Si','No']
     },
 
     sel2_ini: {
         type: String,
-        default: '',
+        default: 'No aprobado',
         enum: ['No aprobado','Efectivo','No efectivo']
     },
 
@@ -191,8 +195,7 @@ const RiesgoSchema = Schema({
     estado : {
         type: Number,
         default: 1,
-        enum: [0,1,2],
-        required: true,
+        enum: [0,1,2]
     },
     usuario: {
         type: Schema.Types.ObjectId,

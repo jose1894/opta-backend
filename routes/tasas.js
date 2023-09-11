@@ -36,7 +36,7 @@ router.get( '/tasasDelete', tasasGetDelete)
 router.post( '/', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
-    check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
+    check( 'codigo', 'La longitud del campo codigo debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
     check( 'codigo' ).custom(existeTasaPorCodigo),
     validarCampos
 ], tasaPost)

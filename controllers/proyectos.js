@@ -38,7 +38,14 @@ const proyectosGet = async (req, res = response) => {
 
         const [total, proyectos] = await Promise.all([
             Proyecto.countDocuments(query),
-            Proyecto.find(query).populate('cliente').populate('socio').populate('sucursal').skip(skip).sort(sort).limit(perPage)
+            Proyecto.find(query)
+            .populate('cliente')
+            .populate('socio')
+            .populate('sucursal')
+            .populate('membresia')
+            .skip(skip)
+            .sort(sort)
+            .limit(perPage)
         ])
 
         res.send({ total, proyectos, perPage: parseInt(perPage), page: parseInt(page) })
@@ -180,7 +187,6 @@ const proyectoPost = async (req, res = response) => {
             unidadNegocio,
             tipoServicio,
             descripcionServicio,
-            membresia,
             estado } = req.body
 
         const proyectoDB = await Proyecto.findOne({ codigo })
@@ -202,7 +208,7 @@ const proyectoPost = async (req, res = response) => {
             unidadNegocio,
             tipoServicio,
             descripcionServicio,
-            membresia,
+            membresia: req.usuario.membresia._id,
             usuario: req.usuario._id,
             estado
         }
@@ -234,6 +240,7 @@ const proyectoPut = async (req, res = response) => {
 
         const { status, usuario, ...data } = req.body
         data.usuario = req.usuario._id
+        data.membresia = req.usuario.membresia._id        
         const fechaNew = moment(data.fecha, "DD-MM-YYYY").toDate();
         data.fecha = fechaNew
 
