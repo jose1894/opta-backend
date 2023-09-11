@@ -94,7 +94,11 @@ const RiesgoSchema = Schema({
         type: String,
         default: '',
     },
-     ase_b1: {
+    ase_a6: {
+        type: String,
+        default: '',
+    },
+    ase_b1: {
         type: String,
         default: '',
     },
