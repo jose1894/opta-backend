@@ -14,6 +14,14 @@ const RiesgoSchema = Schema({
         type: String,
         default: '',
     },
+    type_r1: {
+        type: String,
+        default: '',
+    },
+    type_r2: {
+        type: String,
+        default: '',
+    },
     indice: {
         type: Schema.Types.ObjectId,
         ref: 'Enfoque',
@@ -114,7 +122,15 @@ const RiesgoSchema = Schema({
         type: String,
         default: '',
     },
-    ase_c1: {
+    ase_b5: {
+        type: String,
+        default: '',
+    },
+    ase_b6: {
+        type: String,
+        default: '',
+    },
+    /*ase_c1: {
         type: String,
         default: '',
     },
@@ -129,7 +145,7 @@ const RiesgoSchema = Schema({
     ase_c4: {
         type: String,
         default: '',
-    },
+    },*/
     sel_mon: {
         type: String,
         default: 'No',
