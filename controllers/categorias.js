@@ -9,7 +9,7 @@ const categoriasGet = async ( req, res = response) => {
             q        = '', 
             page     = 0, 
             perPage  = 10, 
-            sortBy   = 'nombre', 
+            sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;
 
@@ -60,7 +60,7 @@ const categoriasGetDeleted = async ( req, res = response) => {
             q        = '', 
             page     = 0, 
             perPage  = 10, 
-            sortBy   = 'nombre', 
+            sortBy   = 'codigo', 
             sortDesc = true, 
         } = req.query;
 

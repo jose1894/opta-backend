@@ -7,7 +7,7 @@ const estadosGet = async ( req, res = response) => {
             q        = '', 
             page     = 0, 
             perPage  = 10, 
-            sortBy   = 'nombre', 
+            sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;
         let options = { $or:[ {'estado':1}, {'estado':0}]};        
@@ -158,7 +158,7 @@ const estdosGetDeleteOrInactive = async ( req, res = response) => {
             q        = '', 
             page     = 0, 
             perPage  = 10, 
-            sortBy   = 'nombre', 
+            sortBy   = 'codigo', 
             sortDesc = true,
             estado = 2,
         } = req.query;

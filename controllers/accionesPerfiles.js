@@ -9,7 +9,7 @@ const accionesPerfilesGet = async ( req, res = response) => {
             q        = '', 
             page     = 0, 
             perPage  = 10, 
-            sortBy   = 'nombre', 
+            sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;
 
@@ -58,7 +58,7 @@ const accionesPerfilesGetDeleted = async ( req, res = response) => {
             q        = '', 
             page     = 0, 
             perPage  = 10, 
-            sortBy   = 'nombre', 
+            sortBy   = 'codigo', 
             sortDesc = true, 
         } = req.query;
 
