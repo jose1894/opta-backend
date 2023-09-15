@@ -232,8 +232,10 @@ const descargarArchivo = async (req, res = response) => {
     }
 
     const filePath = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`);
+    /*if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath)
+    }*/
     res.download(filePath, (error) => {
-      console.log(filePath)
       if (error) {
         console.error('Error downloading file:', error);
         res.status(500).json({ error: 'Internal server error' });

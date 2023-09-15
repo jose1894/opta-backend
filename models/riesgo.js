@@ -14,13 +14,10 @@ const RiesgoSchema = Schema({
         type: String,
         default: '',
     },
-    type_r1: {
+    typeRisk: {
         type: String,
-        default: '',
-    },
-    type_r2: {
-        type: String,
-        default: '',
+        default: 'Seleccione',
+        enum: ['Seleccione','A nivel de estados financieros','A nivel de aseveraciones']
     },
     indice: {
         type: Schema.Types.ObjectId,
