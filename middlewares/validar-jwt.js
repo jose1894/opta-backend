@@ -2,6 +2,8 @@ const { response, request } = require('express')
 const jwt = require('jsonwebtoken')
 const Usuario = require('../models/usuario')
 
+const { TokenExpiredError } = jwt;
+
 const validarJWT = async ( req = request, res = response, next ) => {
 
     const token = req.header('x-token')
@@ -11,7 +13,7 @@ const validarJWT = async ( req = request, res = response, next ) => {
             msg: "No hay token en la peticion"
         })
     }
-
+    
     try{
         const { uid } = jwt.verify( token, process.env.SECRETORPRIVATEKEY )
          
@@ -37,9 +39,17 @@ const validarJWT = async ( req = request, res = response, next ) => {
         next()
     } catch( error ) {
 
-        res.status(401).json({
-            msg: "Token no valido"
-        })
+        if (error instanceof TokenExpiredError) {
+            res.status(401).json({ 
+                msg: "El token ha expirado!" 
+            });
+          } else  {
+            res.status(401).json({
+                msg: "Token no valido"
+            })
+          }
+
+        
 
     }
 }
