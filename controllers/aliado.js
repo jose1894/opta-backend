@@ -8,8 +8,8 @@ const aliadosGet = async (req, res = response) => {
             q = '',
             page = 0,
             perPage = 10,
-            sortBy = 'nombre',
-            sortDesc = true
+            sortBy = 'codigo',
+            sortDesc = false
         } = req.query;
 
         let options = { $or: [{ 'estado': 1 }, { 'estado': 0 }] };
@@ -31,7 +31,6 @@ const aliadosGet = async (req, res = response) => {
         } else {
             query = { ...options }
         }
-
         // Promise . all envia varias promesas simultaneas
         const [total, aliados] = await Promise.all([
             Aliado.countDocuments(query),
@@ -61,7 +60,7 @@ const aliadosGetDelete = async (req, res = response) => {
             q = '',
             page = 0,
             perPage = 10,
-            sortBy = 'nombre',
+            sortBy = 'codigo',
             sortDesc = true
         } = req.query;
 
