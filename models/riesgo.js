@@ -75,6 +75,11 @@ const RiesgoSchema = Schema({
         type: String,
         default: '',
     },
+    ctaFA: {
+        type: Schema.Types.Mixed,
+        default: null,
+
+    },
     consecuenciaEF: {
         type: String,
         default: '',
@@ -179,7 +184,11 @@ const RiesgoSchema = Schema({
         default: 'No aprobado',
         enum: ['No aprobado','Efectivo','No efectivo']
     },
+    refDes: {
+        type: Schema.Types.Mixed,
+        default: null,
 
+    },
     padc_enf: {
         type: String,
         default: ''
@@ -189,12 +198,7 @@ const RiesgoSchema = Schema({
         type: String,
         default: ''
     },
-
-    referencia: {
-        type: String,
-        default: ''
-    },
-
+    
     pfo_mpro: {
         type: String,
         default: ''
