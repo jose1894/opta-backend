@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path')
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser');
 
@@ -10,6 +11,7 @@ class Server {
     constructor() {
         this.app  = express();
         this.port = process.env.PORT;
+        //this.app.use(express.static(path.join(__dirname, '..', 'public/projects')));
 
         this.paths = {
             auth:             '/api/auth',

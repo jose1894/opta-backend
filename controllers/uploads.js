@@ -222,32 +222,23 @@ const archivoProyectoYEnfoquesGet = async (req, res = response) => {
 }
 
 const descargarArchivo = async (req, res = response) => {
-
-  try {
-    
+  try {    
     const { id } = req.params
     const file = await Upload.findById(id);
     if (!file) {
       return res.status(404).json({ error: 'File not found' });
-    }
 
-    const filePath = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`);
-    /*if (fs.existsSync(filePath)) {
+    }    
+    const filePath =  path.join(__dirname, '..' ,`/projects/${file.ruta}/${file.nombreBinario}`);
+    res.set('Content-Disposition', `inline; filename="${file.nombreBinario}"`);
+    if (fs.existsSync(filePath)) {
       return res.sendFile(filePath)
-    }*/
-    res.download(filePath, (error) => {
-      if (error) {
-        console.error('Error downloading file:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    });
+    }
   } catch (error) {
     return res.status(500).json({
       msg: `Error del servidor al descargar el archivos ${error}`
     })
-
   }
-
 }
 
 const deleteFileById = async (req, res = response) => {
