@@ -80,10 +80,6 @@ const RiesgoSchema = Schema({
         default: null,
 
     },
-    consecuenciaEF: {
-        type: String,
-        default: '',
-    },
     ase_a1: {
         type: String,
         default: '',

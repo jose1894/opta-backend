@@ -31,7 +31,6 @@ const riesgosGet = async ( req, res = response) => {
         } else {
             query = {...options}
         }         
-        
         const [ total, riesgos ] = await Promise.all([
             Riesgo.countDocuments( query ),
             Riesgo.find(query)
@@ -55,6 +54,19 @@ const riesgosGet = async ( req, res = response) => {
 
 }
 
+const functionFiltrar = (q) => {
+    const filter = {};
+    if (q && q.length > 0) {
+      const orFilters = q.map(item => {
+        const data =  JSON.parse(item)
+        const { cuadrante } = data
+        const cuadranteFilter = cuadrante ? { cuadrante } : {};
+        return { ...cuadranteFilter };
+      });
+      filter.$or = orFilters;
+    }
+    return filter;
+  }
 
 const riesgoGet = async ( req, res = response ) => {
 
