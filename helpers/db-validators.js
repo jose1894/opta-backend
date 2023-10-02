@@ -27,8 +27,11 @@ const {
     Actividad,
     Proyecto,
     PersonaProyecto,
-    Riesgo
+    Riesgo,
+    Upload
  } = require('../models')
+ const path = require('path')
+ const fs = require('fs');
 
 
 const esRolValido = async ( rol = '' ) => {
@@ -298,10 +301,18 @@ const existeProyectoPorId = async ( id ) => {
     }
 }
 
-const existePersonaProyectoPorId = async ( id ) => {
+const existePersonaProyectoPorId = async ( id ) => {    
     const existe = await PersonaProyecto.findById(id)
     if ( !existe ) {
         throw new Error( `El registro ${ id } no existe`)
+    }
+}
+
+const existeCarpetaZip = async ( code ) => {
+    const filePath = path.join(__dirname, '..', `/projects/${code}`);
+    const existe = await fs.existsSync(filePath)
+    if ( !existe ) {
+        throw new Error( `La carpeta del proyecto ${ code } no existe`)
     }
 }
 
@@ -363,5 +374,6 @@ module.exports = {
     existeSucursalPorCodigo,
     existeCiudadPorCodigo,
     existePersonaProyectoPorId,
-    existeRiesgoPorId
+    existeRiesgoPorId,
+    existeCarpetaZip
 }

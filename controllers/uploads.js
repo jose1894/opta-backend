@@ -6,6 +6,7 @@ const { Usuario, Producto } = require('../models');
 const { param } = require('../routes/auth');
 const cloudinary = require('cloudinary').v2
 const Upload = require('../models/upload')
+const archiver = require('archiver');
 const fs = require('fs');
 
 
@@ -222,14 +223,14 @@ const archivoProyectoYEnfoquesGet = async (req, res = response) => {
 }
 
 const descargarArchivo = async (req, res = response) => {
-  try {    
+  try {
     const { id } = req.params
     const file = await Upload.findById(id);
     if (!file) {
       return res.status(404).json({ error: 'File not found' });
 
-    }    
-    const filePath =  path.join(__dirname, '..' ,`/projects/${file.ruta}/${file.nombreBinario}`);
+    }
+    const filePath = path.join(__dirname, '..', `/projects/${file.ruta}/${file.nombreBinario}`);
     res.set('Content-Disposition', `inline; filename="${file.nombreBinario}"`);
     if (fs.existsSync(filePath)) {
       return res.sendFile(filePath)
@@ -241,10 +242,50 @@ const descargarArchivo = async (req, res = response) => {
   }
 }
 
+const generarZip = async (req, res = response) => {
+  try {
+    const { code } = req.params
+    const filePath = path.join(__dirname, '..', `/projects/${code}`);
+    if (fs.existsSync(filePath)) {
+      const dirList = fs.readdirSync(filePath)
+      const filePathSave = path.join(__dirname, '..', `/projects/filezip/${code}.zip`);
+      const output = fs.createWriteStream(filePathSave);
+      const archive = archiver('zip', {
+        zlib: { level: 9 } // set the compression level
+      });
+      archive.directory(filePath, false);
+      archive.pipe(output);
+      output.on('close', function () {
+        if (fs.existsSync(filePathSave)) {
+          return res.sendFile(filePathSave)
+        }
+      });
+      archive.on('error', function (err) {
+        return res.status(500).json({
+           succes: false,
+           error: err,
+           msg: `Error al comprimir la carpeta ${code}`
+        });
+      });
+      archive.finalize();
+    } else {
+      return res.status(201).json({
+        succes: false,
+        msg: `Error al comprimir la carpeta ${code}`
+     });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      succes: false,
+      msg: `Error del servidor al descargar el archivos ${error}`
+    })
+  }
+}
+
 const deleteFileById = async (req, res = response) => {
 
   try {
-    
+
     const { id } = req.params
     const file = await Upload.findById(id);
     if (!file) {
@@ -253,7 +294,7 @@ const deleteFileById = async (req, res = response) => {
     const filePath = path.join(__dirname, `../projects/${file.ruta}/${file.nombreBinario}`);
     fs.unlinkSync(filePath)
     const archivo = await Upload.deleteOne({ _id: id })
-    res.json( archivo )
+    res.json(archivo)
   } catch (error) {
     return res.status(500).json({
       msg: `Error del servidor al descargar el archivos ${error}`
@@ -263,8 +304,23 @@ const deleteFileById = async (req, res = response) => {
 
 }
 
+const verificarExisteCarpeta = async (req, res = response) => {
 
+ try {
+  const { name } = req.params
+  const filePath = path.join(__dirname, '..', `/projects/${name}`);
+  const carpeta =  await fs.existsSync(filePath)
+  return res.status(200).json({
+    succes: carpeta,
+ });
+ } catch (error) {
+  return res.status(500).json({
+    msg: `Error del servidor al buscar la carpeta ${error}`
+  })
+  
+ }
 
+}
 
 module.exports = {
   cargarArchivo,
@@ -273,5 +329,7 @@ module.exports = {
   mostrarImagen,
   archivoProyectoYEnfoquesGet,
   descargarArchivo,
-  deleteFileById
+  deleteFileById,
+  generarZip,
+  verificarExisteCarpeta
 }

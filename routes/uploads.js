@@ -6,11 +6,14 @@ const {
     mostrarImagen , 
     archivoProyectoYEnfoquesGet,
     descargarArchivo,
-    deleteFileById 
+    deleteFileById,
+    generarZip,
+    verificarExisteCarpeta
 } = require('../controllers/uploads')
 const { coleccionesPermitidas } = require('../helpers')
 const { validarArchivoSubir } = require('../middlewares/validar-archivo')
 const { validarCampos } = require('../middlewares/validar-campos')
+const { existeCarpetaZip } = require('../helpers/db-validators')
 const { validarJWT } = require( '../middlewares')
 
 const router = Router()
@@ -20,6 +23,10 @@ router.get( '/archivoProyectoYEnfoquesGet/:proyectoId/:enfoqueId', archivoProyec
 router.post( '/',  [ validarJWT, validarArchivoSubir ] , cargarArchivo )
 
 router.get( '/download/:id',  [ validarJWT ] , descargarArchivo )
+
+router.get('/zipFile/:code', [ validarJWT ], generarZip)
+
+router.get('/verificarExisteCarpeta/:name', [ validarJWT ] ,  verificarExisteCarpeta)
 
 router.delete( '/:id',[
     validarJWT,    
