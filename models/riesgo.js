@@ -146,39 +146,70 @@ const RiesgoSchema = Schema({
     },*/
     sel_mon: {
         type: String,
-        default: 'No',
-        enum: ['No aprobado','Si','No']
+        default: 'No probado',
+        enum: ['No probado','Probado']
+    },
+    ref_sel_mon: {
+        type: String,
+        default: '',
     },
     sel_mon2: {
         type: String,
-        default: 'No',
-        enum: ['No aprobado','Si','No']
+        default: 'No probado',
+        enum: ['No probado','Probado']
+    },
+    ref_sel_mon2: {
+        type: String,
+        default: '',
     },
     sel_gen: {
         type: String,
-        default: 'No',
-        enum: ['No aprobado','Si','No']
+        default: 'No probado',
+        enum: ['No probado','Probado']
+    },
+    ref_sel_gen: {
+        type: String,
+        default: '',
     },
     sel_gen2: {
         type: String,
-        default: 'No',
-        enum: ['No aprobado','Si','No']
+        default: 'No probado',
+        enum: ['No probado','Probado']
+    },
+    ref_sel_gen2: {
+        type: String,
+        default: '',
     },
     sel_esp: {
         type: String,
-        default: 'No',
-        enum: ['No aprobado','Si','No']
+        default: 'No probado',
+        enum: ['No probado','Probado']
+    },
+    ref_sel_esp: {
+        type: String,
+        default: '',
     },
     sel_esp2: {
         type: String,
-        default: 'No',
-        enum: ['No aprobado','Si','No']
+        default: 'No probado',
+        enum: ['No probado','Probado']
     },
-
+    ref_sel_esp2: {
+        type: String,
+        default: '',
+    },
     sel2_ini: {
         type: String,
-        default: 'No aprobado',
-        enum: ['No aprobado','Efectivo','No efectivo']
+        default: 'No probado',
+        enum: ['No probado','Efectivo','No efectivo']
+    },
+    ref_sel2_ini: {
+        type: String,
+        default: '',
+    },
+    reasons_NT_cont: {
+        type: String,
+        default: '',
     },
     refDes: {
         type: Schema.Types.Mixed,
@@ -204,7 +235,10 @@ const RiesgoSchema = Schema({
         type: String,
         default: ''
     },
-    
+    conclusion: {
+        type: String,
+        default: '',
+    },    
     estado : {
         type: Number,
         default: 1,
