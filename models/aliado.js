@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const Counter = require('./counter');
 
 const AliadoSchema = Schema({
     codigo: {
@@ -39,9 +40,8 @@ const AliadoSchema = Schema({
         ref: 'Ciudad',
         required: true,
     },
-    calle: {
-        type:String,
-        maxLength: [250,'La longitud máxima es de 250 caracteres']
+    direccionAliado: {
+        type:String
     },
     paginaWeb: {
         type: String,
@@ -97,5 +97,19 @@ AliadoSchema.methods.toJSON = function() {
     const {__v, ...data } = this.toObject()
     return data
 }
+
+AliadoSchema.pre('save', function (next) {
+    const aliado = this;
+    Counter.findByIdAndUpdate(
+        { _id: 'aliadoId' },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true },
+        function (error, counter) {
+            if (error) return next(error);
+            aliado.codigo = counter.count.toString().padStart(4, '0');
+            next();
+        }
+    );
+});
 
 module.exports = model( 'Aliado', AliadoSchema);

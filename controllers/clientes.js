@@ -7,7 +7,7 @@ const clientesGet = async ( req, res = response) => {
         const {
             q        = '', 
             page     = 0, 
-            perPage  = 10, 
+            perPage  = 1, 
             sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;

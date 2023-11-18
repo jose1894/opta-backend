@@ -1,13 +1,9 @@
 const { Schema, model } = require('mongoose')
+const Counter = require('./counter');
 
 const CargoSchema = Schema({
     codigo: {
-        type: String,
-        required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
-        uppercase: true,
-        trim: true,
-        unique: true,
-        maxLength: [3,'La longitud máxima es de 2 caracteres']
+        type: String
     },
     nombre: {
         type: String,
@@ -33,5 +29,19 @@ CargoSchema.methods.toJSON = function() {
     const {__v, ...data } = this.toObject()
     return data
 }
+
+CargoSchema.pre('save', function (next) {
+    const cargo = this;
+    Counter.findByIdAndUpdate(
+        { _id: 'cargoId' },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true },
+        function (error, counter) {
+            if (error) return next(error);
+            cargo.codigo = counter.count.toString().padStart(4, '0');
+            next();
+        }
+    );
+});
 
 module.exports = model( 'Cargo', CargoSchema)

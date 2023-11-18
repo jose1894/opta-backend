@@ -160,7 +160,7 @@ const monedaPost = async ( req, res = response ) => {
 
         const data = {
             nombre,
-            codigo,
+            /*codigo,*/
             usuario: req.usuario._id
         }
 

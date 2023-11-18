@@ -1,5 +1,6 @@
 const { response } = require("express");
-const Pais  = require('../models/pais')
+const Pais  = require('../models/pais');
+const counter = require("../models/counter");
 
 // obtenerPaiss - paginado - total - populate
 
@@ -132,7 +133,7 @@ const paisesPost = async ( req, res = response ) => {
 
 
     try {
-        const {nombre,codigo, estado } = req.body
+        const {nombre,codigo, estado } = req.body        
 
         const paisDB = await Pais.findOne( { $or : [ { nombre}, { codigo} ] } )
 
@@ -152,7 +153,7 @@ const paisesPost = async ( req, res = response ) => {
         }
 
         const pais = new Pais( data )
-
+        
         //Guardar en DB
         await pais.save()
 

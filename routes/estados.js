@@ -38,12 +38,11 @@ router.post('/', [
 ], estadosPost)
 
 // Obtener un estado - publico
-router.get('/:id', [
+router.get( '/:id', [
     check('id', 'No es un ID valido').isMongoId(),
-    check('id').custom(existeEstadoPorId),
-    check('codigo').custom(existeEstadoPorCodigo),
+    check('id').custom( existeEstadoPorId ),   
     validarCampos,
-], estadoGet)
+],estadoGet)
 
 
 //Actualizar estado - privado - Cualquier persona con token

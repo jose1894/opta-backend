@@ -1,25 +1,19 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require('mongoose');
+const Counter = require('./counter');
 
 const MonedaSchema = Schema({
-    codigo: {
-        type: String,
-        required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
-        uppercase: true,
-        unique: true,
-        trim: true,
-        maxLength: [3,'La longitud máxima es de 2 caracteres']
-    },
+    codigo: { type: String },
     nombre: {
         type: String,
-        required: [ true, 'El nombre es obligatorio'],
+        required: [true, 'El nombre es obligatorio'],
         uppercase: true,
         trim: true,
         unique: true
     },
-    estado : {
+    estado: {
         type: Number,
         default: 1,
-        enum: [0,1,2],
+        enum: [0, 1, 2],
         required: true,
     },
     usuario: {
@@ -29,9 +23,24 @@ const MonedaSchema = Schema({
     }
 })
 
-MonedaSchema.methods.toJSON = function() {
-    const {__v, ...data } = this.toObject()
+
+MonedaSchema.methods.toJSON = function () {
+    const { __v, ...data } = this.toObject()
     return data
 }
 
-module.exports = model( 'Moneda', MonedaSchema)
+MonedaSchema.pre('save', function (next) {
+    const currency = this;
+    Counter.findByIdAndUpdate(
+        { _id: 'monedaId' },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true },
+        function (error, counter) {
+            if (error) return next(error);
+            currency.codigo = counter.count.toString().padStart(4, '0');
+            next();
+        }
+    );
+});
+
+module.exports = model('Moneda', MonedaSchema)

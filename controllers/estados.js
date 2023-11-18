@@ -91,8 +91,7 @@ const estadosPost = async ( req, res = response ) => {
             })
         }
         const data = {
-            nombre,
-            codigo,            
+            nombre,           
             pais,
             estado: req.body.estado,
             usuario: req.usuario._id,

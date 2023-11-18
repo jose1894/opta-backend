@@ -144,7 +144,7 @@ const aliadosPost = async (req, res = response) => {
 
 
     try {
-        const { codigo, nombre, iDFiscal, pais, state, ciudad, calle,
+        const { codigo, nombre, iDFiscal, pais, state, ciudad, direccionAliado,
             paginaWeb, nombreContact, apellidoContact, cargo, telefonoOfic,
             telefonoCelu, correoContact, estado } = req.body      
 
@@ -165,7 +165,7 @@ const aliadosPost = async (req, res = response) => {
             pais,
             state,
             ciudad,
-            calle,
+            direccionAliado,
             paginaWeb,
             nombreContact,
             apellidoContact,

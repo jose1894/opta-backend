@@ -1,13 +1,9 @@
 const { Schema, model } = require('mongoose');
+const Counter = require('./counter');
 
 const CiudadSchema = Schema({
     codigo: {
-        type: String,
-        required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
-        uppercase: true,
-        trim: true,
-        unique: true,
-        maxLength: [3,'La longitud máxima es de 3 caracteres']
+        type: String 
     },
     nombre: {
         type: String,
@@ -43,5 +39,19 @@ CiudadSchema.methods.toJSON = function() {
     const {__v, ...data } = this.toObject()
     return data
 }
+
+CiudadSchema.pre('save', function (next) {
+    const ciudad = this;
+    Counter.findByIdAndUpdate(
+        { _id: 'ciudadId' },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true },
+        function (error, counter) {
+            if (error) return next(error);
+            ciudad.codigo = counter.count.toString().padStart(4, '0');
+            next();
+        }
+    );
+});
 
 module.exports = model( 'Ciudad', CiudadSchema);

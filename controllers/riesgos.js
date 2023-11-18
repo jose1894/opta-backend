@@ -6,15 +6,16 @@ const riesgosGet = async ( req, res = response) => {
     try{
         const {
             q        = '', 
-            page     = 0, 
-            perPage  = 10, 
+            pageRisk = 0, 
+            perPage  = 3, 
             sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;
 
         let options = { $or:[ {'estado':1}, {'estado':0}]};        
         const sort = {}
-        const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
+        const skip = parseInt(pageRisk) === 0 || parseInt(pageRisk) === 1 ? 0 : (parseInt(pageRisk) - 1) * parseInt(perPage);
+        console.log(pageRisk)
         let filter = {}
         let query = {}
 
@@ -42,7 +43,7 @@ const riesgosGet = async ( req, res = response) => {
                     .limit( perPage )
         ])
 
-        res.send({ total, riesgos, perPage:parseInt(perPage), page: parseInt(page)})
+        res.send({ total, riesgos, perPage:parseInt(perPage), pageRisk: parseInt(pageRisk)})
 
     } catch ( error ) {
         
