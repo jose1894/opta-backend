@@ -36,7 +36,6 @@ router.get( '/allUnidadesNegocio', allUnidadesNegocioGet)
 router.post( '/', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
-    check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
     check( 'nombre', 'La longitud debe ser de 250 caracteres' ).isLength({ min: 1, max:250 }),
     check( 'siglas', 'La longitud debe ser de 5 caracteres' ).isLength({ min: 1, max:5 }),
     check( 'siglas', 'las siglas son obligatorias' ).not().isEmpty(),
@@ -56,7 +55,6 @@ router.get( '/:id', [
 router.put( '/:id', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
-    check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
     check( 'nombre', 'La longitud debe ser de 250 caracteres' ).isLength({ min: 1, max:250 }),
     check( 'siglas', 'La longitud debe ser de 5 caracteres' ).isLength({ min: 1, max:5 }),
     check( 'siglas', 'las siglas son obligatorias' ).not().isEmpty(),

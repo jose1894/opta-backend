@@ -1,13 +1,9 @@
 const { Schema, model } = require('mongoose');
+const Counter = require('./counter');
 
 const UnidadNegocioSchema = Schema({
     codigo: {
-        type: String,
-        required:[true, 'El código es obligatorio', 'El código es el de la normativa ISO 3166'],
-        uppercase: true,
-        trim: true,
-        unique: true,
-        maxLength: [3,'La longitud máxima es de 3 caracteres']
+        type: String
     },
     siglas: {
         type: String,
@@ -42,5 +38,19 @@ UnidadNegocioSchema.methods.toJSON = function() {
     const {__v, ...data } = this.toObject()
     return data
 }
+
+UnidadNegocioSchema.pre('save', function (next) {
+    const unidadNegocio = this;
+    Counter.findByIdAndUpdate(
+        { _id: 'unidadNegocioId' },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true },
+        function (error, counter) {
+            if (error) return next(error);
+            unidadNegocio.codigo = counter.count.toString().padStart(4, '0');
+            next();
+        }
+    );
+});
 
 module.exports = model( 'UnidadNegocio', UnidadNegocioSchema);

@@ -36,7 +36,6 @@ router.get( '/proyectosDeleted', proyectosGetDeleted)
 router.post( '/', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
-    check( 'codigo', 'La longitud debe ser de 10 caracteres' ).isLength({ min: 2, max:10 }),
     validarCampos
 ], proyectoPost)
 

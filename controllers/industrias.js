@@ -160,7 +160,6 @@ const industriaPost = async ( req, res = response ) => {
 
         const data = {
             nombre,
-            codigo,
             usuario: req.usuario._id,
             estado
         }

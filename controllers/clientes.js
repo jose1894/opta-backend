@@ -7,7 +7,7 @@ const clientesGet = async ( req, res = response) => {
         const {
             q        = '', 
             page     = 0, 
-            perPage  = 1, 
+            perPage  = 10, 
             sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;
@@ -226,6 +226,7 @@ const clientePut = async ( req, res = response ) => {
         const { status, usuario, contactos, ...data } = req.body
         data.usuario = req.usuario._id 
         data.miembro = req.usuario.membresia._id 
+        const dataContact = await Contacto.deleteOne({ cliente: id })
         const cliente = await Cliente.findByIdAndUpdate( id, data, { new:true })
         const dataContacto = await Promise.all( contactos.map(async (contact) => {
             const { _id, ...dataC } = contact         

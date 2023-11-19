@@ -36,7 +36,6 @@ router.get( '/membresiasDelete',miembrosGetDelete)
 router.post( '/', [
     validarJWT,
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
-    check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
     check( 'nombre', 'La longitud debe ser de 250 caracteres' ).isLength({ min: 1, max:250 }),
     check( 'iDFiscal', 'La longitud debe ser de 12 caracteres' ).isLength({ min: 1, max:12 }),
     check( 'calle', 'La longitud debe ser de 250 caracteres' ).isLength({ min: 1, max:250 }),
@@ -64,7 +63,6 @@ router.put( '/:id', [
     validarJWT,
     check('id', 'No es un ID valido').isMongoId(),
     check( 'codigo', 'El codigo es obligatorio. El código es el de la normativa ISO 3166' ).not().isEmpty(),
-    check( 'codigo', 'La longitud debe ser de 3 caracteres' ).isLength({ min: 2, max:3 }),
     check( 'nombre', 'La longitud debe ser de 250 caracteres' ).isLength({ min: 1, max:250 }),
     check( 'iDFiscal', 'La longitud debe ser de 12 caracteres' ).isLength({ min: 1, max:12 }),
     check( 'calle', 'La longitud debe ser de 250 caracteres' ).isLength({ min: 1, max:250 }),

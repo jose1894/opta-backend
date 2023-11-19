@@ -101,6 +101,10 @@ PersonalSchema.virtual('nombreCompleto').get(function () {
     return `${this.nombres} ${this.apellidos}`;
 });
 
+PersonalSchema.virtual('sucursalNombre').get(function () {
+    return `${this.sucursal?.nombre}`;
+});
+
 PersonalSchema.set('toObject', { virtuals: true });
 PersonalSchema.set('toJSON', { virtuals: true });
 

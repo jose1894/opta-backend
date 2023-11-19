@@ -144,7 +144,6 @@ const unidadNegocioPost = async ( req, res = response ) => {
             })
         }
         const data = {
-            codigo, 
             nombre, 
             siglas,
             estado,

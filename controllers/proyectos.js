@@ -13,7 +13,7 @@ const proyectosGet = async (req, res = response) => {
         const {
             q = '',
             page = 0,
-            perPage = 1,
+            perPage = 10,
             sortBy = 'codigo',
             sortDesc = true
         } = req.query;
@@ -199,7 +199,6 @@ const proyectoPost = async (req, res = response) => {
         }
 
         const data = {
-            codigo,
             creado,
             cliente,
             socio,

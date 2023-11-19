@@ -167,8 +167,7 @@ const miembroPost = async ( req, res = response ) => {
             })
         }
         const data = {
-            aliado,
-            codigo, 
+            aliado, 
             nombre, 
             iDFiscal, 
             ejercicioFiscal,

@@ -21,6 +21,8 @@ const personastGet = async (req, res = response) => {
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
 
+        console.log(sort)
+
         if (q) {
             filter = functionFiltrar(q);
             query = {

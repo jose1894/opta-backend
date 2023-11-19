@@ -148,8 +148,7 @@ const sucursalPost = async ( req, res = response ) => {
             })
         }
         const data = {
-            nombre,
-            codigo,            
+            nombre,           
             pais,
             ciudad,
             estado,
