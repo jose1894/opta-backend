@@ -19,6 +19,7 @@ const proyectosGet = async (req, res = response) => {
         } = req.query;
 
         let options = { $or: [{ 'estado': 1 }, { 'estado': 0 }] };
+        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -71,7 +72,7 @@ const functionFiltrar = (q) => {
         const codeFilter = codigo ? { codigo } : {};
         const socioFilter = socio ? { socio } : {};
         return { ...dateFilter, ...clientFilter, ...codeFilter, ...socioFilter };
-      });
+      });      
       filter.$or = orFilters;
     }
     return filter;

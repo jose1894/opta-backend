@@ -46,6 +46,8 @@ class Server {
             riesgos:          '/api/riesgos',
             uploads:          '/api/uploads',
             emails:          '/api/emails',
+            planes:          '/api/planes',
+            membresiaLicencias: '/api/membresiaLicencias',
         }
 
 
@@ -120,6 +122,8 @@ class Server {
         this.app.use( this.paths.riesgos, require('../routes/riesgos'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
         this.app.use( this.paths.emails, require('../routes/email'));
+        this.app.use( this.paths.planes, require('../routes/planes'));
+        this.app.use( this.paths.membresiaLicencias, require('../routes/membresiaLicencia'));
     }
 
     listen() {

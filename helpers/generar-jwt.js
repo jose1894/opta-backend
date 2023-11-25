@@ -38,7 +38,26 @@ const generarRefreshJWT = ( uid = '' ) => {
     })
 }
 
+const generarLicencia = ( uid = '', dias = 0 ) => {
+    return new Promise( (resolve, reject) => {
+
+        const payload = { uid }
+
+        jwt.sign( payload, process.env.SECRETYLICENCIAKEY, {
+            expiresIn: `${dias}d`
+        }, ( err, licencia ) => {
+            
+            if ( err ) {
+                console.log(err)
+                reject( 'No se pudo generar la licencia' )
+            } else {
+                resolve( licencia ) 
+            }
+        })
+    })
+}
 module.exports = {
     generarJWT,
-    generarRefreshJWT
+    generarRefreshJWT,
+    generarLicencia
 }
