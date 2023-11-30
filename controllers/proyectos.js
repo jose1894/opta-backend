@@ -1,6 +1,7 @@
 const { response } = require("express");
 const moment = require('moment');
 const Proyecto = require('../models/proyecto')
+const ProyectosView = require('../models/proyectosView')
 const Enfoque = require('../models/enfoque')
 const ProyectoEnfoque = require('../models/proyectoEnfoque')
 const fs = require('fs');
@@ -14,11 +15,12 @@ const proyectosGet = async (req, res = response) => {
             q = '',
             page = 0,
             perPage = 10,
+            estado = -1,
             sortBy = 'codigo',
             sortDesc = true
         } = req.query;
-
-        let options = { $or: [{ 'estado': 1 }, { 'estado': 0 }] };
+        let jsonQ = (q) ? JSON.parse(q) : {}
+        let options = estado === -1 ? { $or: [{ 'estado': 1 }, { 'estado': 0 }] } : {$or: [{ 'estado': estado }]};
         
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
@@ -26,30 +28,50 @@ const proyectosGet = async (req, res = response) => {
         let query = {}
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
         if (q) {
-            filter = functionFiltrar(q);
+            filter = functionFiltrar(jsonQ);
             query = {
-                ...filter,
+                //...filter,
                 '$and': [
                     options
                 ]
             }
         } else {
             query = { ...options }
-        }
-
-        const [total, proyectos] = await Promise.all([
-            Proyecto.countDocuments(query),
-            Proyecto.find(query)
-            .populate('cliente')
-            .populate('socio')
-            .populate('sucursal')
-            .populate('membresia')
+        } 
+        let [total, proyectos, proyectosView] = await Promise.all([
+            ProyectosView.countDocuments(query),
+            /*Proyecto.find(query)
+            .populate({
+                path: 'cliente',
+                match: {
+                    $or: [
+                        jsonQ?.cliente ? filterProperty(jsonQ?.cliente) : {}
+                    ]
+                }                
+            })
+            .populate({
+                path:'socio',
+                match: {
+                    $or: [
+                        jsonQ?.socio ? filterProperty(jsonQ?.socio) : {}
+                    ]
+                }                
+            })
+            .populate({
+                path: 'sucursal',
+                match: jsonQ?.sucursal ? filterProperty(jsonQ?.sucursal) : {}
+            })
+            .populate({
+                path:'membresia',
+                match: jsonQ?.membresia ? filterProperty(jsonQ?.membresia) : {}
+            }),*/
+            ProyectosView.find(query)
             .skip(skip)
             .sort(sort)
             .limit(perPage)
         ])
-
-        res.send({ total, proyectos, perPage: parseInt(perPage), page: parseInt(page) })
+        //proyectos = proyectos.filter(proyecto => proyecto.cliente !== null || proyecto.socio !== null);
+        res.send({ total, proyectos, proyectosView, perPage: parseInt(perPage), page: parseInt(page) })
 
     } catch (error) {
 
@@ -61,7 +83,33 @@ const proyectosGet = async (req, res = response) => {
 
 }
 
+const filterProperty = (q) => {
+    let filter = {}
+    Object.keys(q).forEach(key => {
+        filter = {[key]: { $eq: q[key]  }};
+    });
+    return filter
+}
+
 const functionFiltrar = (q) => {
+    let filter = {}  
+    console.log(q.filtros)  
+    if (q?.filtros && q.filtros.length > 0) {
+        const params = q.filtros.map(item => {
+            const data = item
+            let obj = [];
+            Object.keys(data).forEach(key => {
+                console.log(key)
+                obj.push({[key]: { $eq: data[key] }});
+            });
+            return obj
+        })
+        filter.$or = params[0];
+    }
+    return filter
+}
+
+/*const functionFiltrar = (q) => {
     const filter = {};
     if (q && q.length > 0) {
       const orFilters = q.map(item => {
@@ -76,7 +124,7 @@ const functionFiltrar = (q) => {
       filter.$or = orFilters;
     }
     return filter;
-  }
+}*/
 
 const proyectosGetDeleted = async (req, res = response) => {
     try {

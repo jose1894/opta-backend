@@ -10,16 +10,16 @@ const {
 } = require( '../middlewares')
 
 const { 
-    contactoPost
+    contactoDelete
 } = require('../controllers/contactos')
 
 const router =  Router()
 
 //Crear pais - privado - Cualquier persona con token
-router.post( '/', [
+router.delete( '/:id', [
     validarJWT,
     validarCampos
-], contactoPost)
+], contactoDelete)
 
 
 

@@ -56,15 +56,22 @@ const getLicenciaByMembresia = async (req, res = response) => {
     try {
 
         const { membresia } = req.params
-        console.log(membresia)
-
         const licencia = await MembresiaLicencia.findOne({
             "$and": [
                 { membresia: membresia },
                 { 'estado': 1 }
             ]
         }).populate('plan')
-        return res.status(200).send({ licencia })
+        if (licencia) {
+            let fInicio = moment()
+            let fFinal = moment(licencia.fechaFinal)
+            let diferencia = fFinal.diff(fInicio, 'days')
+            if(diferencia === 0) {
+                await MembresiaLicencia.findByIdAndUpdate(licencia._id, { estado: 2 }, { new: true })
+                return res.status(200).send({ msj: 'Tiene la licencia vencida', data:{}})
+            }
+        }
+        return res.status(200).send({ msj: 'Licencia encontrada', data: licencia })
     } catch (error) {
         return res.status(500).json({
             msg: `Error del servidor al mostrar la licencia ${error}`

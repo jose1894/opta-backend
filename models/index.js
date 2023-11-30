@@ -34,6 +34,7 @@ const PersonaProyecto = require('./personaProyecto')
 const Riesgo = require('./riesgo')
 const Upload = require('./upload')
 const Plan = require('./plan')
+const ProyectosView = require('./proyectosView')
 
 module.exports = {
     Categoria,
@@ -69,6 +70,7 @@ module.exports = {
     PersonaProyecto,
     Riesgo,
     Upload,
-    Plan
+    Plan,
+    ProyectosView
 }
 

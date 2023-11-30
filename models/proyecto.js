@@ -70,6 +70,13 @@ ProyectoSchema.methods.toJSON = function() {
     return data
 }
 
+ProyectoSchema.virtual('socioNombre').get(function () {
+    return `${this.socio?.nombres}`;
+});
+
+ProyectoSchema.set('toObject', { virtuals: true });
+ProyectoSchema.set('toJSON', { virtuals: true });
+
 ProyectoSchema.pre('save', function (next) {
     const proyecto = this;
     Counter.findByIdAndUpdate(

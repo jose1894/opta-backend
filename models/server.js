@@ -48,6 +48,7 @@ class Server {
             emails:          '/api/emails',
             planes:          '/api/planes',
             membresiaLicencias: '/api/membresiaLicencias',
+            contactos:        '/api/contactos',
         }
 
 

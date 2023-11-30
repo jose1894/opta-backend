@@ -222,20 +222,19 @@ const clientePut = async ( req, res = response ) => {
     try{
 
         const { id } = req.params
-
         const { status, usuario, contactos, ...data } = req.body
         data.usuario = req.usuario._id 
         data.miembro = req.usuario.membresia._id 
-        const dataContact = await Contacto.deleteOne({ cliente: id })
+        //const dataContact = await Contacto.deleteMany({ cliente: id })
         const cliente = await Cliente.findByIdAndUpdate( id, data, { new:true })
         const dataContacto = await Promise.all( contactos.map(async (contact) => {
-            const { _id, ...dataC } = contact         
-            if (contact.cliente === '') {
-                dataC.cliente = id
+            const { _id } = contact   
+            if (_id === '') {
+                const {_id, ...dataC} = contact
                 const contactosData = new Contacto(dataC)
-                 await contactosData.save()
+                await contactosData.save()
             } else {
-                await Contacto.findByIdAndUpdate( _id, dataC, { new:true })
+                await Contacto.findByIdAndUpdate( _id, contact, { new:true })
             }
         })
     );

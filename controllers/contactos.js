@@ -2,43 +2,26 @@ const { response } = require("express");
 const Contacto  = require('../models/contacto')
 
 
-const contactoPost = async ( req, res = response ) => {
-
-
+const contactoDelete = async ( req, res = response ) => {
     try {
-
-        return res.status( 200 ).json({
-            msg: `Error del servidor al guardar un cargo + create`
+        const { id } = req.params
+        const contacto = await Contacto.deleteOne({ _id: id })
+        return res.status(200).send({
+            contacto,
+            msj: 'Eliminado con exito'
+        })        
+    } catch (error) {
+        return res.status(500).send({
+            error,
+            msj: 'Error al eliminar el contacto'
         })
-        /*const {nombre,apellido, cargo, telefonoOfic,telefonoCelu, correo} = c
-
-        const data = {
-            nombre,
-            apellido, 
-            cargo, 
-            telefonoOfic,
-            telefonoCelu, 
-            correo
-        }
-
-        const contacto = new Contacto( data )
-
-        //Guardar en DB
-        await contacto.save()
-
-        return res.status( 201 ).json(cargo)*/
-
-    } catch ( error ) {
-            
-
-            return res.status( 500 ).json({
-                msg: `Error del servidor al guardar un cargo ${ error }`
-            })
-
+        
     }
-} 
+
+    
+}
 
 
 module.exports = {
-    contactoPost
+    contactoDelete
 }
