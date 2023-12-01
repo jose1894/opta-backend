@@ -1,18 +1,21 @@
 const { response } = require("express");
 const Cliente  = require('../models/cliente')
 const Contacto = require('../models/contacto')
+const { filtrarPorPropiedades } = require("../helpers/filter-search")
 
 const clientesGet = async ( req, res = response) => {
     try{
         const {
-            q        = '', 
-            page     = 0, 
-            perPage  = 10, 
+            q = '',
+            page = 0,
+            perPage = 10,
+            estado = -1,
             sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        let jsonQ = (q) ? JSON.parse(q) : {}
+        let options = estado === -1 ? { $or: [{ 'estado': 1 }, { 'estado': 0 }] } : { $or: [{ 'estado': estado }] };       
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -20,20 +23,10 @@ const clientesGet = async ( req, res = response) => {
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
         
-        if ( q ){
-            filter = functionFiltrar( q );
-            query = {
-                ...filter,
-                '$and': [
-                    options
-                ]
-            }
-        } else {
-            query = {...options}
-        }
+        query = {...options}
          
         // Promise . all envia varias promesas simultaneas
-        const [ total, clientes ] = await Promise.all([
+        let [ total, clientes ] = await Promise.all([
             Cliente.countDocuments( query ),
             Cliente.find(query)
                     .populate('industria')
@@ -42,6 +35,14 @@ const clientesGet = async ( req, res = response) => {
                     .sort(sort) 
                     .limit( perPage )
         ])
+
+        if(q) {
+            const keys = jsonQ?.filters
+            const searchText = jsonQ.search 
+            const clientesFilter =  filtrarPorPropiedades(keys, clientes, searchText);
+            clientes = clientesFilter
+            total = clientesFilter.length
+        } 
 
         res.send({ total, clientes, perPage:parseInt(perPage), page: parseInt(page)})
 
@@ -58,13 +59,15 @@ const clientesGet = async ( req, res = response) => {
 const clientesGetDeleted = async ( req, res = response) => {
     try{
         const {
-            q        = '', 
-            page     = 0, 
-            perPage  = 10, 
+            q = '',
+            page = 0,
+            perPage = 10,
+            estado = -1,
             sortBy   = 'codigo', 
             sortDesc = true 
         } = req.query;
 
+        let jsonQ = (q) ? JSON.parse(q) : {}
         let options = { $or:[ {'estado':2}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
@@ -72,21 +75,9 @@ const clientesGetDeleted = async ( req, res = response) => {
         let query = {}
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-        
-        if ( q ){
-            filter = functionFiltrar( q );
-            query = {
-                ...filter,
-                '$and': [
-                    options
-                ]
-            }
-        } else {
-            query = {...options}
-        }
-         
+        query = {...options}
         // Promise . all envia varias promesas simultaneas
-        const [ total, clientes ] = await Promise.all([
+        let [ total, clientes ] = await Promise.all([
             Cliente.countDocuments( query ),
             Cliente.find(query)
                     .populate('industria')
@@ -98,6 +89,14 @@ const clientesGetDeleted = async ( req, res = response) => {
                     .sort(sort) 
                     .limit( perPage )
         ])
+
+        if(q) {
+            const keys = jsonQ?.filters
+            const searchText = jsonQ.search 
+            const clientesFilter =  filtrarPorPropiedades(keys, clientes, searchText);
+            clientes = clientesFilter
+            total = clientesFilter.length
+        }
 
         res.send({ total, clientes, perPage:parseInt(perPage), page: parseInt(page)})
 

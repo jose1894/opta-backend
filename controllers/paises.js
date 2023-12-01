@@ -1,6 +1,7 @@
 const { response } = require("express");
 const Pais = require('../models/pais');
 const counter = require("../models/counter");
+const { functionFiltrar } = require("../helpers/filter-search")
 
 // obtenerPaiss - paginado - total - populate
 
@@ -55,22 +56,6 @@ const paisesGet = async (req, res = response) => {
         })
     }
 
-}
-
-const functionFiltrar = (q) => {
-    let filter = {}
-    if (q && q.length > 0) {
-        const params = q.map(item => {
-            const data = JSON.parse(item)
-            let obj = [];
-            Object.keys(data).forEach(key => {
-                obj.push({[key]: { $regex: data[key], $options: 'i' }});
-            });
-            return obj
-        })
-        filter.$or = params[0];
-    }
-    return filter
 }
 
 const paisesGetDeleteOrInactive = async (req, res = response) => {

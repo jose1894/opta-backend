@@ -1,7 +1,6 @@
 const { response } = require("express");
 const Personal = require('../models/personal')
-
-// obtenerPaiss - paginado - total - populate
+const { filtrarPorPropiedades } = require("../helpers/filter-search")
 
 const personastGet = async (req, res = response) => {
     try {
@@ -9,11 +8,12 @@ const personastGet = async (req, res = response) => {
             q = '',
             page = 0,
             perPage = 10,
-            sortBy = 'codigo',
+            estado = -1,
+            sortBy = 'nombres',
             sortDesc = true
         } = req.query;
-
-        let options = { $or: [{ 'estado': 1 }, { 'estado': 0 }] };
+        let jsonQ = (q) ? JSON.parse(q) : {}
+        let options = estado === -1 ? { $or: [{ 'estado': 1 }, { 'estado': 0 }] } : { $or: [{ 'estado': estado }] };
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
         let filter = {}
@@ -21,22 +21,10 @@ const personastGet = async (req, res = response) => {
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
 
-        console.log(sort)
-
-        if (q) {
-            filter = functionFiltrar(q);
-            query = {
-                ...filter,
-                '$and': [
-                    options
-                ]
-            }
-        } else {
-            query = { ...options }
-        }
+        query = { ...options }
 
         // Promise . all envia varias promesas simultaneas
-        const [total, personas] = await Promise.all([
+        let [total, personas] = await Promise.all([
             Personal.countDocuments(query),
             Personal.find(query)
                 .populate('profesion')
@@ -51,6 +39,14 @@ const personastGet = async (req, res = response) => {
                 .sort(sort)
                 .limit(perPage)
         ])
+        
+        if(q) {
+            const keys = jsonQ?.filters
+            const searchText = jsonQ.search 
+            const personasFilter =  filtrarPorPropiedades(keys, personas, searchText);
+            personas = personasFilter
+            total = personasFilter.length
+        } 
 
         res.send({ total, personas, perPage: parseInt(perPage), page: parseInt(page) })
 
@@ -95,13 +91,21 @@ const personasGetDeleted = async (req, res = response) => {
         }
 
         // Promise . all envia varias promesas simultaneas
-        const [total, personas] = await Promise.all([
+        let [total, personas] = await Promise.all([
             Personal.countDocuments(query),
             Personal.find(query)
                 .skip(skip)
                 .sort(sort)
                 .limit(perPage)
         ])
+
+        if(q) {
+            const keys = jsonQ?.filters
+            const searchText = jsonQ.search 
+            const personasFilter =  filtrarPorPropiedades(keys, personas, searchText);
+            personas = personasFilter
+            total = personasFilter.length
+        } 
 
         res.send({ total, personas, perPage: parseInt(perPage), page: parseInt(page) })
 
