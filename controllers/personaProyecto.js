@@ -65,7 +65,6 @@ const personaProyectoPost = async ( req, res = response ) => {
             }
             return PersonaProyecto.findByIdAndUpdate(_id, data, { new: true });
         });
-        console.log(saveDataPersonaProyecto.length, updateDataPersonaProyecto.length) 
         if(saveDataPersonaProyecto.length > 0 && updateDataPersonaProyecto.length > 0) {
             const newData = await Promise.all(promisesSave)
             const updateData = await Promise.all(promisesUpdate)
