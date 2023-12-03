@@ -14,7 +14,7 @@ const clientesGet = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let jsonQ = (q) ? JSON.parse(q) : {}
+        let jsonQ = q
         if(typeof q === "string") {
             jsonQ = (q) ? JSON.parse(q) : {}
         }
