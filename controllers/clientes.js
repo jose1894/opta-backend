@@ -15,6 +15,9 @@ const clientesGet = async ( req, res = response) => {
         } = req.query;
 
         let jsonQ = (q) ? JSON.parse(q) : {}
+        if(typeof q === "string") {
+            jsonQ = (q) ? JSON.parse(q) : {}
+        }
         let options = estado === -1 ? { $or: [{ 'estado': 1 }, { 'estado': 0 }] } : { $or: [{ 'estado': estado }] };       
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
