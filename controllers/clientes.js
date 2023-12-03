@@ -67,7 +67,10 @@ const clientesGetDeleted = async ( req, res = response) => {
             sortDesc = true 
         } = req.query;
 
-        let jsonQ = (q) ? JSON.parse(q) : {}
+        let jsonQ = q
+        if(typeof q === "string") {
+            jsonQ = (q) ? JSON.parse(q) : {}
+        }
         let options = { $or:[ {'estado':2}]};        
         const sort = {}
         const skip = parseInt(page) === 0 || parseInt(page) === 1 ? 0 : (parseInt(page) - 1) * parseInt(perPage);
