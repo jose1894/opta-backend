@@ -22,7 +22,11 @@ const proyectosGet = async (req, res = response) => {
             sortDesc = true
         } = req.query;
         
-        let jsonQ2 = (q2) ? JSON.parse(q2) : {}
+        
+        let jsonQ2 = q2
+        if(typeof q2 === "string") {
+            jsonQ2 = (q2) ? JSON.parse(q2) : {}
+        }
         let options = estado === -1 ? { $or: [{ 'estado': 1 }, { 'estado': 0 }] } : { $or: [{ 'estado': estado }] };
 
         const sort = {}
