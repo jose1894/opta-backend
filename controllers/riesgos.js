@@ -1,28 +1,29 @@
 const { response } = require("express");
-const Riesgo  = require('../models/riesgo')
+const Riesgo = require('../models/riesgo')
 
 
-const riesgosGet = async ( req, res = response) => {
-    try{
+const riesgosGet = async (req, res = response) => {
+    try {
         const {
-            q        = '', 
-            pageRisk = 0, 
-            perPage  = 3, 
-            sortBy   = 'codigo', 
-            sortDesc = true 
+            q = '',
+            q2 = '',
+            pageRisk = 0,
+            perPage = 3,
+            sortBy = 'codigo',
+            sortDesc = true
         } = req.query;
 
-        let options = { $or:[ {'estado':1}, {'estado':0}]};        
+        let options = { $or: [{ 'estado': 1 }, { 'estado': 0 }] };
         const sort = {}
         const skip = parseInt(pageRisk) === 0 || parseInt(pageRisk) === 1 ? 0 : (parseInt(pageRisk) - 1) * parseInt(perPage);
-        
+
         let filter = {}
         let query = {}
 
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
-        
-        if ( q ){
-            filter = functionFiltrar( q );
+
+        if (q2) {
+            filter = functionFiltrar(q2);
             query = {
                 ...filter,
                 '$and': [
@@ -30,26 +31,36 @@ const riesgosGet = async ( req, res = response) => {
                 ]
             }
         } else {
-            query = {...options}
-        }         
-        const [ total, riesgos ] = await Promise.all([
-            Riesgo.countDocuments( query ),
+            query = { ...options }
+        }
+        let [total, riesgos] = await Promise.all([
+            Riesgo.countDocuments(query),
             Riesgo.find(query)
-                    .populate( 'proyecto')
-                    .populate( 'indice')
-                    .populate( 'usuario')
-                    .skip( skip )
-                    .sort(sort) 
-                    .limit( perPage )
+                .populate('proyecto')
+                .populate('indice')
+                .populate('usuario')
+                .skip(skip)
+                .sort(sort)
+                .limit(perPage)
         ])
 
-        res.send({ total, riesgos, perPage:parseInt(perPage), pageRisk: parseInt(pageRisk)})
 
-    } catch ( error ) {
-        
+        let jsonQ = q
+        if (typeof q === "string") {
+            jsonQ = (q) ? JSON.parse(q) : {}
+        }
+        const codeProject = (typeof jsonQ[0] === 'string') ? JSON.parse(jsonQ[0]).projectId : jsonQ[0].projectId
+        const dataN = riesgos.filter((item) => item.proyecto.codigo === codeProject && item.indice.rcr === 1)
+        riesgos = dataN
+        total = dataN.length
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los riesgos ${ error }`
+        res.send({ total, riesgos, perPage: parseInt(perPage), pageRisk: parseInt(pageRisk) })
+
+    } catch (error) {
+
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar los riesgos ${error}`
         })
     }
 
@@ -58,43 +69,45 @@ const riesgosGet = async ( req, res = response) => {
 const functionFiltrar = (q) => {
     const filter = {};
     if (q && q.length > 0) {
-      const orFilters = q.map(item => {
-        const data =  JSON.parse(item)
-        const { cuadrante } = data
-        const cuadranteFilter = cuadrante ? { cuadrante } : {};
-        return { ...cuadranteFilter };
-      });
-      filter.$or = orFilters;
+        const orFilters = q.map(item => {
+            const data = (typeof item === 'string') ? JSON.parse(item) : item
+            const { cuadrante } = data
+            const cuadranteFilter = cuadrante ? { cuadrante } : {};
+            return { ...cuadranteFilter };
+        });
+       
+        filter.$or = orFilters;
     }
+    console.log(filter)
     return filter;
-  }
+}
 
-const riesgoGet = async ( req, res = response ) => {
+const riesgoGet = async (req, res = response) => {
 
-    try{
+    try {
 
         const { id } = req.params
 
-        const riesgo = await Riesgo.findById( id ).populate( 'proyecto' ).populate( 'usuario' )
+        const riesgo = await Riesgo.findById(id).populate('proyecto').populate('usuario')
 
         return res.status(200).send(
             riesgo
         )
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al mostrar los riesgos ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al mostrar los riesgos ${error}`
         })
     }
 }
 
-const riesgoPost = async ( req, res = response ) => {
+const riesgoPost = async (req, res = response) => {
 
 
     try {
-        const {proyecto,titulo,descripcion,indice, estado} = req.body
+        const { proyecto, titulo, descripcion, indice, estado } = req.body
 
         /*const paisDB = await Pais.findOne( { $or : [ { titulo}, { codigo} ] } )
 
@@ -105,79 +118,79 @@ const riesgoPost = async ( req, res = response ) => {
                 data: paisDB
             })
         }*/
-       // const projectId = ObjectId(proyecto.trim())
+        // const projectId = ObjectId(proyecto.trim())
         const data = {
             proyecto,
             titulo,
             descripcion,
-            indice, 
+            indice,
             estado,
             usuario: req.usuario._id
         }
 
-        const riesgo = new Riesgo( data )
+        const riesgo = new Riesgo(data)
 
         //Guardar en DB
         await riesgo.save()
 
-        return res.status( 201 ).json(riesgo)
+        return res.status(201).json(riesgo)
 
-    } catch ( error ) {
-            
+    } catch (error) {
 
-            return res.status( 500 ).json({
-                msg: `Error del servidor al guardar el riesgo ${ error }`
-            })
+
+        return res.status(500).json({
+            msg: `Error del servidor al guardar el riesgo ${error}`
+        })
 
     }
-} 
+}
 
-const riesgoPut = async ( req, res = response ) => {
+const riesgoPut = async (req, res = response) => {
 
-    try{
+    try {
 
         const { id } = req.params
 
         const { usuario, ...data } = req.body
 
         data.titulo = data.titulo.toUpperCase()
-        data.usuario = req.usuario._id 
+        data.usuario = req.usuario._id
 
-        const riesgo = await Riesgo.findByIdAndUpdate( id, data, { new:true })
+        const riesgo = await Riesgo.findByIdAndUpdate(id, data, { new: true })
 
         return res.status(200).send(
             riesgo
         )
 
-    } catch ( error ) {
-        
+    } catch (error) {
 
-        return res.status( 500 ).json({
-            msg: `Error del servidor al modificar el riesgo ${ error }`
+
+        return res.status(500).json({
+            msg: `Error del servidor al modificar el riesgo ${error}`
         })
     }
 }
 
 
-const riesgoDelete = async ( req, res = response ) => {
+const riesgoDelete = async (req, res = response) => {
 
     const { id } = req.params
-    const riesgo = await Riesgo.findByIdAndUpdate( id, { estado: 2}, { new: true})
+    const riesgo = await Riesgo.findByIdAndUpdate(id, { estado: 2 }, { new: true })
 
-    res.json( riesgo )
+    res.json(riesgo)
 }
 
 
-const riesgoRestore = async ( req, res = response ) => {
+const riesgoRestore = async (req, res = response) => {
 
     const { id } = req.params
-    const riesgo = await Riesgo.findByIdAndUpdate( id, { estado: 1}, { new: true})
+    const riesgo = await Riesgo.findByIdAndUpdate(id, { estado: 1 }, { new: true })
 
-    if(!riesgo){
+    if (!riesgo) {
         return res.json(`El riesgo solicitado no se encuentra eliminado`)
     }
 
-    res.json( riesgo )
+    res.json(riesgo)
 }
 
 module.exports = {
