@@ -128,7 +128,8 @@ class Server {
     }
 
     listen() {
-        this.app.listen( this.port, () => {
+        this.app.listen( this.port, (req, res) => {
+            res.send({msg: "Servidor iniciado"})
             console.log('Servidor corriendo en puerto', this.port );
         });
     }
