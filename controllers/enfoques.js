@@ -1,6 +1,8 @@
 const { response } = require("express");
 const Enfoque  = require('../models/enfoque')
 const { ObjectId } = require('mongodb');
+const Upload = require('../models/upload')
+const Riesgo = require('../models/riesgo')
 
 
 const enfoquesGet = async ( req, res = response) => {
@@ -71,7 +73,7 @@ const getChildrenPaginateGet = async ( req, res = response) => {
             ]
         }       
         
-        const [ total = 0, dataEnfoques = [] ] = await Promise.all([
+        const [ total = 0, dataEnfoques = []] = await Promise.all([
             Enfoque.countDocuments( query ),
             Enfoque.find(query)
                     .populate('miembro')
@@ -81,7 +83,23 @@ const getChildrenPaginateGet = async ( req, res = response) => {
                     .limit( perPage )
         ])
 
-        const enfoques = dataEnfoques.filter(enfoque => enfoque.children)
+        let enfoquesUploads = dataEnfoques.filter(enfoque => enfoque.children)
+        const enfoques = await Promise.all(enfoquesUploads.map(async (item) => {
+            try {
+                item.countUpload = await Upload.countDocuments({ enfoque: item._id });                
+            } catch (error) {
+                item.countUpload = 0                
+            } 
+            item.countRisk = await Riesgo.countDocuments({
+                ...{ indice: item._id },
+                '$and': [
+                    options
+                ]
+
+            })           
+            return item;
+        }));
+
         res.send({ total, enfoques, perPage:parseInt(perPage), page: parseInt(page)})
 
     } catch ( error ) {

@@ -60,6 +60,14 @@ const EnfoqueSchema = Schema({
         default: 2,
         enum: [0,1,2], //0-raiz, 1-principales y 2-otros
     },
+    countUpload: {
+        type: Number,
+        default: 0, //0-raiz, 1-principales y 2-otros
+    },
+    countRisk: {
+        type: Number,
+        default: 0, //0-raiz, 1-principales y 2-otros
+    },
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario',
