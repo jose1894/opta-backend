@@ -1,6 +1,12 @@
 const { Schema, model } = require('mongoose')
+const moment = require('moment');
 
 const RiesgoSchema = Schema({
+    fecha: {
+        type: Date,
+        default: () => moment().format('YYYY-MM-DD HH:mm:ss')
+
+    },
     proyecto: {
         type: Schema.Types.ObjectId,
         ref: 'Proyecto',
