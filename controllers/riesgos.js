@@ -7,6 +7,7 @@ const riesgosGet = async (req, res = response) => {
         const {
             q = '',
             q2 = '',
+            q3 = '',
             pageRisk = 0,
             perPage = 3,
             sortBy = 'codigo',
@@ -19,11 +20,18 @@ const riesgosGet = async (req, res = response) => {
 
         let filter = {}
         let query = {}
-
+        
         sort[sortBy] = (sortDesc === "false") ? -1 : 1;
 
-        if (q2) {
-            filter = functionFiltrar(q2);
+        if (q2 || q3) {
+            if(q3 && q3.length > 0) {
+                const qparam = (typeof q3[0] === "string") ? JSON.parse(q3[0]) : q3[0]
+                let p = {}
+                p.$or = [qparam]                
+                filter = p
+            } else {
+                filter = functionFiltrar(q2);
+            }        
             query = {
                 ...filter,
                 '$and': [
@@ -74,11 +82,9 @@ const functionFiltrar = (q) => {
             const { cuadrante } = data
             const cuadranteFilter = cuadrante ? { cuadrante } : {};
             return { ...cuadranteFilter };
-        });
-       
+        });       
         filter.$or = orFilters;
     }
-    console.log(filter)
     return filter;
 }
 
@@ -151,7 +157,7 @@ const riesgoPut = async (req, res = response) => {
 
         const { id } = req.params
 
-        const { usuario, ...data } = req.body
+        const { usuario, fecha, ...data } = req.body
 
         data.titulo = data.titulo.toUpperCase()
         data.usuario = req.usuario._id
