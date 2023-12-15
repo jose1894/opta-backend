@@ -245,6 +245,7 @@ const descargarArchivo = async (req, res = response) => {
 const generarZip = async (req, res = response) => {
   try {
     const { code } = req.params
+    console.log(code)
     const filePath = path.join(__dirname, '..', `/projects/${code}`);
     if (fs.existsSync(filePath)) {
       const dirList = fs.readdirSync(filePath)
