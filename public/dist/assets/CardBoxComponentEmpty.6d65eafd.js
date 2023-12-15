@@ -1,1 +1,0 @@
-import{b as e}from"./BaseButton.1e584900.js";import{o as t,h as o,b as s}from"./index.bf3eb1d4.js";const r={},c={class:"text-center py-24 text-gray-500 dark:text-slate-400"},n=s("p",null,"Nothing's here\u2026",-1),a=[n];function _(d,i){return t(),o("div",c,a)}const h=e(r,[["render",_]]);export{h as C};
