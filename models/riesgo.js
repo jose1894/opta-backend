@@ -213,6 +213,15 @@ const RiesgoSchema = Schema({
         type: String,
         default: '',
     },
+    sel2_ini2: {
+        type: String,
+        default: 'No probado',
+        enum: ['No probado','Efectivo','No efectivo']
+    },
+    ref_sel2_ini2: {
+        type: String,
+        default: '',
+    },
     reasons_NT_cont: {
         type: String,
         default: '',
